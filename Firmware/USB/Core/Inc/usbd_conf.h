@@ -35,7 +35,7 @@ extern "C" {
 #define USBD_MAX_NUM_CONFIGURATION                  1U
 #define USBD_MAX_STR_DESC_SIZ             (uint16_t)0x100
 #define USBD_SELF_POWERED                           0U
-#define USBD_DEBUG_LEVEL                            2U
+#define USBD_DEBUG_LEVEL                            0U
 
 /* Device Core identification */
 #define DEVICE_FS                                   0
@@ -103,8 +103,8 @@ extern "C" {
 #endif /* (USBD_DEBUG_LEVEL > 2U) */
 
 /* Exported functions -------------------------------------------------------*/
-void* USBD_static_malloc(uint32_t size);
-void USBD_static_free(void *p);
+//void* USBD_static_malloc(uint32_t size);
+//void USBD_static_free(void *p);
 
 #ifdef __cplusplus
 }
