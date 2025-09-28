@@ -13,9 +13,15 @@ Demonstration highlights:
  - The firmware presents a USB 2.0 -compliant USB Audio device for the host computer, together with a USB 2.0 Human Interface Device (HID) device for controlling the tuner chip
  - The GUI application grants the user the ability to control the hardware device, tune to a station, adjust volume, and other operations
 
-## Licensing
+## Copyright and License
 
-This repository contains multiple licenses. All files, unless otherwise noted are licensed under the Creative Commons NonCommercial license (CC BY-NC). This means you are free to use them for your own use, for education, entertainment, or perhaps for building a copy of the device for yourself. However, any commerical use whatsoever is strictly prohibited. The demonstration project's intent is to showcase the skills of the author, and not provide you with a product that you can sell for profit.
+This repository consists of several independent sections, some delivered by third parties, and some by the author of the repository. Therefore it falls under several copyrights and licenses.
+
+The original work presented in this repository (the  KiCad project & files, portions of firmware not originating from a third party and the GUI application) are copyright of the author. Due to the "work in progress" nature of this repository some files may have a copyright statement while others do not. In case a file does not contain a copyright statement, and clearly does not belong to a third party then it is part of the original work, and therefore copyright of the author.
+
+Similarly, the original work is entirely licensed under the Creative Commons NonCommercial license (CC BY-NC).
+
+This means you are free to use the original work for your own use, for education, entertainment, or perhaps for building a copy of the device for yourself. However, any commerical use whatsoever is strictly prohibited. The demonstration project's intent is to showcase the skills of the author, and not to provide you with a ready-made product that you can sell for profit.
 
 ## How to use
 
