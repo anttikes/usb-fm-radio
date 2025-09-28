@@ -1,0 +1,5 @@
+# Ignore backup folder
+radio-circuit-backups
+
+# Ignore temporary files
+fp-info-cache
