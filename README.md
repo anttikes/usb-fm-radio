@@ -13,6 +13,10 @@ Demonstration highlights:
  - The firmware presents a USB 2.0 -compliant USB Audio device for the host computer, together with a USB 2.0 Human Interface Device (HID) device for controlling the tuner chip
  - The GUI application grants the user the ability to control the hardware device, tune to a station, adjust volume, and other operations
 
+## Licensing
+
+This repository contains multiple licenses. All files, unless otherwise noted are licensed under the Creative Commons NonCommercial license (CC BY-NC). This means you are free to use them for your own use, for education, entertainment, or perhaps for building a copy of the device for yourself. However, any commerical use whatsoever is strictly prohibited. The demonstration project's intent is to showcase the skills of the author, and not provide you with a product that you can sell for profit.
+
 ## How to use
 
 This repository has been created using the `git submodule` command:
