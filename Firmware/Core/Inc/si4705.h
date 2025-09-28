@@ -330,6 +330,8 @@ HAL_StatusTypeDef RSQStatus(volatile RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STA
 /* Private defines -----------------------------------------------------------*/
 #define SI4705_I2C_ADDRESS								(uint16_t)(0x11 << 1)  /* Hard-coded address for the Si4705 device, left-shifted for HAL-compatibility */
 #define SI4705_I2C_ALT_ADDRESS							(uint16_t)(0x63 << 1)  /* Hard-coded alternative address for the Si4705 device, left-shifted for HAL-compatibility */
+#define SI4705_VOLUME_MAX_SETTING  						63
+#define SI4705_VOLUME_MIN_SETTING  						0
 
 // Supported command identifiers
 #define CMD_POWER_UP                					0x01

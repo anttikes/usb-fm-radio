@@ -272,7 +272,7 @@ static uint8_t USBD_RADIO_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 
 	/* Initialize control structure */
 	haudio->control.cmd = AUDIO_CS_NONE;
-	memset(haudio->control.data, 0, sizeof(haudio->control.data));
+	(void) USBD_memset(haudio->control.data, 0, USB_MAX_EP0_SIZE);
 	haudio->control.len = 0U;
 	haudio->control.ifOrEp = 0U;
 	haudio->control.unitId = 0U;
@@ -450,7 +450,7 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 								haudio->control.unitId = 0U;
 								haudio->control.ifOrEp = 0U;
 
-								int16_t usbVolume = map_chip_to_usb_volume(0);
+								int16_t usbVolume = map_chip_to_usb_volume(SI4705_VOLUME_MIN_SETTING);
 
 								haudio->control.data[0] = LOBYTE(usbVolume);
 								haudio->control.data[1] = HIBYTE(usbVolume);
@@ -490,7 +490,7 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 								haudio->control.unitId = 0U;
 								haudio->control.ifOrEp = 0U;
 
-								int16_t usbVolume = map_chip_to_usb_volume(63);
+								int16_t usbVolume = map_chip_to_usb_volume(SI4705_VOLUME_MAX_SETTING);
 
 								haudio->control.data[0] = LOBYTE(usbVolume);
 								haudio->control.data[1] = HIBYTE(usbVolume);
@@ -762,7 +762,7 @@ static uint8_t USBD_RADIO_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
 	UNUSED(pdev);
 	UNUSED(epnum);
 
-	/* Not supported yet, but we would react here when an OUT transfer over a non-EP0 endpoint has completed (e.g. a HID report was received */
+	/* Not supported yet, but we would react here when an OUT transfer over a non-EP0 endpoint has completed (e.g. a HID report was received, or an audio transfer was completed */
 	return (uint8_t) USBD_OK;
 }
 
@@ -781,67 +781,45 @@ static uint8_t USBD_RADIO_EP0_RxReady(USBD_HandleTypeDef *pdev)
 		return (uint8_t) USBD_FAIL;
 	}
 
-	// TODO: Process the instruction and store data
+	if (haudio->control.unitId == AUDIO_FEATURE_UNIT_ID)
+	{
+		// Mute or volume
+		switch(haudio->control.cmd)
+		{
+			case AUDIO_CS_MUTE:
+				haudio->mute = haudio->control.data[0];
+				break;
+
+			case AUDIO_CS_VOLUME: {
+				int16_t newSetting = ((int16_t)haudio->control.data[0]) | (((int16_t)haudio->control.data[1]) << 8);
+				haudio->volume = map_usb_to_chip_volume(newSetting);
+				break;
+			}
+
+			default:
+				break;
+		}
+	}
+	else
+	{
+		// Sampling frequency (or pitch, if it was supported)
+		switch(haudio->control.cmd)
+		{
+			case AUDIO_CS_SAMPLING_FREQ:
+				haudio->samplingFrequency = ((uint32_t)haudio->control.data[0]) | (((uint32_t)haudio->control.data[1]) << 8) | (((uint32_t)haudio->control.data[2]) << 16);
+				break;
+
+			default:
+				break;
+		}
+	}
 
 	/* Handling of the response is complete; ready the cache for next operation */
 	haudio->control.cmd = AUDIO_CS_NONE;
-	memset(haudio->control.data, 0, sizeof(haudio->control.data));
+	(void) USBD_memset(haudio->control.data, 0, USB_MAX_EP0_SIZE);
 	haudio->control.len = 0U;
 	haudio->control.ifOrEp = 0U;
 	haudio->control.unitId = 0U;
-
-//	switch(HIBYTE(req->wValue))
-//	{
-//		case AUDIO_CS_SAMPLING_FREQ: {
-//			if (req->wLength != 3U) {
-//				USBD_CtlError(pdev, req);
-//				ret = USBD_FAIL;
-//				break;
-//			}
-//
-//			volatile uint8_t buf[3] = {0};
-//
-//			(void) USBD_CtlPrepareRx(pdev, (uint8_t*)&buf[0], req->wLength);
-//
-//			haudio->samplingFrequency = ((uint32_t)buf[0]) | (((uint32_t)buf[1]) << 8) | (((uint32_t)buf[2]) << 16);
-//
-//			break;
-//		}
-//
-//		default:
-//			USBD_CtlError(pdev, req);
-//			ret = USBD_FAIL;
-//			break;
-//	}
-//	break;
-//
-//	switch(HIBYTE(req->wValue))
-//	{
-//		case AUDIO_CS_MUTE: {
-//			/* Mute */
-//			if (req->wLength != 1) {
-//				// Only the one-byte variant is supported for now
-//				USBD_CtlError(pdev, req);
-//				ret = USBD_FAIL;
-//				break;
-//			}
-//
-//			/* Update the mute status from the next byte */
-//			(void) USBD_CtlPrepareRx(pdev, (uint8_t*)&haudio->mute, req->wLength);
-//
-//			break;
-//		}
-//
-//		case AUDIO_CS_VOLUME: {
-//			break;
-//		}
-//
-//		default:
-//			USBD_CtlError(pdev, req);
-//			ret = USBD_FAIL;
-//			break;
-//	}
-//	break;
 
 	return (uint8_t) USBD_OK;
 }
@@ -863,7 +841,7 @@ static uint8_t USBD_RADIO_EP0_TxReady(USBD_HandleTypeDef *pdev)
 
 	/* Sending of the response is complete; ready the cache for next operation */
 	haudio->control.cmd = AUDIO_CS_NONE;
-	memset(haudio->control.data, 0, sizeof(haudio->control.data));
+	(void) USBD_memset(haudio->control.data, 0, USB_MAX_EP0_SIZE);
 	haudio->control.len = 0U;
 	haudio->control.ifOrEp = 0U;
 	haudio->control.unitId = 0U;

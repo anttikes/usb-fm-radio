@@ -47,29 +47,41 @@ extern "C" {
 #define AUDIO_CHANNELS							      2U
 #endif
 
+/* This helper macro is essentially the same as Math.Ceil i.e. round to the nearest whole upwards */
+#define CEIL_DIV(numerator, denominator) (((numerator) + (denominator) - 1) / (denominator))
+
 /*
- * AUDIO_IN_BYTES_PER_SECOND represents the number of bytes per second that the desired
+ * AUDIO_BYTES_PER_SECOND represents the number of bytes per second that the desired
  * sampling frequency, sample bit depth and channel count produce
  *
- * AUDIO_IN_PACKET represents the amount of data transferred in a single USB 2.0 Full-speed frame (one frame per ms)
- * If High-speed was used here, the calculation would be different
+ * AUDIO_BYTES_PER_FRAME represents the amount of data transferred in a single USB 2.0 FS frame (1 ms)
+ *
+ * ALIGNED_BYTES_PER_FRAME is the AUDIO_BYTES_PER_FRAME but rounded up the nearest 32-bit boundary,
+ * to ensure efficient DMA operations
  */
-#define AUDIO_BYTES_PER_SECOND				          ((uint32_t)((USBD_AUDIO_FREQ * AUDIO_BITDEPTH * AUDIO_CHANNELS) / 8U))
+#define AUDIO_BYTES_PER_SECOND	                      ((uint32_t)((USBD_AUDIO_FREQ * AUDIO_BITDEPTH * AUDIO_CHANNELS) / 8U))
 
-#define AUDIO_BYTES_PER_FRAME                         ((uint16_t)(AUDIO_BYTES_PER_SECOND / 1000U))
-//#define AUDIO_IN_BYTES_PER_FRAME                      (uint16_t)(((AUDIO_IN_BYTES_PER_SECOND + 999U) / 1000U + 31U) & ~31U)
+#define AUDIO_BYTES_PER_FRAME                         CEIL_DIV(AUDIO_BYTES_PER_SECOND, 1000U)
 
-/* Number of sub-packets in the DMA transfer buffer */
+#define ALIGNED_BYTES_PER_FRAME						  (CEIL_DIV(AUDIO_BYTES_PER_FRAME, 4U) * 4U)
+
+/*
+ * Number of sub-packets (frames) in the DMA transfer buffer
+ * When increasing this be mindful of the available heap size
+ */
 #define DMA_IN_PACKET_NUM                             4U
 
-/* Number of packets in one PMA buffer */
+/*
+ * Number of packets in one PMA buffer
+ * When increasing this be mindful of the available SRAM size
+ */
 #define USB_IN_PACKET_NUM							  2U
 
 /* Total size of the DMA transfer buffer, in bytes */
-#define DMA_TOTAL_BUF_SIZE                            ((uint16_t)(AUDIO_BYTES_PER_FRAME * DMA_IN_PACKET_NUM))
+#define DMA_TOTAL_BUF_SIZE                            ((uint16_t)(ALIGNED_BYTES_PER_FRAME * DMA_IN_PACKET_NUM))
 
-/* Total size of individual PMA buffer, in bytes */
-#define USB_TOTAL_BUF_SIZE                            ((uint16_t)(AUDIO_BYTES_PER_FRAME * USB_IN_PACKET_NUM))
+/* Total size of a PMA buffer, in bytes */
+#define USB_TOTAL_BUF_SIZE                            ((uint16_t)(ALIGNED_BYTES_PER_FRAME * USB_IN_PACKET_NUM))
 
 #ifndef AUDIO_HS_BINTERVAL
 #define AUDIO_HS_BINTERVAL                            0x01U
@@ -79,7 +91,9 @@ extern "C" {
 #define AUDIO_FS_BINTERVAL                            0x01U
 #endif /* AUDIO_FS_BINTERVAL */
 
-#define AUDIO_IN_EP                                   (0x01U | IN)
+/* EP number both with and without the directional bit */
+#define AUDIO_EP									  0x01U
+#define AUDIO_IN_EP                                   (AUDIO_EP | IN)
 
 #define AUDIO_IF_DESC_SIZE                            0x09U
 #define USB_AUDIO_DESC_SIZ                            0x09U
@@ -217,7 +231,7 @@ typedef struct
 	uint8_t data[USB_MAX_EP0_SIZE];
 
 	/* Holds the number of data bytes */
-	uint8_t len;
+	uint16_t len;
 } USBD_RADIO_ControlTypeDef;
 
 typedef struct
