@@ -432,7 +432,7 @@
       "duplicate_sheet_names": "error",
       "endpoint_off_grid": "warning",
       "extra_units": "error",
-      "footprint_filter": "ignore",
+      "footprint_filter": "warning",
       "footprint_link_issues": "warning",
       "four_way_junction": "ignore",
       "global_label_dangling": "warning",
@@ -451,14 +451,14 @@
       "no_connect_dangling": "warning",
       "pin_not_connected": "error",
       "pin_not_driven": "error",
-      "pin_to_pin": "warning",
+      "pin_to_pin": "error",
       "power_pin_not_driven": "error",
       "same_local_global_label": "warning",
       "similar_label_and_power": "warning",
       "similar_labels": "warning",
       "similar_power": "warning",
-      "simulation_model_issue": "ignore",
-      "single_global_label": "ignore",
+      "simulation_model_issue": "warning",
+      "single_global_label": "warning",
       "unannotated": "error",
       "unconnected_wire_endpoint": "warning",
       "unit_value_mismatch": "error",
@@ -677,11 +677,41 @@
             "label": "JLCPCB Part Number",
             "name": "JLCPCB Part Number",
             "show": true
+          },
+          {
+            "group_by": false,
+            "label": "Sim.Type",
+            "name": "Sim.Type",
+            "show": false
+          },
+          {
+            "group_by": false,
+            "label": "Sim.Device",
+            "name": "Sim.Device",
+            "show": false
+          },
+          {
+            "group_by": false,
+            "label": "Sim.Library",
+            "name": "Sim.Library",
+            "show": false
+          },
+          {
+            "group_by": false,
+            "label": "Sim.Name",
+            "name": "Sim.Name",
+            "show": false
+          },
+          {
+            "group_by": false,
+            "label": "Sim.Params",
+            "name": "Sim.Params",
+            "show": false
           }
         ],
         "filter_string": "",
         "group_symbols": false,
-        "include_excluded_from_bom": true,
+        "include_excluded_from_bom": false,
         "name": "JLCPCB",
         "sort_asc": true,
         "sort_field": "${QUANTITY}"

@@ -2875,89 +2875,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Mechanical:MountingHole"
-			(pin_names
-				(offset 1.016)
-			)
-			(exclude_from_sim no)
-			(in_bom no)
-			(on_board yes)
-			(property "Reference" "H"
-				(at 0 5.08 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "MountingHole"
-				(at 0 3.175 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Mounting Hole without connection"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "mounting hole"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "MountingHole*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "MountingHole_0_1"
-				(circle
-					(center 0 0)
-					(radius 1.27)
-					(stroke
-						(width 1.27)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "Oscillator:SG-3030CM"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -5074,7 +4991,7 @@
 		)
 		(uuid "847872b6-0c4a-4c0d-af81-734035879d90")
 	)
-	(text "v0.1"
+	(text "v0.2"
 		(exclude_from_sim no)
 		(at 268.478 193.294 0)
 		(effects
@@ -5084,6 +5001,17 @@
 			(justify left)
 		)
 		(uuid "8dd136ef-a730-42c6-9b6a-2128a0fcebb6")
+	)
+	(text "Grounding ~{SEN} selects\nthe I2C address of Si4705"
+		(exclude_from_sim no)
+		(at 158.242 102.108 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9aca9232-2fe3-43fa-803d-79560350170c")
 	)
 	(text "Fwd. voltage on LED 2.0V,\ndesired operating current\naround 1mA. 1.5k resistor\nchosen due to E-series"
 		(exclude_from_sim no)
@@ -5135,6 +5063,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "0808a462-92d7-420f-8021-1ff0117744d5")
+	)
+	(junction
+		(at 40.64 50.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "0874faee-54b7-4926-b731-f830541e5974")
 	)
 	(junction
 		(at 85.09 31.75)
@@ -5233,6 +5167,12 @@
 		(uuid "62a8aa49-e5a7-4554-87d1-0d293d85444a")
 	)
 	(junction
+		(at 33.02 53.34)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "69b6e61f-8179-4c70-a95c-1c3e53b430c4")
+	)
+	(junction
 		(at 218.44 33.02)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5257,12 +5197,6 @@
 		(uuid "7ff77399-4ab8-4aa4-978b-4ee70bd0cdad")
 	)
 	(junction
-		(at 33.02 53.34)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "858c5694-585a-4640-8f00-b32f4eb8d4cd")
-	)
-	(junction
 		(at 57.15 128.27)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5279,12 +5213,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "9cc33e40-eb39-4565-9010-543a770d13c2")
-	)
-	(junction
-		(at 40.64 50.8)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "a58ab889-0bf9-45d9-b75e-a34af58eb164")
 	)
 	(junction
 		(at 52.07 128.27)
@@ -5493,10 +5421,6 @@
 	(no_connect
 		(at 123.19 184.15)
 		(uuid "ec4cd62d-41d3-4a0c-b289-c0787df65c88")
-	)
-	(no_connect
-		(at 176.53 59.69)
-		(uuid "edae52df-71a0-4928-9d20-a5a181a10f70")
 	)
 	(no_connect
 		(at 74.93 71.12)
@@ -5748,6 +5672,16 @@
 	)
 	(wire
 		(pts
+			(xy 50.8 170.18) (xy 50.8 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2452efb6-ad1d-4fa5-bee7-32080e052890")
+	)
+	(wire
+		(pts
 			(xy 110.49 153.67) (xy 110.49 156.21)
 		)
 		(stroke
@@ -5755,6 +5689,16 @@
 			(type default)
 		)
 		(uuid "24614d52-99d1-4fe3-b960-e656bbc4bf26")
+	)
+	(wire
+		(pts
+			(xy 50.8 185.42) (xy 50.8 187.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "257bd67b-1274-4906-8313-b8503e5b37a1")
 	)
 	(wire
 		(pts
@@ -5788,16 +5732,6 @@
 	)
 	(wire
 		(pts
-			(xy 27.94 180.34) (xy 45.72 180.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "277e2c61-1d33-4c63-a500-641e2b64a39b")
-	)
-	(wire
-		(pts
 			(xy 40.64 40.64) (xy 33.02 40.64)
 		)
 		(stroke
@@ -5815,6 +5749,26 @@
 			(type default)
 		)
 		(uuid "2b17fd9b-d68f-4314-97a5-7cc3b94948d1")
+	)
+	(wire
+		(pts
+			(xy 55.88 177.8) (xy 59.69 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2d894313-1c76-4ad9-9207-a5b3c975bf00")
+	)
+	(wire
+		(pts
+			(xy 29.21 50.8) (xy 40.64 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2db182f8-25ef-4d03-9eed-de333f0eb1e2")
 	)
 	(wire
 		(pts
@@ -6008,13 +5962,13 @@
 	)
 	(wire
 		(pts
-			(xy 27.94 177.8) (xy 45.72 177.8)
+			(xy 173.99 59.69) (xy 176.53 59.69)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "4cb8e847-0b59-452d-9e1c-9eb3f67cb5d5")
+		(uuid "4c2ceec7-e793-4138-97e4-abef5fc75380")
 	)
 	(wire
 		(pts
@@ -6098,23 +6052,13 @@
 	)
 	(wire
 		(pts
-			(xy 168.91 54.61) (xy 172.72 54.61)
+			(xy 156.21 54.61) (xy 172.72 54.61)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "5891b75b-6e72-4ddc-bea6-aeb02c4e9a2f")
-	)
-	(wire
-		(pts
-			(xy 55.88 177.8) (xy 59.69 177.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "58f342c8-019d-4ca2-9237-40d23422184f")
 	)
 	(wire
 		(pts
@@ -6198,16 +6142,6 @@
 	)
 	(wire
 		(pts
-			(xy 29.21 50.8) (xy 40.64 50.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6958904c-d87a-4d83-bd0c-5294fc41abf1")
-	)
-	(wire
-		(pts
 			(xy 237.49 58.42) (xy 248.92 58.42)
 		)
 		(stroke
@@ -6228,7 +6162,7 @@
 	)
 	(wire
 		(pts
-			(xy 172.72 62.23) (xy 176.53 62.23)
+			(xy 156.21 62.23) (xy 176.53 62.23)
 		)
 		(stroke
 			(width 0)
@@ -6288,6 +6222,16 @@
 	)
 	(wire
 		(pts
+			(xy 27.94 177.8) (xy 45.72 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "79d8c64e-dd89-47ba-9066-6707e629720a")
+	)
+	(wire
+		(pts
 			(xy 214.63 66.04) (xy 215.9 66.04)
 		)
 		(stroke
@@ -6298,7 +6242,7 @@
 	)
 	(wire
 		(pts
-			(xy 172.72 69.85) (xy 176.53 69.85)
+			(xy 156.21 69.85) (xy 176.53 69.85)
 		)
 		(stroke
 			(width 0)
@@ -6448,7 +6392,7 @@
 	)
 	(wire
 		(pts
-			(xy 172.72 64.77) (xy 176.53 64.77)
+			(xy 156.21 64.77) (xy 176.53 64.77)
 		)
 		(stroke
 			(width 0)
@@ -6558,16 +6502,6 @@
 	)
 	(wire
 		(pts
-			(xy 55.88 180.34) (xy 59.69 180.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a544dd1e-d4c7-453c-b7f0-9608f1362c21")
-	)
-	(wire
-		(pts
 			(xy 248.92 58.42) (xy 248.92 63.5)
 		)
 		(stroke
@@ -6658,16 +6592,6 @@
 	)
 	(wire
 		(pts
-			(xy 29.21 53.34) (xy 33.02 53.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b9fb0f21-4f72-4486-abc4-5cc14d956991")
-	)
-	(wire
-		(pts
 			(xy 172.72 54.61) (xy 176.53 54.61)
 		)
 		(stroke
@@ -6685,6 +6609,16 @@
 			(type default)
 		)
 		(uuid "bc1f3292-99eb-4a65-bb88-03b866b4c276")
+	)
+	(wire
+		(pts
+			(xy 27.94 180.34) (xy 45.72 180.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bd020408-8687-4772-990a-e561f1a6780b")
 	)
 	(wire
 		(pts
@@ -6795,6 +6729,16 @@
 			(type default)
 		)
 		(uuid "c71b8439-6a57-48e0-afa2-2e73ab612c78")
+	)
+	(wire
+		(pts
+			(xy 55.88 180.34) (xy 59.69 180.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c85155de-15f6-420f-8db2-13d9e6adf33b")
 	)
 	(wire
 		(pts
@@ -6945,16 +6889,6 @@
 			(type default)
 		)
 		(uuid "df2af7d4-38a9-4471-8d5a-4fb290c35532")
-	)
-	(wire
-		(pts
-			(xy 50.8 170.18) (xy 50.8 172.72)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e105be7f-baf6-4a9d-b39f-f3e753c49304")
 	)
 	(wire
 		(pts
@@ -7128,6 +7062,16 @@
 	)
 	(wire
 		(pts
+			(xy 29.21 53.34) (xy 33.02 53.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f1c76de8-d0b0-4265-84f3-119e485ea212")
+	)
+	(wire
+		(pts
 			(xy 214.63 58.42) (xy 226.06 58.42)
 		)
 		(stroke
@@ -7165,16 +7109,6 @@
 			(type default)
 		)
 		(uuid "f69af3d4-c89b-4984-b760-aff605dd914e")
-	)
-	(wire
-		(pts
-			(xy 50.8 185.42) (xy 50.8 187.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f7d26341-df02-4e8d-8382-0db444183745")
 	)
 	(wire
 		(pts
@@ -7318,7 +7252,7 @@
 	)
 	(global_label "I2C_SDA"
 		(shape input)
-		(at 172.72 64.77 180)
+		(at 156.21 64.77 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7328,7 +7262,7 @@
 		)
 		(uuid "1fb375e4-312a-475d-a37a-ca1404ddaf63")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 162.1148 64.77 0)
+			(at 145.6048 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7516,7 +7450,7 @@
 	)
 	(global_label "I2C_SCL"
 		(shape input)
-		(at 172.72 62.23 180)
+		(at 156.21 62.23 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7526,7 +7460,7 @@
 		)
 		(uuid "4434f0c6-ef0d-4e3b-a9d2-a8304a885db8")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 162.1753 62.23 0)
+			(at 145.6653 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7736,7 +7670,7 @@
 	)
 	(global_label "~{RST}"
 		(shape input)
-		(at 168.91 54.61 180)
+		(at 156.21 54.61 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7746,7 +7680,7 @@
 		)
 		(uuid "a031f3cd-9e4d-4ed9-900c-bce63596136b")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 162.4777 54.61 0)
+			(at 149.7777 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7802,7 +7736,7 @@
 	)
 	(global_label "I2C_SDA"
 		(shape input)
-		(at 29.21 53.34 180)
+		(at 29.21 50.8 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7812,7 +7746,7 @@
 		)
 		(uuid "b2c6bb28-d8e2-4117-9af0-700e0c01e9a0")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 18.6048 53.34 0)
+			(at 18.6048 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7824,7 +7758,7 @@
 	)
 	(global_label "RCLK"
 		(shape input)
-		(at 172.72 69.85 180)
+		(at 156.21 69.85 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7834,7 +7768,7 @@
 		)
 		(uuid "b80ee249-8780-4d4f-9814-9bfb53380cf7")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 164.8967 69.85 0)
+			(at 148.3867 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7890,7 +7824,7 @@
 	)
 	(global_label "I2C_SCL"
 		(shape input)
-		(at 29.21 50.8 180)
+		(at 29.21 53.34 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7900,7 +7834,7 @@
 		)
 		(uuid "f0febc22-4d73-4962-87ec-a48fa091b50d")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 18.6653 50.8 0)
+			(at 18.6653 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7937,7 +7871,7 @@
 		(at 33.02 45.72 0)
 		(mirror y)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -8033,7 +7967,7 @@
 		(lib_id "power:GND")
 		(at 166.37 41.91 270)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -8213,7 +8147,7 @@
 		(lib_id "Device:FerriteBead")
 		(at 44.45 128.27 90)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -8307,7 +8241,7 @@
 		(lib_id "power:GND")
 		(at 90.17 114.3 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -8374,7 +8308,7 @@
 		(lib_id "power:+3.3V")
 		(at 193.04 19.05 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -8553,7 +8487,7 @@
 		(lib_id "power:+3.3V")
 		(at 110.49 153.67 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -8618,7 +8552,7 @@
 		(lib_id "Device:C")
 		(at 44.45 27.94 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -8715,7 +8649,7 @@
 		(lib_id "power:VBUS")
 		(at 30.48 170.18 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -8849,7 +8783,7 @@
 		(at 59.69 50.8 270)
 		(mirror x)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -8945,7 +8879,7 @@
 		(lib_id "Device:Fuse")
 		(at 25.4 128.27 90)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -9217,7 +9151,7 @@
 		(at 97.79 135.89 0)
 		(mirror y)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -9313,7 +9247,7 @@
 		(lib_id "power:GND")
 		(at 121.92 35.56 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -9380,7 +9314,7 @@
 		(at 110.49 194.31 0)
 		(mirror y)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -9446,7 +9380,7 @@
 		(lib_id "Device:C")
 		(at 207.01 27.94 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -9544,7 +9478,7 @@
 		(at 40.64 45.72 0)
 		(mirror y)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -9641,7 +9575,7 @@
 		(at 172.72 48.26 0)
 		(mirror y)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -9737,7 +9671,7 @@
 		(lib_id "MCU_ST_STM32F0:STM32F042C6Tx")
 		(at 90.17 73.66 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -9969,92 +9903,10 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole")
-		(at 147.32 165.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "55f291a1-2800-47db-96ba-9afbbe99183a")
-		(property "Reference" "H1"
-			(at 149.86 163.8299 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "MountingHole"
-			(at 149.86 166.3699 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_ISO7380"
-			(at 147.32 165.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 147.32 165.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Mounting Hole without connection"
-			(at 147.32 165.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Library" ""
-			(at 147.32 165.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Name" ""
-			(at 147.32 165.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(instances
-			(project ""
-				(path "/6b4c382d-c3a6-4721-98dc-a03527f31640"
-					(reference "H1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C")
 		(at 167.64 86.36 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -10151,7 +10003,7 @@
 		(lib_id "Oscillator:SG-3030CM")
 		(at 201.93 135.89 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -10253,7 +10105,7 @@
 		(lib_id "power:VBUS")
 		(at 50.8 170.18 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -10319,7 +10171,7 @@
 		(lib_id "power:+3.3V")
 		(at 187.96 123.19 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -10385,7 +10237,7 @@
 		(at 50.8 187.96 0)
 		(mirror y)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -10451,7 +10303,7 @@
 		(lib_id "power:GND")
 		(at 194.31 96.52 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -10518,7 +10370,7 @@
 		(lib_id "power:GND")
 		(at 201.93 146.05 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -10585,7 +10437,7 @@
 		(at 162.56 80.01 90)
 		(mirror x)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -10681,7 +10533,7 @@
 		(lib_id "Device:C")
 		(at 111.76 27.94 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -10777,7 +10629,7 @@
 		(lib_id "power:VBUS")
 		(at 17.78 125.73 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -10841,16 +10693,16 @@
 	)
 	(symbol
 		(lib_id "Power_Protection:USBLC6-2SC6")
-		(at 50.8 180.34 0)
-		(mirror x)
+		(at 50.8 177.8 0)
+		(mirror y)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "73474254-2195-41a6-85e2-0b5c081a0184")
 		(property "Reference" "U1"
-			(at 47.244 173.228 0)
+			(at 55.118 172.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10859,7 +10711,7 @@
 			)
 		)
 		(property "Value" "USBLC6-2SC6"
-			(at 51.562 184.912 0)
+			(at 67.818 186.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10868,7 +10720,7 @@
 			)
 		)
 		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
-			(at 52.07 173.99 0)
+			(at 49.53 184.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10879,7 +10731,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.st.com/resource/en/datasheet/usblc6-2.pdf"
-			(at 52.07 172.085 0)
+			(at 49.53 186.055 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10889,7 +10741,7 @@
 			)
 		)
 		(property "Description" "Very low capacitance ESD protection diode, 2 data-line, SOT-23-6"
-			(at 50.8 180.34 0)
+			(at 50.8 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10898,7 +10750,7 @@
 			)
 		)
 		(property "JLCPCB Part Number" "C7519"
-			(at 50.8 180.34 0)
+			(at 50.8 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10907,7 +10759,7 @@
 			)
 		)
 		(property "Sim.Library" ""
-			(at 50.8 180.34 0)
+			(at 50.8 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10916,7 +10768,7 @@
 			)
 		)
 		(property "Sim.Name" ""
-			(at 50.8 180.34 0)
+			(at 50.8 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10955,7 +10807,7 @@
 		(lib_id "Device:C")
 		(at 121.92 27.94 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -11051,7 +10903,7 @@
 		(lib_id "Regulator_Linear:LD39015M33R")
 		(at 68.58 130.81 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -11156,7 +11008,7 @@
 		(lib_id "Connector:USB_B_Micro")
 		(at 20.32 177.8 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -11264,7 +11116,7 @@
 		(lib_id "Connector:Conn_ST_STDC14")
 		(at 110.49 173.99 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -11396,7 +11248,7 @@
 		(lib_id "Device:C")
 		(at 21.59 27.94 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -11494,7 +11346,7 @@
 		(at 118.11 53.34 90)
 		(mirror x)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -11590,7 +11442,7 @@
 		(lib_id "Device:C")
 		(at 80.01 135.89 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -11605,7 +11457,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10u"
+		(property "Value" "4.7u"
 			(at 83.82 137.1599 0)
 			(effects
 				(font
@@ -11614,7 +11466,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 80.9752 139.7 0)
 			(effects
 				(font
@@ -11641,7 +11493,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part Number" "C15850"
+		(property "JLCPCB Part Number" "C19666"
 			(at 80.01 135.89 0)
 			(effects
 				(font
@@ -11952,7 +11804,7 @@
 		(lib_id "Device:C")
 		(at 55.88 27.94 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -12049,7 +11901,7 @@
 		(lib_id "power:+3.3V")
 		(at 80.01 125.73 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -12114,7 +11966,7 @@
 		(lib_id "Device:C")
 		(at 67.31 36.83 180)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -12210,7 +12062,7 @@
 		(lib_id "Device:C")
 		(at 33.02 27.94 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -12304,92 +12156,10 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole")
-		(at 147.32 177.8 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "9f0d9c63-9847-4cec-b4aa-2a250dfb9814")
-		(property "Reference" "H3"
-			(at 149.86 176.5299 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "MountingHole"
-			(at 149.86 179.0699 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_ISO7380"
-			(at 147.32 177.8 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 147.32 177.8 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Mounting Hole without connection"
-			(at 147.32 177.8 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Library" ""
-			(at 147.32 177.8 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Name" ""
-			(at 147.32 177.8 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(instances
-			(project "radio-circuit"
-				(path "/6b4c382d-c3a6-4721-98dc-a03527f31640"
-					(reference "H3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:+3.3V")
 		(at 33.02 39.37 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -12452,9 +12222,75 @@
 	)
 	(symbol
 		(lib_id "power:GND")
+		(at 173.99 59.69 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "b90cf83b-755d-4ae5-9f41-844739f47720")
+		(property "Reference" "#PWR025"
+			(at 167.64 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 169.926 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 173.99 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 173.99 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 173.99 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "44a02056-84ca-4643-bc14-f589641048be")
+		)
+		(instances
+			(project "radio-circuit"
+				(path "/6b4c382d-c3a6-4721-98dc-a03527f31640"
+					(reference "#PWR025")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
 		(at 53.34 52.07 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -12521,7 +12357,7 @@
 		(lib_id "power:GND")
 		(at 68.58 144.78 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -12585,93 +12421,11 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole")
-		(at 147.32 184.15 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "bde37e3a-885b-4707-9c9f-d86e7d0eac95")
-		(property "Reference" "H4"
-			(at 149.86 182.8799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "MountingHole"
-			(at 149.86 185.4199 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_ISO7380"
-			(at 147.32 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 147.32 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Mounting Hole without connection"
-			(at 147.32 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Library" ""
-			(at 147.32 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Name" ""
-			(at 147.32 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(instances
-			(project "radio-circuit"
-				(path "/6b4c382d-c3a6-4721-98dc-a03527f31640"
-					(reference "H4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 20.32 190.5 0)
 		(mirror y)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -12737,7 +12491,7 @@
 		(lib_id "power:GND")
 		(at 218.44 34.29 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -12804,7 +12558,7 @@
 		(lib_id "power:GND")
 		(at 21.59 36.83 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -12871,7 +12625,7 @@
 		(lib_id "Device:C")
 		(at 218.44 27.94 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -12967,7 +12721,7 @@
 		(lib_id "Device:C")
 		(at 187.96 135.89 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -13063,7 +12817,7 @@
 		(lib_id "power:+3.3V")
 		(at 85.09 19.05 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -13128,7 +12882,7 @@
 		(lib_id "Device:C")
 		(at 67.31 27.94 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -13225,7 +12979,7 @@
 		(lib_id "Device:C")
 		(at 57.15 135.89 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -13239,7 +12993,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10u"
+		(property "Value" "4.7u"
 			(at 50.8 137.16 0)
 			(effects
 				(font
@@ -13248,7 +13002,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 58.1152 139.7 0)
 			(effects
 				(font
@@ -13275,7 +13029,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part Number" "C15850"
+		(property "JLCPCB Part Number" "C19666"
 			(at 57.15 135.89 0)
 			(effects
 				(font
@@ -13322,7 +13076,7 @@
 		(at 118.11 50.8 90)
 		(mirror x)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -13418,7 +13172,7 @@
 		(lib_id "power:GND")
 		(at 167.64 92.71 0)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
@@ -13482,92 +13236,10 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole")
-		(at 147.32 171.45 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "f7b9df8b-7295-4843-aa45-301c2df1e67f")
-		(property "Reference" "H2"
-			(at 149.86 170.1799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "MountingHole"
-			(at 149.86 172.7199 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_ISO7380"
-			(at 147.32 171.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 147.32 171.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Mounting Hole without connection"
-			(at 147.32 171.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Library" ""
-			(at 147.32 171.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Name" ""
-			(at 147.32 171.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(instances
-			(project "radio-circuit"
-				(path "/6b4c382d-c3a6-4721-98dc-a03527f31640"
-					(reference "H2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:LED")
 		(at 87.63 128.27 180)
 		(unit 1)
-		(exclude_from_sim yes)
+		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
