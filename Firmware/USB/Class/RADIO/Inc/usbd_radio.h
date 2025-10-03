@@ -63,7 +63,7 @@ extern "C" {
 
 #define AUDIO_BYTES_PER_FRAME                         CEIL_DIV(AUDIO_BYTES_PER_SECOND, 1000U)
 
-#define ALIGNED_BYTES_PER_FRAME						  (CEIL_DIV(AUDIO_BYTES_PER_FRAME, 4U) * 4U)
+#define ALIGNED_BYTES_PER_FRAME                       (CEIL_DIV(AUDIO_BYTES_PER_FRAME, 4U) * 4U)
 
 /*
  * Number of sub-packets (frames) in the DMA transfer buffer

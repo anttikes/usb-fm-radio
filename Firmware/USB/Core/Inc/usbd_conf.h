@@ -41,8 +41,8 @@ extern "C" {
 #define DEVICE_FS                                   0
 
 /* RADIO Class Config */
-#define USBD_AUDIO_FREQ                             I2S_AUDIOFREQ_44K		// Linked to the current I2S frequency selection
-#define AUDIO_REAL_FREQ								44117U					// This comes from the IOC visualizer
+#define USBD_AUDIO_FREQ                             I2S_AUDIOFREQ_48K		// Linked to the current I2S frequency selection
+#define AUDIO_REAL_FREQ								I2S_AUDIOFREQ_48K		// This comes from the IOC visualizer
 #define AUDIO_BITDEPTH								16U
 #define AUDIO_CHANNELS								2U
 #define CUSTOM_HID_HS_BINTERVAL                     0x05U
