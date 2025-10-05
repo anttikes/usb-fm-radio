@@ -159,17 +159,17 @@ int main(void)
 	// Instruct the DMA to start transferring samples to the audio buffer
 	// This also enables DCLK and DFS which the radio chip needs in order
 	// to enable its digital audio output
-	USBD_RADIO_HandleTypeDef *haudio;
+	USBD_RADIO_HandleTypeDef *hradio;
 
-	haudio = (USBD_RADIO_HandleTypeDef*) hUsbDeviceFS.pClassDataCmsit[hUsbDeviceFS.classId];
+	hradio = (USBD_RADIO_HandleTypeDef*) hUsbDeviceFS.pClassDataCmsit[hUsbDeviceFS.classId];
 
-	if (haudio == NULL) {
+	if (hradio == NULL) {
 		return (USBD_FAIL);
 	}
 
 	// The DMA buffer is large enough to hold four USB 2.0 frames worth of data (4 ms)
 	// The value provided here is the total number of one-channel samples that can fit into the buffer
-	if (HAL_I2S_Receive_DMA(&hi2s1, &haudio->halfWordBuffer[0], DMA_TOTAL_BUF_SIZE / 2U) != HAL_OK) {
+	if (HAL_I2S_Receive_DMA(&hi2s1, &hradio->halfWordBuffer[0], DMA_TOTAL_BUF_SIZE / 2U) != HAL_OK) {
 		Error_Handler();
 	}
 
@@ -187,7 +187,6 @@ int main(void)
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
-
 	}
 
   /* USER CODE END 3 */
