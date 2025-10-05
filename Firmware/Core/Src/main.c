@@ -113,8 +113,8 @@ int main(void)
 	/* USER CODE BEGIN 2 */
 
 	// Bring Si4705 out of reset, and enable the oscillator
-	LL_GPIO_SetOutputPin(RADIO_NRST_GPIO_Port, RADIO_NRST_Pin);
-	LL_GPIO_SetOutputPin(RCLK_EN_GPIO_Port, RCLK_EN_Pin);
+    HAL_GPIO_WritePin(RADIO_NRST_GPIO_Port, RADIO_NRST_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(RCLK_EN_GPIO_Port, RCLK_EN_Pin, GPIO_PIN_SET);
 
 	// The oscillator has a max startup time of one second
 	// The radio chip also has a startup time but it is much faster than the crystal
@@ -189,7 +189,7 @@ int main(void)
 		/* USER CODE BEGIN 3 */
 	}
 
-  /* USER CODE END 3 */
+	/* USER CODE END 3 */
 }
 
 /**
@@ -198,51 +198,57 @@ int main(void)
   */
 void SystemClock_Config(void)
 {
-	LL_FLASH_SetLatency(LL_FLASH_LATENCY_1);
+	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+	RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+	RCC_CRSInitTypeDef RCC_CRSInitStruct = {0};
 
-	while(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_1)
-	{
-	}
+	/* Initializes the RCC Oscillators */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48;
+	RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI48;
+	RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL4;
+	RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV5;
 
-	LL_RCC_HSI48_Enable();
-
-	/* Wait till HSI48 is ready */
-	while(LL_RCC_HSI48_IsReady() != 1)
-	{
-	}
-
-	LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI48, LL_RCC_PLL_MUL_4, LL_RCC_PREDIV_DIV_5);
-	LL_RCC_PLL_Enable();
-
-	/* Wait till PLL is ready */
-	while(LL_RCC_PLL_IsReady() != 1)
-	{
-	}
-
-	LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-	LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-	LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
-
-	/* Wait till System clock is ready */
-	while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL)
-	{
-	}
-
-	LL_SetSystemCoreClock(38400000);
-
-	/* Update the time base */
-	if (HAL_InitTick (TICK_INT_PRIORITY) != HAL_OK)
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
 	{
 		Error_Handler();
 	}
 
-	LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_SYSCLK);
-	LL_RCC_SetUSBClockSource(LL_RCC_USB_CLKSOURCE_HSI48);
-	LL_CRS_SetSyncDivider(LL_CRS_SYNC_DIV_1);
-	LL_CRS_SetSyncPolarity(LL_CRS_SYNC_POLARITY_RISING);
-	LL_CRS_SetSyncSignalSource(LL_CRS_SYNC_SOURCE_USB);
-	LL_CRS_SetFreqErrorLimit(34);
-	LL_CRS_SetHSI48SmoothTrimming(32);
+	/* Initializes the CPU, AHB and APB buses clocks */
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+							  |RCC_CLOCKTYPE_PCLK1;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB|RCC_PERIPHCLK_I2C1;
+	PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_SYSCLK;
+	PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
+
+	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	/* Enable the SYSCFG APB clock */
+	__HAL_RCC_CRS_CLK_ENABLE();
+
+	/* Configure CRS */
+	RCC_CRSInitStruct.Prescaler = RCC_CRS_SYNC_DIV1;
+	RCC_CRSInitStruct.Source = RCC_CRS_SYNC_SOURCE_USB;
+	RCC_CRSInitStruct.Polarity = RCC_CRS_SYNC_POLARITY_RISING;
+	RCC_CRSInitStruct.ReloadValue = __HAL_RCC_CRS_RELOADVALUE_CALCULATE(48000000,1000);
+	RCC_CRSInitStruct.ErrorLimitValue = 34;
+	RCC_CRSInitStruct.HSI48CalibrationValue = 32;
+
+	HAL_RCCEx_CRSConfig(&RCC_CRSInitStruct);
 }
 
 /* USER CODE BEGIN 4 */
