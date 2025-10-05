@@ -29,6 +29,17 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_hal.h"
 
+#include "stm32f0xx_ll_dma.h"
+#include "stm32f0xx_ll_crs.h"
+#include "stm32f0xx_ll_rcc.h"
+#include "stm32f0xx_ll_bus.h"
+#include "stm32f0xx_ll_system.h"
+#include "stm32f0xx_ll_exti.h"
+#include "stm32f0xx_ll_cortex.h"
+#include "stm32f0xx_ll_utils.h"
+#include "stm32f0xx_ll_pwr.h"
+#include "stm32f0xx_ll_gpio.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -57,12 +68,12 @@ void SystemClock_Config(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define RADIO_NIRQ_Pin GPIO_PIN_13
+#define RADIO_NIRQ_Pin LL_GPIO_PIN_13
 #define RADIO_NIRQ_GPIO_Port GPIOC
 #define RADIO_NIRQ_EXTI_IRQn EXTI4_15_IRQn
-#define RADIO_NRST_Pin GPIO_PIN_14
+#define RADIO_NRST_Pin LL_GPIO_PIN_14
 #define RADIO_NRST_GPIO_Port GPIOC
-#define RCLK_EN_Pin GPIO_PIN_15
+#define RCLK_EN_Pin LL_GPIO_PIN_15
 #define RCLK_EN_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */

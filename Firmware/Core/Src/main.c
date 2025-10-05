@@ -113,8 +113,8 @@ int main(void)
 	/* USER CODE BEGIN 2 */
 
 	// Bring Si4705 out of reset, and enable the oscillator
-	HAL_GPIO_WritePin(RADIO_NRST_GPIO_Port, RADIO_NRST_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(RCLK_EN_GPIO_Port, RCLK_EN_Pin, GPIO_PIN_SET);
+	LL_GPIO_SetOutputPin(RADIO_NRST_GPIO_Port, RADIO_NRST_Pin);
+	LL_GPIO_SetOutputPin(RCLK_EN_GPIO_Port, RCLK_EN_Pin);
 
 	// The oscillator has a max startup time of one second
 	// The radio chip also has a startup time but it is much faster than the crystal
@@ -187,9 +187,10 @@ int main(void)
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
+
 	}
 
-	/* USER CODE END 3 */
+  /* USER CODE END 3 */
 }
 
 /**
@@ -198,60 +199,51 @@ int main(void)
   */
 void SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
-  RCC_CRSInitTypeDef RCC_CRSInitStruct = {0};
+	LL_FLASH_SetLatency(LL_FLASH_LATENCY_1);
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48;
-  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI48;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL4;
-  RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV5;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	while(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_1)
+	{
+	}
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+	LL_RCC_HSI48_Enable();
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB|RCC_PERIPHCLK_I2C1;
-  PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_SYSCLK;
-  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
+	/* Wait till HSI48 is ready */
+	while(LL_RCC_HSI48_IsReady() != 1)
+	{
+	}
 
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI48, LL_RCC_PLL_MUL_4, LL_RCC_PREDIV_DIV_5);
+	LL_RCC_PLL_Enable();
 
-  /** Enable the SYSCFG APB clock
-  */
-  __HAL_RCC_CRS_CLK_ENABLE();
+	/* Wait till PLL is ready */
+	while(LL_RCC_PLL_IsReady() != 1)
+	{
+	}
 
-  /** Configures CRS
-  */
-  RCC_CRSInitStruct.Prescaler = RCC_CRS_SYNC_DIV1;
-  RCC_CRSInitStruct.Source = RCC_CRS_SYNC_SOURCE_USB;
-  RCC_CRSInitStruct.Polarity = RCC_CRS_SYNC_POLARITY_RISING;
-  RCC_CRSInitStruct.ReloadValue = __HAL_RCC_CRS_RELOADVALUE_CALCULATE(48000000,1000);
-  RCC_CRSInitStruct.ErrorLimitValue = 34;
-  RCC_CRSInitStruct.HSI48CalibrationValue = 32;
+	LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+	LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+	LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
 
-  HAL_RCCEx_CRSConfig(&RCC_CRSInitStruct);
+	/* Wait till System clock is ready */
+	while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL)
+	{
+	}
+
+	LL_SetSystemCoreClock(38400000);
+
+	/* Update the time base */
+	if (HAL_InitTick (TICK_INT_PRIORITY) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_SYSCLK);
+	LL_RCC_SetUSBClockSource(LL_RCC_USB_CLKSOURCE_HSI48);
+	LL_CRS_SetSyncDivider(LL_CRS_SYNC_DIV_1);
+	LL_CRS_SetSyncPolarity(LL_CRS_SYNC_POLARITY_RISING);
+	LL_CRS_SetSyncSignalSource(LL_CRS_SYNC_SOURCE_USB);
+	LL_CRS_SetFreqErrorLimit(34);
+	LL_CRS_SetHSI48SmoothTrimming(32);
 }
 
 /* USER CODE BEGIN 4 */
@@ -334,13 +326,13 @@ void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s)
   */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
+	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1)
 	{
 	}
-  /* USER CODE END Error_Handler_Debug */
+	/* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -358,7 +350,7 @@ void assert_failed(uint8_t *file, uint32_t line)
 	UNUSED(line);
 
 	/* User can add his own implementation to report the file name and line number,
-	 ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+	   ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
