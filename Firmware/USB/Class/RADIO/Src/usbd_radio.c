@@ -93,7 +93,7 @@ USBD_ClassTypeDef USBD_RADIO = {
 };
 
 // @formatter:off
-__ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[] __ALIGN_END = {
+__ALIGN_BEGIN static uint8_t USBD_RADIO_CfgDesc[] __ALIGN_END = {
 	/* USB 2.0 Standard Configuration descriptor */
 	USB_CONF_DESC_SIZE, 					/* bLength */
 	USB_DESC_TYPE_CONFIGURATION, 			/* bDescriptorType */
@@ -255,27 +255,27 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[] __ALIGN_END = {
 static uint8_t USBD_RADIO_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 {
 	UNUSED(cfgidx);
-	USBD_RADIO_HandleTypeDef *haudio;
+	USBD_RADIO_HandleTypeDef *hradio;
 
-	/* Allocate the audio structure, including the buffer */
-	haudio = (USBD_RADIO_HandleTypeDef*) USBD_malloc(sizeof(USBD_RADIO_HandleTypeDef));
+	/* Allocate the radio structure, including the buffer */
+	hradio = (USBD_RADIO_HandleTypeDef*) USBD_malloc(sizeof(USBD_RADIO_HandleTypeDef));
 
-	if (haudio == NULL) {
+	if (hradio == NULL) {
 		pdev->pClassDataCmsit[pdev->classId] = NULL;
 		return (uint8_t) USBD_EMEM;
 	}
 
-	memset(haudio->byteBuffer, 0, DMA_TOTAL_BUF_SIZE);
+	memset(hradio->byteBuffer, 0, DMA_TOTAL_BUF_SIZE);
 
-	pdev->pClassDataCmsit[pdev->classId] = (void*) haudio;
+	pdev->pClassDataCmsit[pdev->classId] = (void*) hradio;
 	pdev->pClassData = pdev->pClassDataCmsit[pdev->classId];
 
 	/* Initialize control structure */
-	haudio->control.cmd = AUDIO_CS_NONE;
-	(void) USBD_memset(haudio->control.data, 0, USB_MAX_EP0_SIZE);
-	haudio->control.len = 0U;
-	haudio->control.ifOrEp = 0U;
-	haudio->control.unitId = 0U;
+	hradio->control.cmd = AUDIO_CS_NONE;
+	(void) USBD_memset(hradio->control.data, 0, USB_MAX_EP0_SIZE);
+	hradio->control.len = 0U;
+	hradio->control.ifOrEp = 0U;
+	hradio->control.unitId = 0U;
 
 	if (pdev->dev_speed == USBD_SPEED_HIGH) {
 		pdev->ep_in[AUDIO_IN_EP & EP_ADDR_MSK].bInterval = AUDIO_HS_BINTERVAL;
@@ -289,11 +289,11 @@ static uint8_t USBD_RADIO_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 
 	pdev->ep_in[AUDIO_IN_EP & EP_ADDR_MSK].is_used = 1U;
 
-	haudio->alt_setting = 0U;
+	hradio->alt_setting = 0U;
 
-	haudio->mute = 0U;
-	haudio->volume = 0x31U;
-	haudio->samplingFrequency = 0U;
+	hradio->mute = 0U;
+	hradio->volume = 0x31U;
+	hradio->samplingFrequency = 0U;
 
 	/* Initialize the Audio Hardware layer */
 	if (((USBD_RADIO_ItfTypeDef*) pdev->pUserData[pdev->classId])->Init(USBD_AUDIO_FREQ, AUDIO_DEFAULT_VOLUME, 0U) != USBD_OK) {
@@ -342,15 +342,15 @@ static uint8_t USBD_RADIO_DeInit(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
  */
 static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req)
 {
-	USBD_RADIO_HandleTypeDef *haudio;
+	USBD_RADIO_HandleTypeDef *hradio;
 	uint16_t len;
 	uint8_t *pbuf;
 	uint16_t status_info = 0U;
 	USBD_StatusTypeDef ret = USBD_OK;
 
-	haudio = (USBD_RADIO_HandleTypeDef*) pdev->pClassDataCmsit[pdev->classId];
+	hradio = (USBD_RADIO_HandleTypeDef*) pdev->pClassDataCmsit[pdev->classId];
 
-	if (haudio == NULL) {
+	if (hradio == NULL) {
 		return (uint8_t) USBD_FAIL;
 	}
 
@@ -374,20 +374,20 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 								}
 
 								/* If a reception is already in progress, stall */
-								if (haudio->control.cmd != AUDIO_CS_NONE) {
+								if (hradio->control.cmd != AUDIO_CS_NONE) {
 									USBD_CtlError(pdev, req);
 									ret = USBD_FAIL;
 									break;
 								}
 
-								haudio->control.cmd = HIBYTE(req->wValue);
-								haudio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
-								haudio->control.unitId = 0U;
-								haudio->control.ifOrEp = 0U;
+								hradio->control.cmd = HIBYTE(req->wValue);
+								hradio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
+								hradio->control.unitId = 0U;
+								hradio->control.ifOrEp = 0U;
 
-								haudio->control.data[0] = haudio->mute;
+								hradio->control.data[0] = hradio->mute;
 
-								(void) USBD_CtlSendData(pdev, &haudio->control.data[0], haudio->control.len);
+								(void) USBD_CtlSendData(pdev, &hradio->control.data[0], hradio->control.len);
 
 								break;
 
@@ -400,23 +400,23 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 								}
 
 								/* If a reception is already in progress, stall */
-								if (haudio->control.cmd != AUDIO_CS_NONE) {
+								if (hradio->control.cmd != AUDIO_CS_NONE) {
 									USBD_CtlError(pdev, req);
 									ret = USBD_FAIL;
 									break;
 								}
 
-								haudio->control.cmd = HIBYTE(req->wValue);
-								haudio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
-								haudio->control.unitId = 0U;
-								haudio->control.ifOrEp = 0U;
+								hradio->control.cmd = HIBYTE(req->wValue);
+								hradio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
+								hradio->control.unitId = 0U;
+								hradio->control.ifOrEp = 0U;
 
-								int16_t usbVolume = map_chip_to_usb_volume(haudio->volume);
+								int16_t usbVolume = map_chip_to_usb_volume(hradio->volume);
 
-								haudio->control.data[0] = LOBYTE(usbVolume);
-								haudio->control.data[1] = HIBYTE(usbVolume);
+								hradio->control.data[0] = LOBYTE(usbVolume);
+								hradio->control.data[1] = HIBYTE(usbVolume);
 
-								(void) USBD_CtlSendData(pdev, &haudio->control.data[0], haudio->control.len);
+								(void) USBD_CtlSendData(pdev, &hradio->control.data[0], hradio->control.len);
 
 								break;
 
@@ -439,23 +439,23 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 								}
 
 								/* If a reception is already in progress, stall */
-								if (haudio->control.cmd != AUDIO_CS_NONE) {
+								if (hradio->control.cmd != AUDIO_CS_NONE) {
 									USBD_CtlError(pdev, req);
 									ret = USBD_FAIL;
 									break;
 								}
 
-								haudio->control.cmd = HIBYTE(req->wValue);
-								haudio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
-								haudio->control.unitId = 0U;
-								haudio->control.ifOrEp = 0U;
+								hradio->control.cmd = HIBYTE(req->wValue);
+								hradio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
+								hradio->control.unitId = 0U;
+								hradio->control.ifOrEp = 0U;
 
 								int16_t usbVolume = map_chip_to_usb_volume(SI4705_VOLUME_MIN_SETTING);
 
-								haudio->control.data[0] = LOBYTE(usbVolume);
-								haudio->control.data[1] = HIBYTE(usbVolume);
+								hradio->control.data[0] = LOBYTE(usbVolume);
+								hradio->control.data[1] = HIBYTE(usbVolume);
 
-								(void) USBD_CtlSendData(pdev, &haudio->control.data[0], haudio->control.len);
+								(void) USBD_CtlSendData(pdev, &hradio->control.data[0], hradio->control.len);
 
 								break;
 
@@ -479,23 +479,23 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 								}
 
 								/* If a reception is already in progress, stall */
-								if (haudio->control.cmd != AUDIO_CS_NONE) {
+								if (hradio->control.cmd != AUDIO_CS_NONE) {
 									USBD_CtlError(pdev, req);
 									ret = USBD_FAIL;
 									break;
 								}
 
-								haudio->control.cmd = HIBYTE(req->wValue);
-								haudio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
-								haudio->control.unitId = 0U;
-								haudio->control.ifOrEp = 0U;
+								hradio->control.cmd = HIBYTE(req->wValue);
+								hradio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
+								hradio->control.unitId = 0U;
+								hradio->control.ifOrEp = 0U;
 
 								int16_t usbVolume = map_chip_to_usb_volume(SI4705_VOLUME_MAX_SETTING);
 
-								haudio->control.data[0] = LOBYTE(usbVolume);
-								haudio->control.data[1] = HIBYTE(usbVolume);
+								hradio->control.data[0] = LOBYTE(usbVolume);
+								hradio->control.data[1] = HIBYTE(usbVolume);
 
-								(void) USBD_CtlSendData(pdev, &haudio->control.data[0], haudio->control.len);
+								(void) USBD_CtlSendData(pdev, &hradio->control.data[0], hradio->control.len);
 
 								break;
 
@@ -519,21 +519,21 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 								}
 
 								/* If a reception is already in progress, stall */
-								if (haudio->control.cmd != AUDIO_CS_NONE) {
+								if (hradio->control.cmd != AUDIO_CS_NONE) {
 									USBD_CtlError(pdev, req);
 									ret = USBD_FAIL;
 									break;
 								}
 
-								haudio->control.cmd = HIBYTE(req->wValue);
-								haudio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
-								haudio->control.unitId = 0U;
-								haudio->control.ifOrEp = 0U;
+								hradio->control.cmd = HIBYTE(req->wValue);
+								hradio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
+								hradio->control.unitId = 0U;
+								hradio->control.ifOrEp = 0U;
 
-								haudio->control.data[0] = LOBYTE(0x0100);
-								haudio->control.data[1] = HIBYTE(0x0100);
+								hradio->control.data[0] = LOBYTE(0x0100);
+								hradio->control.data[1] = HIBYTE(0x0100);
 
-								(void) USBD_CtlSendData(pdev, &haudio->control.data[0], haudio->control.len);
+								(void) USBD_CtlSendData(pdev, &hradio->control.data[0], hradio->control.len);
 
 								break;
 
@@ -546,19 +546,19 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 
 					case AUDIO_REQ_SET_CUR:
 						/* If a reception is already in progress, stall */
-						if (haudio->control.cmd != AUDIO_CS_NONE) {
+						if (hradio->control.cmd != AUDIO_CS_NONE) {
 							USBD_CtlError(pdev, req);
 							ret = USBD_FAIL;
 							break;
 						}
 
-						haudio->control.cmd = HIBYTE(req->wValue);
-						haudio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
-						haudio->control.unitId = HIBYTE(req->wIndex);
-						haudio->control.ifOrEp = LOBYTE(req->wIndex);
+						hradio->control.cmd = HIBYTE(req->wValue);
+						hradio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
+						hradio->control.unitId = HIBYTE(req->wIndex);
+						hradio->control.ifOrEp = LOBYTE(req->wIndex);
 
 						/* Receive data; the rest is processed in USBD_RADIO_EP0_RxReady */
-						(void) USBD_CtlPrepareRx(pdev, &haudio->control.data[0], haudio->control.len);
+						(void) USBD_CtlPrepareRx(pdev, &hradio->control.data[0], hradio->control.len);
 
 						break;
 
@@ -584,22 +584,22 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 								}
 
 								/* If a reception is already in progress, stall */
-								if (haudio->control.cmd != AUDIO_CS_NONE) {
+								if (hradio->control.cmd != AUDIO_CS_NONE) {
 									USBD_CtlError(pdev, req);
 									ret = USBD_FAIL;
 									break;
 								}
 
-								haudio->control.cmd = HIBYTE(req->wValue);
-								haudio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
-								haudio->control.unitId = HIBYTE(req->wIndex);
-								haudio->control.ifOrEp = LOBYTE(req->wIndex);
+								hradio->control.cmd = HIBYTE(req->wValue);
+								hradio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
+								hradio->control.unitId = HIBYTE(req->wIndex);
+								hradio->control.ifOrEp = LOBYTE(req->wIndex);
 
-								haudio->control.data[0] = LOWORD_LOBYTE(haudio->samplingFrequency);
-								haudio->control.data[1] = LOWORD_HIBYTE(haudio->samplingFrequency);
-								haudio->control.data[2] = HIWORD_LOBYTE(haudio->samplingFrequency);
+								hradio->control.data[0] = LOWORD_LOBYTE(hradio->samplingFrequency);
+								hradio->control.data[1] = LOWORD_HIBYTE(hradio->samplingFrequency);
+								hradio->control.data[2] = HIWORD_LOBYTE(hradio->samplingFrequency);
 
-								(void) USBD_CtlSendData(pdev, &haudio->control.data[0], haudio->control.len);
+								(void) USBD_CtlSendData(pdev, &hradio->control.data[0], hradio->control.len);
 
 								break;
 							}
@@ -620,19 +620,19 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 						}
 
 						/* If a reception is already in progress, stall */
-						if (haudio->control.cmd != AUDIO_CS_NONE) {
+						if (hradio->control.cmd != AUDIO_CS_NONE) {
 							USBD_CtlError(pdev, req);
 							ret = USBD_FAIL;
 							break;
 						}
 
-						haudio->control.cmd = HIBYTE(req->wValue);
-						haudio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
-						haudio->control.unitId = HIBYTE(req->wIndex);
-						haudio->control.ifOrEp = LOBYTE(req->wIndex);
+						hradio->control.cmd = HIBYTE(req->wValue);
+						hradio->control.len = MIN(req->wLength, USB_MAX_EP0_SIZE);
+						hradio->control.unitId = HIBYTE(req->wIndex);
+						hradio->control.ifOrEp = LOBYTE(req->wIndex);
 
 						/* Receive data; the rest is processed in USBD_RADIO_EP0_RxReady */
-						(void) USBD_CtlPrepareRx(pdev, &haudio->control.data[0], haudio->control.len);
+						(void) USBD_CtlPrepareRx(pdev, &hradio->control.data[0], hradio->control.len);
 
 						break;
 
@@ -678,7 +678,7 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 
 			case USB_REQ_GET_INTERFACE:
 				if (pdev->dev_state == USBD_STATE_CONFIGURED) {
-					(void) USBD_CtlSendData(pdev, (uint8_t*) &haudio->alt_setting, 1U);
+					(void) USBD_CtlSendData(pdev, (uint8_t*) &hradio->alt_setting, 1U);
 				} else {
 					USBD_CtlError(pdev, req);
 					ret = USBD_FAIL;
@@ -688,7 +688,7 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 			case USB_REQ_SET_INTERFACE:
 				if (pdev->dev_state == USBD_STATE_CONFIGURED) {
 					if ((uint8_t) (req->wIndex) <= USBD_MAX_NUM_INTERFACES) {
-						haudio->alt_setting = (uint8_t) (req->wValue);
+						hradio->alt_setting = (uint8_t) (req->wValue);
 					} else {
 						/* Call the error management function (command will be NAKed */
 						USBD_CtlError(pdev, req);
@@ -728,9 +728,9 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
  */
 static uint8_t* USBD_RADIO_GetCfgDesc(uint16_t *length)
 {
-	*length = (uint16_t) sizeof(USBD_AUDIO_CfgDesc);
+	*length = (uint16_t) sizeof(USBD_RADIO_CfgDesc);
 
-	return USBD_AUDIO_CfgDesc;
+	return USBD_RADIO_CfgDesc;
 }
 #endif /* USE_USBD_COMPOSITE  */
 
@@ -774,25 +774,25 @@ static uint8_t USBD_RADIO_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
  */
 static uint8_t USBD_RADIO_EP0_RxReady(USBD_HandleTypeDef *pdev)
 {
-	USBD_RADIO_HandleTypeDef *haudio;
-	haudio = (USBD_RADIO_HandleTypeDef*) pdev->pClassDataCmsit[pdev->classId];
+	USBD_RADIO_HandleTypeDef *hradio;
+	hradio = (USBD_RADIO_HandleTypeDef*) pdev->pClassDataCmsit[pdev->classId];
 
-	if (haudio == NULL) {
+	if (hradio == NULL) {
 		return (uint8_t) USBD_FAIL;
 	}
 
-	if (haudio->control.unitId == AUDIO_FEATURE_UNIT_ID)
+	if (hradio->control.unitId == AUDIO_FEATURE_UNIT_ID)
 	{
 		// Mute or volume
-		switch(haudio->control.cmd)
+		switch(hradio->control.cmd)
 		{
 			case AUDIO_CS_MUTE:
-				haudio->mute = haudio->control.data[0];
+				hradio->mute = hradio->control.data[0];
 				break;
 
 			case AUDIO_CS_VOLUME: {
-				int16_t newSetting = ((int16_t)haudio->control.data[0]) | (((int16_t)haudio->control.data[1]) << 8);
-				haudio->volume = map_usb_to_chip_volume(newSetting);
+				int16_t newSetting = ((int16_t)hradio->control.data[0]) | (((int16_t)hradio->control.data[1]) << 8);
+				hradio->volume = map_usb_to_chip_volume(newSetting);
 				break;
 			}
 
@@ -803,10 +803,10 @@ static uint8_t USBD_RADIO_EP0_RxReady(USBD_HandleTypeDef *pdev)
 	else
 	{
 		// Sampling frequency (or pitch, if it was supported)
-		switch(haudio->control.cmd)
+		switch(hradio->control.cmd)
 		{
 			case AUDIO_CS_SAMPLING_FREQ:
-				haudio->samplingFrequency = ((uint32_t)haudio->control.data[0]) | (((uint32_t)haudio->control.data[1]) << 8) | (((uint32_t)haudio->control.data[2]) << 16);
+				hradio->samplingFrequency = ((uint32_t)hradio->control.data[0]) | (((uint32_t)hradio->control.data[1]) << 8) | (((uint32_t)hradio->control.data[2]) << 16);
 				break;
 
 			default:
@@ -815,11 +815,11 @@ static uint8_t USBD_RADIO_EP0_RxReady(USBD_HandleTypeDef *pdev)
 	}
 
 	/* Handling of the response is complete; ready the cache for next operation */
-	haudio->control.cmd = AUDIO_CS_NONE;
-	(void) USBD_memset(haudio->control.data, 0, USB_MAX_EP0_SIZE);
-	haudio->control.len = 0U;
-	haudio->control.ifOrEp = 0U;
-	haudio->control.unitId = 0U;
+	hradio->control.cmd = AUDIO_CS_NONE;
+	(void) USBD_memset(hradio->control.data, 0, USB_MAX_EP0_SIZE);
+	hradio->control.len = 0U;
+	hradio->control.ifOrEp = 0U;
+	hradio->control.unitId = 0U;
 
 	return (uint8_t) USBD_OK;
 }
@@ -832,19 +832,19 @@ static uint8_t USBD_RADIO_EP0_RxReady(USBD_HandleTypeDef *pdev)
  */
 static uint8_t USBD_RADIO_EP0_TxReady(USBD_HandleTypeDef *pdev)
 {
-	USBD_RADIO_HandleTypeDef *haudio;
-	haudio = (USBD_RADIO_HandleTypeDef*) pdev->pClassDataCmsit[pdev->classId];
+	USBD_RADIO_HandleTypeDef *hradio;
+	hradio = (USBD_RADIO_HandleTypeDef*) pdev->pClassDataCmsit[pdev->classId];
 
-	if (haudio == NULL) {
+	if (hradio == NULL) {
 		return (uint8_t) USBD_FAIL;
 	}
 
 	/* Sending of the response is complete; ready the cache for next operation */
-	haudio->control.cmd = AUDIO_CS_NONE;
-	(void) USBD_memset(haudio->control.data, 0, USB_MAX_EP0_SIZE);
-	haudio->control.len = 0U;
-	haudio->control.ifOrEp = 0U;
-	haudio->control.unitId = 0U;
+	hradio->control.cmd = AUDIO_CS_NONE;
+	(void) USBD_memset(hradio->control.data, 0, USB_MAX_EP0_SIZE);
+	hradio->control.len = 0U;
+	hradio->control.ifOrEp = 0U;
+	hradio->control.unitId = 0U;
 
 	return (uint8_t) USBD_OK;
 }
@@ -872,19 +872,19 @@ static uint8_t USBD_RADIO_SOF(USBD_HandleTypeDef *pdev)
  */
 void USBD_RADIO_Sync(USBD_HandleTypeDef *pdev, AUDIO_OffsetTypeDef offset)
 {
-	USBD_RADIO_HandleTypeDef *haudio;
-	haudio = (USBD_RADIO_HandleTypeDef*) pdev->pClassDataCmsit[pdev->classId];
+	USBD_RADIO_HandleTypeDef *hradio;
+	hradio = (USBD_RADIO_HandleTypeDef*) pdev->pClassDataCmsit[pdev->classId];
 
-	if (haudio == NULL) {
+	if (hradio == NULL) {
 		return;
 	}
 
 	uint8_t* pdata = NULL;
 
 	if (offset == AUDIO_OFFSET_HALF) {
-		pdata = &haudio->byteBuffer[0];  // First half is ready
+		pdata = &hradio->byteBuffer[0];  // First half is ready
 	} else if (offset == AUDIO_OFFSET_FULL) {
-		pdata = &haudio->byteBuffer[DMA_TOTAL_BUF_SIZE / 2];  // Second half is ready
+		pdata = &hradio->byteBuffer[DMA_TOTAL_BUF_SIZE / 2];  // Second half is ready
 	}
 
 	// Send it
