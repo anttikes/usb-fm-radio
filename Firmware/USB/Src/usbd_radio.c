@@ -52,9 +52,6 @@
 #include "si4705.h"
 
 /* Private defines -----------------------------------------------------------*/
-#ifdef USE_USBD_COMPOSITE
-#define AUDIO_PACKET_SIZE_WORD(frq)     (uint32_t)((((frq) * 2U * 2U)/1000U))
-#endif /* USE_USBD_COMPOSITE  */
 
 /* Private function prototypes------------------------------------------------*/
 static uint8_t USBD_RADIO_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx);
@@ -214,9 +211,9 @@ __ALIGN_BEGIN static uint8_t USBD_RADIO_CfgDesc[] __ALIGN_END = {
 	(AUDIO_BITDEPTH/8U), 					/* bSubFrameSize (from bitdepth to bytes) */
 	AUDIO_BITDEPTH, 						/* bBitResolution */
 	0x01, 									/* bSamFreqType (Only one discrete frequency supported) */
-	LOWORD_LOBYTE(USBD_AUDIO_FREQ),			/* tSamFreq (Frequency expressed with 3 bytes) */
-	LOWORD_HIBYTE(USBD_AUDIO_FREQ),
-	HIWORD_LOBYTE(USBD_AUDIO_FREQ),
+	LOBYTE(USBD_AUDIO_FREQ),				/* tSamFreq (Frequency expressed with 3 bytes) */
+	HIBYTE(USBD_AUDIO_FREQ),
+	LOBYTE(USBD_AUDIO_FREQ >> 16),
 	/* 94 bytes */
 
 	/* USB Audio 1.0 Standard AudioStreaming Endpoint Descriptor (audio data, with synchronization endpoint) */
@@ -595,9 +592,9 @@ static uint8_t USBD_RADIO_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *
 								hradio->control.unitId = HIBYTE(req->wIndex);
 								hradio->control.ifOrEp = LOBYTE(req->wIndex);
 
-								hradio->control.data[0] = LOWORD_LOBYTE(hradio->samplingFrequency);
-								hradio->control.data[1] = LOWORD_HIBYTE(hradio->samplingFrequency);
-								hradio->control.data[2] = HIWORD_LOBYTE(hradio->samplingFrequency);
+								hradio->control.data[0] = LOBYTE(hradio->samplingFrequency);
+								hradio->control.data[1] = HIBYTE(hradio->samplingFrequency);
+								hradio->control.data[2] = LOBYTE(hradio->samplingFrequency >> 16);
 
 								(void) USBD_CtlSendData(pdev, &hradio->control.data[0], hradio->control.len);
 
