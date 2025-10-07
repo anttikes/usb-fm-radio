@@ -1,20 +1,20 @@
+/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
- * @file    usbd_conf.h
- * @author  Antti Keskinen
- * @brief   Header file for the usbd_conf.c file
+ * @file     usbd_conf.h
+ * @brief    Header file for the usbd_conf.c file
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2015 STMicroelectronics.
+ * Copyright (c) 2025 Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
  * in the root directory of this software component.
- * If no LICENSE file comes with this software, it is provided AS-IS.
  *
  ******************************************************************************
  */
+/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USBD_CONF_H

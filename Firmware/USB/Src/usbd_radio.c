@@ -1,20 +1,17 @@
+/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file    usbd_radio.c
- * @author  Antti Keskinen
  * @brief   This file provides an AM/FM Radio device that adheres
  *          to USB Audio and USB HID specifications.
- *
- *
  ******************************************************************************
  * @attention
  *
- * Copyright (c) Antti Keskinen
+ * Copyright (c) 2025 Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
  * in the root directory of this software component.
- * If no LICENSE file comes with this software, it is provided AS-IS.
  *
  ******************************************************************************
  * @verbatim
@@ -45,6 +42,7 @@
  *  @endverbatim
  ******************************************************************************
  */
+/* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_radio.h"

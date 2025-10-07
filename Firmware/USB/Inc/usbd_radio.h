@@ -1,20 +1,20 @@
+/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
- * @file    usbd_radio.h
- * @author  Antti Keskinen
- * @brief   header file for the usbd_radio.c file.
+ * @file     usbd_radio.h
+ * @brief    Header file for the usbd_radio.c file.
  ******************************************************************************
  * @attention
  *
- * Copyright (c) Antti Keskinen.
+ * Copyright (c) 2025 Antti Keskinen.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
  * in the root directory of this software component.
- * If no LICENSE file comes with this software, it is provided AS-IS.
  *
  ******************************************************************************
  */
+/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USB_RADIO_H
