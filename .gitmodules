@@ -10,3 +10,6 @@
 [submodule "Firmware/ThirdParty/cmsis-core"]
 	path = Firmware/ThirdParty/cmsis-core
 	url = https://github.com/STMicroelectronics/cmsis-core.git
+[submodule "Firmware/ThirdParty/tinyusb"]
+	path = Firmware/ThirdParty/tinyusb
+	url = https://github.com/hathach/tinyusb.git
