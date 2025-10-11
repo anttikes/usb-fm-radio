@@ -1,6 +1,3 @@
-[submodule "Firmware/ThirdParty/stm32-mw-usb-device"]
-	path = Firmware/ThirdParty/stm32-mw-usb-device
-	url = https://github.com/STMicroelectronics/stm32-mw-usb-device.git
 [submodule "Firmware/ThirdParty/stm32f0xx-hal-driver"]
 	path = Firmware/ThirdParty/stm32f0xx-hal-driver
 	url = https://github.com/STMicroelectronics/stm32f0xx-hal-driver.git
