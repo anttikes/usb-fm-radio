@@ -19,18 +19,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "si4705.h"
 #include "i2c.h"
-#include "usbd_def.h"
+//#include "usbd_def.h"
 
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
-#define USB_UNIT_PER_DB   256       // 1 dB = 256 LSB in USB format
-#define CHIP_MAX_GAIN_DB  0         // 0 dB (Loudest)
-#define CHIP_MIN_GAIN_DB  -63       // -63 dB (Quietest, mapped from chip setting 0)
-
-// Pre-calculated USB values for the chip's range limits
-#define USB_VAL_0DB       0         // 0 dB * 256 = 0x0000
-#define USB_VAL_MINUS_63DB -16128   // -63 dB * 256 = 0xC040
 
 /* Private macro -------------------------------------------------------------*/
 
@@ -512,43 +505,4 @@ HAL_StatusTypeDef RSQStatus(volatile RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STA
 	pResponse->frequencyOffset = (int8_t) rx_buffer[7];
 
 	return status;
-}
-
-uint8_t map_usb_to_chip_volume(int16_t usb_vol_value)
-{
-	// 1. Handle Mute (0x8000) - always maps to the quietest setting
-	if (usb_vol_value == (int16_t)0x8000) {
-		return SI4705_VOLUME_MIN_SETTING;
-	}
-
-	// 2. Clamp USB value to the chip's supported dB range (-63 dB to 0 dB)
-	// Any value louder than 0 dB (positive gain) is capped at 0 dB.
-	usb_vol_value = MIN(usb_vol_value, (int16_t)USB_VAL_0DB);
-
-	// Any value quieter than -63 dB (down to -127.99 dB) is capped at -63 dB.
-	usb_vol_value = MAX(usb_vol_value, (int16_t)USB_VAL_MINUS_63DB);
-
-	// 3. Convert the clamped USB value to a rounded integer dB value
-	//    This is equivalent to: floor(USB_VAL / 256) (since negative numbers are tricky)
-	int16_t db_attenuation = usb_vol_value / USB_UNIT_PER_DB;
-
-	// 4. Map the dB value (-63 to 0) to the chip's register setting (0 to 63)
-	//    Formula: chip_setting = SI4705_VOLUME_MAX_SETTING + db_attenuation
-	//    Example: 0 dB -> 63 + 0 = 63
-	//    Example: -63 dB -> 63 + (-63) = 0
-	int16_t chip_setting = SI4705_VOLUME_MAX_SETTING + db_attenuation;
-
-	return (uint8_t)chip_setting;
-}
-
-int16_t map_chip_to_usb_volume(uint8_t chip_setting)
-{
-	// 1. Calculate dB attenuation:
-	//    Range is -63 dB (setting 0) to 0 dB (setting 63)
-	int16_t db_attenuation = (int16_t)chip_setting - SI4705_VOLUME_MAX_SETTING;
-
-	// 2. Convert dB attenuation to USB's 1/256 dB units
-	int16_t usb_vol_value = db_attenuation * USB_UNIT_PER_DB;
-
-	return usb_vol_value;
 }

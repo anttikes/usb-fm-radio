@@ -21,6 +21,7 @@
 #include "stm32f0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "tusb.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,7 +55,6 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern PCD_HandleTypeDef hpcd_USB_FS;
 extern DMA_HandleTypeDef hdma_spi1_rx;
 /* USER CODE BEGIN EV */
 
@@ -72,9 +72,9 @@ void NMI_Handler(void)
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
-	while (1)
-	{
-	}
+  while (1)
+  {
+  }
   /* USER CODE END NonMaskableInt_IRQn 1 */
 }
 
@@ -145,12 +145,12 @@ void SysTick_Handler(void)
   */
 void RCC_CRS_IRQHandler(void)
 {
-  /* USER CODE BEGIN RCC_CRS_IRQn 0 */
+	/* USER CODE BEGIN RCC_CRS_IRQn 0 */
 
-  /* USER CODE END RCC_CRS_IRQn 0 */
-  /* USER CODE BEGIN RCC_CRS_IRQn 1 */
+	/* USER CODE END RCC_CRS_IRQn 0 */
+	/* USER CODE BEGIN RCC_CRS_IRQn 1 */
 
-  /* USER CODE END RCC_CRS_IRQn 1 */
+	/* USER CODE END RCC_CRS_IRQn 1 */
 }
 
 /**
@@ -158,13 +158,13 @@ void RCC_CRS_IRQHandler(void)
   */
 void EXTI4_15_IRQHandler(void)
 {
-  /* USER CODE BEGIN EXTI4_15_IRQn 0 */
+	/* USER CODE BEGIN EXTI4_15_IRQn 0 */
 
-  /* USER CODE END EXTI4_15_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(RADIO_NIRQ_Pin);
-  /* USER CODE BEGIN EXTI4_15_IRQn 1 */
+	/* USER CODE END EXTI4_15_IRQn 0 */
+	HAL_GPIO_EXTI_IRQHandler(RADIO_NIRQ_Pin);
+	/* USER CODE BEGIN EXTI4_15_IRQn 1 */
 
-  /* USER CODE END EXTI4_15_IRQn 1 */
+	/* USER CODE END EXTI4_15_IRQn 1 */
 }
 
 /**
@@ -172,13 +172,13 @@ void EXTI4_15_IRQHandler(void)
   */
 void DMA1_Channel2_3_IRQHandler(void)
 {
-  /* USER CODE BEGIN DMA1_Channel2_3_IRQn 0 */
+	/* USER CODE BEGIN DMA1_Channel2_3_IRQn 0 */
 
-  /* USER CODE END DMA1_Channel2_3_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_spi1_rx);
-  /* USER CODE BEGIN DMA1_Channel2_3_IRQn 1 */
+	/* USER CODE END DMA1_Channel2_3_IRQn 0 */
+	HAL_DMA_IRQHandler(&hdma_spi1_rx);
+	/* USER CODE BEGIN DMA1_Channel2_3_IRQn 1 */
 
-  /* USER CODE END DMA1_Channel2_3_IRQn 1 */
+	/* USER CODE END DMA1_Channel2_3_IRQn 1 */
 }
 
 /**
@@ -186,13 +186,14 @@ void DMA1_Channel2_3_IRQHandler(void)
   */
 void USB_IRQHandler(void)
 {
-  /* USER CODE BEGIN USB_IRQn 0 */
+	/* USER CODE BEGIN USB_IRQn 0 */
+	tusb_int_handler(BOARD_DEVICE_RHPORT_NUM, true);
+	return;
+	/* USER CODE END USB_IRQn 0 */
 
-  /* USER CODE END USB_IRQn 0 */
-  HAL_PCD_IRQHandler(&hpcd_USB_FS);
-  /* USER CODE BEGIN USB_IRQn 1 */
+	/* USER CODE BEGIN USB_IRQn 1 */
 
-  /* USER CODE END USB_IRQn 1 */
+	/* USER CODE END USB_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

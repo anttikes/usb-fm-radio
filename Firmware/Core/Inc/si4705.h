@@ -311,9 +311,6 @@ typedef struct _RadioDevice_t
 extern volatile RadioDevice_t radioDevice;
 
 /* Exported functions prototypes ---------------------------------------------*/
-uint8_t map_usb_to_chip_volume(int16_t usb_vol_value);
-int16_t map_chip_to_usb_volume(uint8_t chip_setting);
-
 void WaitForStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t statusToWait);
 
 HAL_StatusTypeDef PowerUp(volatile RadioDevice_t *pRadioDevice,	CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2);

@@ -21,13 +21,12 @@
 #include "dma.h"
 #include "i2c.h"
 #include "i2s.h"
-#include "usb_device.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "si4705.h"
-#include "usbd_radio.h"
+#include "tusb.h"
 
 /* USER CODE END Includes */
 
@@ -38,7 +37,12 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define DMA_BUFFER_LENGTH                                       CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 8
+#define DMA_BUFFER_START                                        0
+#define DMA_BUFFER_MIDPOINT                                     DMA_BUFFER_LENGTH / 2
 
+// This comes from the IOC tool
+#define REAL_AUDIO_FREQUENCY                                    44117
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -55,27 +59,11 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-int8_t Radio_Init(uint32_t AudioFreq, uint32_t Volume, uint32_t options);
-int8_t Radio_DeInit(uint32_t options);
-int8_t Radio_AudioCmd(uint8_t *pbuf, uint32_t size, uint8_t cmd);
-int8_t Radio_VolumeCtl(uint8_t vol);
-int8_t Radio_MuteCtl(uint8_t cmd);
-int8_t Radio_PeriodicTC(uint8_t *pbuf, uint32_t size, uint8_t cmd);
-int8_t Radio_GetState(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-USBD_RADIO_ItfTypeDef USBD_AUDIO_fops_FS = {
-	Radio_Init,
-	Radio_DeInit,
-	Radio_AudioCmd,
-	Radio_VolumeCtl,
-	Radio_MuteCtl,
-	Radio_PeriodicTC,
-	Radio_GetState
-};
-
+uint16_t i2sBuffer[DMA_BUFFER_LENGTH];
 /* USER CODE END 0 */
 
 /**
@@ -109,8 +97,14 @@ int main(void)
 	MX_DMA_Init();
 	MX_I2C1_Init();
 	MX_I2S1_Init();
-	MX_USB_DEVICE_Init();
 	/* USER CODE BEGIN 2 */
+
+	/* USB peripheral clock enable */
+	__HAL_RCC_USB_CLK_ENABLE();
+
+	/* USB peripheral interrupt init */
+	HAL_NVIC_SetPriority(USB_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(USB_IRQn);
 
 	// Bring Si4705 out of reset, and enable the oscillator
     HAL_GPIO_WritePin(RADIO_NRST_GPIO_Port, RADIO_NRST_Pin, GPIO_PIN_SET);
@@ -119,6 +113,14 @@ int main(void)
 	// The oscillator has a max startup time of one second
 	// The radio chip also has a startup time but it is much faster than the crystal
 	HAL_Delay(1250);
+
+	// Initialize TinyUSB; done after the oscillator delay to ensure this is done after the oscillator delay
+	tusb_rhport_init_t dev_init = {
+		.role = TUSB_ROLE_DEVICE,
+		.speed = TUSB_SPEED_FULL
+	};
+
+	tusb_init(BOARD_DEVICE_RHPORT_NUM, &dev_init);
 
 	// Send "Power Up" to the radio
 	if (PowerUp(&radioDevice, POWER_UP_ARGS_1_FUNCTION_FM, POWER_UP_ARGS_2_DIGITAL_OUTPUT_2) != HAL_OK)	{
@@ -156,40 +158,30 @@ int main(void)
 
 	WaitForStatus(&radioDevice, STATUS_STCINT);
 
-	// Instruct the DMA to start transferring samples to the audio buffer
-	// This also enables DCLK and DFS which the radio chip needs in order
-	// to enable its digital audio output
-	USBD_RADIO_HandleTypeDef *hradio;
 
-	hradio = (USBD_RADIO_HandleTypeDef*) hUsbDeviceFS.pClassDataCmsit[hUsbDeviceFS.classId];
-
-	if (hradio == NULL) {
-		return (USBD_FAIL);
-	}
-
-	// The DMA buffer is large enough to hold four USB 2.0 frames worth of data (4 ms)
-	// The value provided here is the total number of one-channel samples that can fit into the buffer
-	if (HAL_I2S_Receive_DMA(&hi2s1, &hradio->halfWordBuffer[0], DMA_TOTAL_BUF_SIZE / 2U) != HAL_OK) {
+	// When using circular mode, the size parameter must equal the number of elements in the receiving array
+	if (HAL_I2S_Receive_DMA(&hi2s1, &i2sBuffer[0], DMA_BUFFER_LENGTH) != HAL_OK) {
 		Error_Handler();
 	}
 
-	// Instruct the radio chip to start providing audio samples at the "real frequency" of the I2S
-	if (SetProperty(&radioDevice, PROP_DIGITAL_OUTPUT_SAMPLE_RATE, AUDIO_REAL_FREQ) != HAL_OK) {
+	// Now that the DCLK and DFS are enabled we can instruct the radio chip to start providing audio samples
+	if (SetProperty(&radioDevice, PROP_DIGITAL_OUTPUT_SAMPLE_RATE, REAL_AUDIO_FREQUENCY) != HAL_OK) {
 		Error_Handler();
 	}
 
-	/* USER CODE END 2 */
+    /* USER CODE END 2 */
 
-	/* Infinite loop */
-	/* USER CODE BEGIN WHILE */
+    /* Infinite loop */
+    /* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		/* USER CODE END WHILE */
+		tud_task();
+        /* USER CODE END WHILE */
 
-		/* USER CODE BEGIN 3 */
+        /* USER CODE BEGIN 3 */
 	}
 
-	/* USER CODE END 3 */
+    /* USER CODE END 3 */
 }
 
 /**
@@ -206,10 +198,7 @@ void SystemClock_Config(void)
 	/* Initializes the RCC Oscillators */
 	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48;
 	RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
-	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI48;
-	RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL4;
-	RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV5;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
 
 	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
 	{
@@ -219,7 +208,7 @@ void SystemClock_Config(void)
 	/* Initializes the CPU, AHB and APB buses clocks */
 	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
 							  |RCC_CLOCKTYPE_PCLK1;
-	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI48;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
 	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 
@@ -252,71 +241,18 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-int8_t Radio_Init(uint32_t AudioFreq, uint32_t Volume, uint32_t options)
-{
-	UNUSED(AudioFreq);
-	UNUSED(Volume);
-	UNUSED(options);
-
-	return (USBD_OK);
-}
-
-int8_t Radio_DeInit(uint32_t options)
-{
-	UNUSED(options);
-
-	return (USBD_OK);
-}
-
-int8_t Radio_AudioCmd(uint8_t *pbuf, uint32_t size, uint8_t cmd)
-{
-	UNUSED(pbuf);
-	UNUSED(size);
-	UNUSED(cmd);
-
-	return (USBD_OK);
-}
-
-int8_t Radio_VolumeCtl(uint8_t vol)
-{
-	UNUSED(vol);
-
-	return (USBD_OK);
-}
-
-int8_t Radio_MuteCtl(uint8_t cmd)
-{
-	UNUSED(cmd);
-
-	return (USBD_OK);
-}
-
-int8_t Radio_PeriodicTC(uint8_t *pbuf, uint32_t size, uint8_t cmd)
-{
-	UNUSED(pbuf);
-	UNUSED(size);
-	UNUSED(cmd);
-
-	return (USBD_OK);
-}
-
-int8_t Radio_GetState(void)
-{
-	return (USBD_OK);
-}
-
 void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s)
 {
 	UNUSED(hi2s);
 
-	USBD_RADIO_Sync(&hUsbDeviceFS, AUDIO_OFFSET_HALF);
+	tud_audio_n_write(0, &i2sBuffer[DMA_BUFFER_START], DMA_BUFFER_LENGTH);
 }
 
 void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
 {
 	UNUSED(hi2s);
 
-	USBD_RADIO_Sync(&hUsbDeviceFS, AUDIO_OFFSET_FULL);
+	tud_audio_n_write(0, &i2sBuffer[DMA_BUFFER_MIDPOINT], DMA_BUFFER_LENGTH);
 }
 
 void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s)
@@ -331,13 +267,13 @@ void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s)
   */
 void Error_Handler(void)
 {
-	/* USER CODE BEGIN Error_Handler_Debug */
+    /* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1)
 	{
 	}
-	/* USER CODE END Error_Handler_Debug */
+    /* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT
