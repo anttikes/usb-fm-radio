@@ -85,7 +85,7 @@ extern "C" {
 //--------------------------------------------------------------------
 
 // Sample rate and sample bit depth (not really part of the driver but listed here for clarity)
-#define CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE                       44100
+#define CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE                       48000
 #define CFG_TUD_AUDIO_FUNC_1_SAMPLE_BIT_RESOLUTION             16
 
 // Descriptor length and audio function control buffer size

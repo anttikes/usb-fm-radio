@@ -42,7 +42,7 @@
 #define DMA_BUFFER_MIDPOINT                                     DMA_BUFFER_LENGTH / 2
 
 // This comes from the IOC tool
-#define REAL_AUDIO_FREQUENCY                                    44117
+#define REAL_AUDIO_FREQUENCY                                    48000
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -169,19 +169,19 @@ int main(void)
 		Error_Handler();
 	}
 
-    /* USER CODE END 2 */
+	/* USER CODE END 2 */
 
-    /* Infinite loop */
-    /* USER CODE BEGIN WHILE */
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
 		tud_task();
-        /* USER CODE END WHILE */
+		/* USER CODE END WHILE */
 
-        /* USER CODE BEGIN 3 */
+		/* USER CODE BEGIN 3 */
 	}
 
-    /* USER CODE END 3 */
+	/* USER CODE END 3 */
 }
 
 /**
@@ -198,7 +198,10 @@ void SystemClock_Config(void)
 	/* Initializes the RCC Oscillators */
 	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48;
 	RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
-	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI48;
+	RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL4;
+	RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV5;
 
 	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
 	{
@@ -208,7 +211,7 @@ void SystemClock_Config(void)
 	/* Initializes the CPU, AHB and APB buses clocks */
 	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
 							  |RCC_CLOCKTYPE_PCLK1;
-	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI48;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
 	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 
@@ -245,14 +248,14 @@ void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s)
 {
 	UNUSED(hi2s);
 
-	tud_audio_n_write(0, &i2sBuffer[DMA_BUFFER_START], DMA_BUFFER_LENGTH);
+	tud_audio_write(&i2sBuffer[DMA_BUFFER_START], DMA_BUFFER_LENGTH);
 }
 
 void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
 {
 	UNUSED(hi2s);
 
-	tud_audio_n_write(0, &i2sBuffer[DMA_BUFFER_MIDPOINT], DMA_BUFFER_LENGTH);
+	tud_audio_write(&i2sBuffer[DMA_BUFFER_MIDPOINT], DMA_BUFFER_LENGTH);
 }
 
 void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s)
@@ -267,13 +270,13 @@ void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s)
   */
 void Error_Handler(void)
 {
-    /* USER CODE BEGIN Error_Handler_Debug */
+	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1)
 	{
 	}
-    /* USER CODE END Error_Handler_Debug */
+	/* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT
