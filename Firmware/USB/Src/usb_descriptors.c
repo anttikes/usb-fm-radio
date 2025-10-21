@@ -2,7 +2,7 @@
 /**
  ******************************************************************************
  * @file           : usb_descriptors.c
- * @brief          : Provides the USB descriptors for TinyUSB
+ * @brief          : Implements the standard USB callback functions
  ******************************************************************************
  * @attention
  *
@@ -19,7 +19,8 @@
 
 #include "stm32f042x6.h"
 #include "tusb.h"
-#include "usb_descriptors.h"
+#include "audio_config.h"
+#include "hid_config.h"
 
 //--------------------------------------------------------------------+
 // Board support
@@ -77,6 +78,15 @@ static inline size_t board_usb_get_serial(uint16_t desc_str1[], size_t maxChars)
 }
 
 //--------------------------------------------------------------------+
+// HID Report Descriptor
+//--------------------------------------------------------------------+
+
+uint8_t const desc_hid_report[] =
+{
+	TUD_HID_REPORT_DESC_GENERIC_INOUT(CFG_TUD_HID_EP_BUFSIZE)
+};
+
+//--------------------------------------------------------------------+
 // String Descriptors
 //--------------------------------------------------------------------+
 
@@ -88,16 +98,16 @@ enum {
 	STRID_SERIAL,
 };
 
-// The string descriptors themselves
+// The strings that identify the device
 char const* string_desc_arr [] = {
     (const char[]) { 0x09, 0x04 }, // 0: is supported language is English (0x0409)
     "AK Design",                   // 1: Manufacturer
-    "USB FM Radio",                // 2: Product
-    NULL,                          // 3: Serials will use unique ID if possible
-    "UAC2",                        // 4: Audio Interface
+    "AK Design FM Radio",          // 2: Product
+    NULL,                          // 3: Serial will use unique ID if possible
 };
 
-// Buffer to hold the Unicode representation of the string
+// Buffer to hold the Unicode representation of a string
+// Serial number is the longest
 static uint16_t _desc_str[32 + 1];
 
 /**
@@ -141,7 +151,7 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
 			break;
 	}
 
-	// First byte is length of the descriptor (including type and length), second byte is string type
+	// First byte is length of the entire descriptor, second byte identifies it as string type
 	_desc_str[0] = (uint16_t) ((TUSB_DESC_STRING << 8) | (2 * chr_count + 2));
 
 	return _desc_str;
@@ -156,7 +166,7 @@ tusb_desc_device_t const desc_device =
     .bDescriptorType    = TUSB_DESC_DEVICE,
     .bcdUSB             = 0x0200,
 
-    // Use Interface Association Descriptor (IAD) for USB Audio 2.0
+     // Use Interface Association Descriptor (IAD) for USB Audio 2.0
     .bDeviceClass       = TUSB_CLASS_MISC,
     .bDeviceSubClass    = MISC_SUBCLASS_COMMON,
     .bDeviceProtocol    = MISC_PROTOCOL_IAD,
@@ -186,16 +196,12 @@ uint8_t const * tud_descriptor_device_cb(void)
 //--------------------------------------------------------------------+
 // Configuration Descriptor
 //--------------------------------------------------------------------+
-enum
-{
-	ITF_NUM_AUDIO_CONTROL = 0,
-	ITF_NUM_AUDIO_STREAMING,
-	ITF_NUM_AUDIO_TOTAL
-};
 
-#define ITF_NUM_TOTAL          ITF_NUM_AUDIO_TOTAL
+#define ITF_NUM_TOTAL          ITF_NUM_AUDIO_TOTAL + ITF_NUM_HID_TOTAL
 
-#define CONFIG_TOTAL_LEN       (TUD_CONFIG_DESC_LEN + CFG_TUD_AUDIO * TUD_AUDIO_RADIO_RECEIVER_TWO_CH_1_FORMAT_DESC_LEN)
+#define CONFIG_TOTAL_LEN       (TUD_CONFIG_DESC_LEN\
+	+ CFG_TUD_AUDIO * TUD_AUDIO_RADIO_RECEIVER_TWO_CH_1_FORMAT_DESC_LEN\
+	+ CFG_TUD_HID * TUD_HID_INOUT_DESC_LEN)
 
 uint8_t const desc_configuration[] =
 {
@@ -204,8 +210,8 @@ uint8_t const desc_configuration[] =
 		1,                                                       /* bConfigurationValue */
 		ITF_NUM_TOTAL,                                           /* bNumInterfaces */
 		0x00,                                                    /* iConfiguration */
-		CONFIG_TOTAL_LEN,                                        /* wTotalLength ?? */
-		0x80,                                                    /* bmAttributes ?? */
+		CONFIG_TOTAL_LEN,                                        /* wTotalLength */
+		0x80,                                                    /* bmAttributes */
 		100                                                      /* bMaxPower (in mA) */
 	),
 
@@ -216,14 +222,14 @@ uint8_t const desc_configuration[] =
 		0x00                                                     /* iFunction */
 	),
 
-	/* Standard AC Interface Descriptor(4.7.1) */
+	/* Standard AC Interface Descriptor (4.7.1) */
 	TUD_AUDIO_DESC_STD_AC(
 		ITF_NUM_AUDIO_CONTROL,                                   /* bInterfaceNumber */
 		0x00,                                                    /* bNumEndpoints */
 		0x00                                                     /* iInterface */
 	),
 
-	/* Class-Specific AC Interface Header Descriptor(4.7.2) */
+	/* Class-Specific AC Interface Header Descriptor (4.7.2) */
 	TUD_AUDIO_DESC_CS_AC(
 		0x0200,												     /* bcdADC */
 		AUDIO_FUNC_MICROPHONE,                                   /* bCategory */
@@ -234,7 +240,7 @@ uint8_t const desc_configuration[] =
 		AUDIO_CTRL_NONE                                          /* bmControls */
 	),
 
-	/* Clock Source Descriptor(4.7.2.1) */
+	/* Clock Source Descriptor (4.7.2.1) */
 	TUD_AUDIO_DESC_CLK_SRC(
 		ENTITY_ID_CLOCK_SOURCE,                                  /* bClockId */
 		AUDIO_CLOCK_SOURCE_ATT_INT_FIX_CLK,                      /* bmAttributes */
@@ -243,7 +249,7 @@ uint8_t const desc_configuration[] =
 		0x00                                                     /* iClockSource */
 	),
 
-	/* Input Terminal Descriptor(4.7.2.4) */
+	/* Input Terminal Descriptor (4.7.2.4) */
 	// Terminal id, terminal type, associated terminal, clock id, channel count, channel config, string index for channel names, control, string index
 	TUD_AUDIO_DESC_INPUT_TERM(
 		ENTITY_ID_INPUT_TERMINAL,                                /* bTerminalId */
@@ -258,7 +264,7 @@ uint8_t const desc_configuration[] =
 		0x00                                                     /* iTerminal */
 	),
 
-	/* Feature Unit Descriptor(4.7.2.8) */
+	/* Feature Unit Descriptor (4.7.2.8) */
 	TUD_AUDIO_DESC_FEATURE_UNIT_TWO_CHANNEL(
 		ENTITY_ID_FEATURE_UNIT,                                  /* bUnitId */
 		ENTITY_ID_INPUT_TERMINAL,                                /* bSourceId */
@@ -269,7 +275,7 @@ uint8_t const desc_configuration[] =
 		0x00                                                     /* iFeature */
 	),
 
-	/* Output Terminal Descriptor(4.7.2.5) */
+	/* Output Terminal Descriptor (4.7.2.5) */
 	// Terminal id, terminal type, associated terminal, source terminal, clock id, controls, string index
 	TUD_AUDIO_DESC_OUTPUT_TERM(
 		ENTITY_ID_OUTPUT_TERMINAL,                               /* bTerminalId */
@@ -281,25 +287,25 @@ uint8_t const desc_configuration[] =
 		0x00                                                     /* iTerminal */
 	),
 
-	/* Standard AS Interface Descriptor(4.9.1) */
+	/* Standard AS Interface Descriptor (4.9.1) */
 	/* "Mute" interface */
 	TUD_AUDIO_DESC_STD_AS_INT(
 		ITF_NUM_AUDIO_STREAMING,                                 /* bInterfaceNumber */
-		0x00,                                                    /* bAlternateSetting */
+		ALTERNATIVE_SETTING_DISABLE,                             /* bAlternateSetting */
 		0x00,                                                    /* bNumEndpoints */
 		0x00                                                     /* iInterface */
 	),
 
-	/* Standard AS Interface Descriptor(4.9.1) */
+	/* Standard AS Interface Descriptor (4.9.1) */
 	/* Real interface with endpoints */
 	TUD_AUDIO_DESC_STD_AS_INT(
 		ITF_NUM_AUDIO_STREAMING,                                 /* bInterfaceNumber */
-		0x01,                                                    /* bAlternateSetting */
+		ALTERNATIVE_SETTING_ENABLE,                              /* bAlternateSetting */
 		0x01,                                                    /* bNumEndpoints */
 		0x00                                                     /* iInterface */
 	),
 
-	/* Class-Specific AS Interface Descriptor(4.9.2) */
+	/* Class-Specific AS Interface Descriptor (4.9.2) */
 	TUD_AUDIO_DESC_CS_AS_INT(
 		ENTITY_ID_OUTPUT_TERMINAL,                               /* bTerminalLink */
 		AUDIO_CTRL_NONE,                                         /* bmControls */
@@ -311,13 +317,13 @@ uint8_t const desc_configuration[] =
 		0x00                                                     /* iChannelNames */
 	),
 
-	/* Type I Format Type Descriptor(2.3.1.6 - Audio Formats) */
+	/* Type I Format Type Descriptor (2.3.1.6 - Audio Formats) */
 	TUD_AUDIO_DESC_TYPE_I_FORMAT(
 		CFG_TUD_AUDIO_FUNC_1_FORMAT_1_N_BYTES_PER_SAMPLE_TX,     /* bSubslotSize */
 		CFG_TUD_AUDIO_FUNC_1_SAMPLE_BIT_RESOLUTION               /* bBitResolution */
 	),
 
-	/* Standard AS Isochronous Audio Data Endpoint Descriptor(4.10.1.1) */
+	/* Standard AS Isochronous Audio Data Endpoint Descriptor (4.10.1.1) */
 	TUD_AUDIO_DESC_STD_AS_ISO_EP(
 		0x80 | EPNUM_AUDIO,                                      /* bEndpointAddress */
 		TUSB_XFER_ISOCHRONOUS |                                  /* bmAttributes */
@@ -327,14 +333,28 @@ uint8_t const desc_configuration[] =
 		0x01                                                     /* bInterval */
 	),
 
-	/* Class-Specific AS Isochronous Audio Data Endpoint Descriptor(4.10.1.2) */
+	/* Class-Specific AS Isochronous Audio Data Endpoint Descriptor (4.10.1.2) */
 	TUD_AUDIO_DESC_CS_AS_ISO_EP(
 		AUDIO_CS_AS_ISO_DATA_EP_ATT_NON_MAX_PACKETS_OK,          /* bmAttributes */
 		AUDIO_CTRL_NONE,                                         /* bmControls */
 		AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_UNDEFINED,       /* bLockDelayUnits */
 		0x0000                                                   /* wLockDelay */
-	)
+	),
+
+	/* HID Input/Output (Class-specific 6.1 & Appendix E, Class-specific 6.2.1, Standard 9.6.6 and Standard 9.6.6)  */
+	TUD_HID_INOUT_DESCRIPTOR(
+		ITF_NUM_HID,                                             /* bInterfaceNumber */
+		0x00,                                                    /* iInterface */
+		HID_ITF_PROTOCOL_NONE,                                   /* bInterfaceSubClass & bInterfaceProtocol */
+		sizeof(desc_hid_report),                                 /* wDescriptorLength */
+		EPNUM_HID,                                               /* bEndpointAddress (OUT) */
+		0x80 | EPNUM_HID,                                        /* bEndpointAddress (IN) */
+		CFG_TUD_HID_EP_BUFSIZE,                                  /* wMaxPacketSize */
+		0x0A                                                     /* bInterval */
+	),
 };
+
+TU_VERIFY_STATIC(sizeof(desc_configuration) == CONFIG_TOTAL_LEN, "Configuration descriptor actual size differs from CONFIG_TOTAL_LEN");
 
 /**
  * @brief  Invoked when GET CONFIGURATION DESCRIPTOR is received

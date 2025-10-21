@@ -1,8 +1,8 @@
 /* USER CODE BEGIN Header */
 /**
  ******************************************************************************
- * @file           : usb_device.c
- * @brief          : Implements the callback functions for TinyUSB
+ * @file           : audio_callbacks.c
+ * @brief          : Implements the Audio callback functions
  ******************************************************************************
  * @attention
  *
@@ -17,7 +17,9 @@
  */
 /* USER CODE END Header */
 
-#include <stdlib.h>
+#include "audio_config.h"
+#include <stdbool.h>
+#include "i2s.h"
 #include "tusb.h"
 
 uint32_t samplingFrequency = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE;
@@ -43,7 +45,7 @@ audio_control_range_2_n_t(1) volumeRange =
 };
 
 /**
- * @brief  Invoked when audio set interface request received
+ * @brief  Invoked to handle the SET INTERFACE request
  * @param  rhport Root hub port to which the request came
  * @param  p_request Pointer to request data
  *
@@ -52,13 +54,22 @@ audio_control_range_2_n_t(1) volumeRange =
 bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const * p_request)
 {
 	(void) rhport;
-	(void) p_request;
+
+	//uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
+	uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
+
+	// Clear buffer when streaming format is changed
+	if (alt == 1) {
+		TU_BREAKPOINT();
+	} else {
+		TU_BREAKPOINT();
+	}
 
 	return true;
 }
 
 /**
- * @brief  Invoked when audio set interface request received which closes an endpoint
+ * @brief  Invoked to handle a SET INTERFACE request to close an endpoint
  * @param  rhport Root hub port to which the request came
  * @param  p_request Pointer to request data
  *
@@ -73,7 +84,7 @@ bool tud_audio_set_itf_close_ep_cb(uint8_t rhport, tusb_control_request_t const 
 }
 
 /**
- * @brief  Invoked when audio class specific set request received for an endpoint
+ * @brief  Invoked to handle an audio class-specific SET request for an endpoint
  * @param  rhport Root hub port to which the request came
  * @param  p_request Pointer to request data
  * @param  pBuff Pointer to data buffer
@@ -90,7 +101,7 @@ bool tud_audio_set_req_ep_cb(uint8_t rhport, tusb_control_request_t const * p_re
 }
 
 /**
- * @brief  Invoked when audio class specific set request received for an interface
+ * @brief  Invoked to handle an audio class-specific SET request for an interface
  * @param  rhport Root hub port to which the request came
  * @param  p_request Pointer to request data
  *
@@ -106,7 +117,7 @@ bool tud_audio_set_req_itf_cb(uint8_t rhport, tusb_control_request_t const * p_r
 }
 
 /**
- * @brief  Invoked when audio class specific set request received for an entity
+ * @brief  Invoked to handle an audio class-specific SET request for an entity
  * @param  rhport Root hub port to which the request came
  * @param  p_request Pointer to request data
  *
@@ -147,7 +158,7 @@ bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const * 
 }
 
 /**
- * @brief  Invoked when audio class specific get request received for an EP
+ * @brief  Invoked to handle an audio class-specific GET request for an endpoint
  * @param  rhport Root hub port to which the request came
  * @param  p_request Pointer to request data
  *
@@ -162,7 +173,7 @@ bool tud_audio_get_req_ep_cb(uint8_t rhport, tusb_control_request_t const * p_re
 }
 
 /**
- * @brief  Invoked when audio class specific get request received for an interface
+ * @brief  Invoked to handle an audio class-specific GET request for an interface
  * @param  rhport Root hub port to which the request came
  * @param  p_request Pointer to request data
  *
@@ -177,7 +188,7 @@ bool tud_audio_get_req_itf_cb(uint8_t rhport, tusb_control_request_t const * p_r
 }
 
 /**
- * @brief  Invoked when audio class specific get request received for an entity
+ * @brief  Invoked to handle an audio class-specific GET request for an entity
  * @param  rhport Root hub port to which the request came
  * @param  p_request Pointer to request data
  *
@@ -209,7 +220,7 @@ bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const * 
 				}
 
 			case AUDIO_FU_CTRL_MUTE:
-				return tud_control_xfer(rhport, p_request, &mute, 1);
+				return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &mute, 1);
 
 			default:
 				TU_BREAKPOINT();
@@ -227,7 +238,7 @@ bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const * 
 						return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &samplingFrequency, sizeof(samplingFrequency));
 
 					case AUDIO_CS_REQ_RANGE:
-						return tud_control_xfer(rhport, p_request, &samplingFrequencyRange, sizeof(samplingFrequencyRange));
+						return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &samplingFrequencyRange, sizeof(samplingFrequencyRange));
 
 					default:
 						TU_BREAKPOINT();
@@ -235,7 +246,7 @@ bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const * 
 				}
 
 				case AUDIO_CS_CTRL_CLK_VALID:
-					return tud_control_xfer(rhport, p_request, &clockValid, sizeof(clockValid));
+					return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &clockValid, sizeof(clockValid));
 
 			default:
 				TU_BREAKPOINT();

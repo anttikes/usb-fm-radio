@@ -93,7 +93,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry excluding="Src/stm32f0xx_hal_timebase_tim_template.c|Src/stm32f0xx_hal_timebase_rtc_wakeup_template.c|Src/stm32f0xx_hal_timebase_rtc_alarm_template.c|Src/stm32f0xx_hal_msp_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ThirdParty/stm32f0xx-hal-driver"/>
-						<entry excluding="portable/wch|portable/valentyusb|portable/ti|portable/template|portable/synopsys|portable/sunxi|portable/sony|portable/renesas|portable/raspberrypi|portable/ohci|portable/nxp|portable/nuvoton|portable/nordic|portable/mindmotion|portable/microchip|portable/mentor|portable/ehci|portable/dialog|portable/chipidea|portable/bridgetek|portable/analog|portable/st/typec|class/video|class/vendor|class/usbtmc|class/net|class/mtp|class/msc|class/midi|class/hid|class/dfu|class/cdc|class/bth|host|typec" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ThirdParty/tinyusb/src"/>
+						<entry excluding="portable/wch|portable/valentyusb|portable/ti|portable/template|portable/synopsys|portable/sunxi|portable/sony|portable/renesas|portable/raspberrypi|portable/ohci|portable/nxp|portable/nuvoton|portable/nordic|portable/mindmotion|portable/microchip|portable/mentor|portable/ehci|portable/dialog|portable/chipidea|portable/bridgetek|portable/analog|portable/st/typec|class/video|class/vendor|class/usbtmc|class/net|class/mtp|class/msc|class/midi|class/dfu|class/cdc|class/bth|host|typec" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ThirdParty/tinyusb/src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="USB"/>
 					</sourceEntries>
 				</configuration>
@@ -178,7 +178,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry excluding="Src/stm32f0xx_hal_timebase_tim_template.c|Src/stm32f0xx_hal_timebase_rtc_wakeup_template.c|Src/stm32f0xx_hal_timebase_rtc_alarm_template.c|Src/stm32f0xx_hal_msp_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ThirdParty/stm32f0xx-hal-driver"/>
-						<entry excluding="portable/wch|portable/valentyusb|portable/ti|portable/template|portable/synopsys|portable/sunxi|portable/sony|portable/renesas|portable/raspberrypi|portable/ohci|portable/nxp|portable/nuvoton|portable/nordic|portable/mindmotion|portable/microchip|portable/mentor|portable/ehci|portable/dialog|portable/chipidea|portable/bridgetek|portable/analog|portable/st/typec|class/video|class/vendor|class/usbtmc|class/net|class/mtp|class/msc|class/midi|class/hid|class/dfu|class/cdc|class/bth|host|typec" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ThirdParty/tinyusb/src"/>
+						<entry excluding="class/vendor|class/vendor/vendor_host.c|portable/wch|portable/valentyusb|portable/ti|portable/template|portable/synopsys|portable/sunxi|portable/sony|portable/renesas|portable/raspberrypi|portable/ohci|portable/nxp|portable/nuvoton|portable/nordic|portable/mindmotion|portable/microchip|portable/mentor|portable/ehci|portable/dialog|portable/chipidea|portable/bridgetek|portable/analog|portable/st/typec|class/video|class/usbtmc|class/net|class/mtp|class/msc|class/midi|class/dfu|class/cdc|class/bth|host|typec" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ThirdParty/tinyusb/src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="USB"/>
 					</sourceEntries>
 				</configuration>
