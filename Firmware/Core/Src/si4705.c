@@ -368,6 +368,8 @@ HAL_StatusTypeDef TuneFreq(volatile RadioDevice_t *pRadioDevice,
 
 	WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
+	pRadioDevice->currentState = RADIOSTATE_TUNED_TO_STATION;
+
 	return status;
 }
 

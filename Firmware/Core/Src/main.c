@@ -21,6 +21,7 @@
 #include "dma.h"
 #include "i2c.h"
 #include "i2s.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -97,7 +98,16 @@ int main(void)
 	MX_DMA_Init();
 	MX_I2C1_Init();
 	MX_I2S1_Init();
+	MX_TIM14_Init();
 	/* USER CODE BEGIN 2 */
+
+	// Initialize TinyUSB
+	tusb_rhport_init_t dev_init = {
+		.role = TUSB_ROLE_DEVICE,
+		.speed = TUSB_SPEED_FULL
+	};
+
+	tusb_init(BOARD_DEVICE_RHPORT_NUM, &dev_init);
 
 	/* USB peripheral clock enable */
 	__HAL_RCC_USB_CLK_ENABLE();
@@ -114,15 +124,7 @@ int main(void)
 	// The radio chip also has a startup time but it is much faster than the crystal
 	HAL_Delay(1250);
 
-	// Initialize TinyUSB; done after the oscillator delay to ensure this is done after the oscillator delay
-	tusb_rhport_init_t dev_init = {
-		.role = TUSB_ROLE_DEVICE,
-		.speed = TUSB_SPEED_FULL
-	};
-
-	tusb_init(BOARD_DEVICE_RHPORT_NUM, &dev_init);
-
-	// Send "Power Up" to the radio
+	// Power up the radio
 	if (PowerUp(&radioDevice, POWER_UP_ARGS_1_FUNCTION_FM, POWER_UP_ARGS_2_DIGITAL_OUTPUT_2) != HAL_OK)	{
 		Error_Handler();
 	}
@@ -169,6 +171,8 @@ int main(void)
 		Error_Handler();
 	}
 
+	radioDevice.currentState = RADIOSTATE_DIGITAL_OUTPUT_ENABLED;
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -195,7 +199,7 @@ void SystemClock_Config(void)
 	RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 	RCC_CRSInitTypeDef RCC_CRSInitStruct = {0};
 
-	/* Initializes the RCC Oscillators */
+	/* Initialize the RCC Oscillators */
 	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48;
 	RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -208,7 +212,7 @@ void SystemClock_Config(void)
 		Error_Handler();
 	}
 
-	/* Initializes the CPU, AHB and APB buses clocks */
+	/* Initialize the CPU, AHB and APB buses clocks */
 	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
 							  |RCC_CLOCKTYPE_PCLK1;
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
@@ -262,6 +266,12 @@ void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s)
 {
 	UNUSED(hi2s);
 }
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	UNUSED(htim);
+}
+
 /* USER CODE END 4 */
 
 /**
