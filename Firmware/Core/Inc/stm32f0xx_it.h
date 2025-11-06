@@ -53,9 +53,9 @@ void SysTick_Handler(void);
 void RCC_CRS_IRQHandler(void);
 void EXTI4_15_IRQHandler(void);
 void DMA1_Channel2_3_IRQHandler(void);
-void USB_IRQHandler(void);
+void TIM14_IRQHandler(void);
 /* USER CODE BEGIN EFP */
-
+void USB_IRQHandler(void);
 /* USER CODE END EFP */
 
 #ifdef __cplusplus

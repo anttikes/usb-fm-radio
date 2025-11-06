@@ -16,7 +16,6 @@
  ******************************************************************************
  */
 /* USER CODE END Header */
-
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __DMA_H__
 #define __DMA_H__

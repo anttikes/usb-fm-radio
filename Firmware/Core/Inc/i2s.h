@@ -16,7 +16,6 @@
  ******************************************************************************
  */
 /* USER CODE END Header */
-
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __I2S_H__
 #define __I2S_H__
