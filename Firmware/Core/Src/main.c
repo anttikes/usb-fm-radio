@@ -101,6 +101,10 @@ int main(void)
 	MX_TIM14_Init();
 	/* USER CODE BEGIN 2 */
 
+	/* USB peripheral clock enable and interrupt priority */
+	__HAL_RCC_USB_CLK_ENABLE();
+	HAL_NVIC_SetPriority(USB_IRQn, 0, 0);
+
 	// Initialize TinyUSB
 	tusb_rhport_init_t dev_init = {
 		.role = TUSB_ROLE_DEVICE,
@@ -108,13 +112,6 @@ int main(void)
 	};
 
 	tusb_init(BOARD_DEVICE_RHPORT_NUM, &dev_init);
-
-	/* USB peripheral clock enable */
-	__HAL_RCC_USB_CLK_ENABLE();
-
-	/* USB peripheral interrupt init */
-	HAL_NVIC_SetPriority(USB_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(USB_IRQn);
 
 	// Bring Si4705 out of reset, and enable the oscillator
     HAL_GPIO_WritePin(RADIO_NRST_GPIO_Port, RADIO_NRST_Pin, GPIO_PIN_SET);
