@@ -1,0 +1,2 @@
+# Ignore a file maintained by the STM32CubeIDE extension
+c_cpp_properties.json
