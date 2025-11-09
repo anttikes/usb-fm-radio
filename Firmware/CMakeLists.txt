@@ -22,20 +22,15 @@ target_sources(firmware PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c
 )
 
-# Add TinyUSB sources to the project
-add_library(tinyusb OBJECT)
-tinyusb_target_add(tinyusb)
-target_include_directories(tinyusb PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/USB/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/
-)
-
 # Add include paths
 target_include_directories(firmware PRIVATE
     # Add user defined include paths
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/
 )
+
+# Add TinyUSB sources to the project
+tinyusb_target_add(firmware)
 
 # Add project symbols (macros)
 target_compile_definitions(firmware PRIVATE
@@ -50,5 +45,4 @@ target_link_libraries(firmware
     stm32cubemx
 
     # Add user defined libraries
-    tinyusb
 )
