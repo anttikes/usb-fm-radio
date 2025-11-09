@@ -10,7 +10,6 @@
             "name": "Launch ST-Link GDB Server",
             "origin": "snippet",
             "cwd": "${workspaceFolder}",
-            "deviceCore": "Cortex-M0",
             "preBuild": "${command:st-stm32-ide-debug-launch.build}",
             "runEntry": "main",
             "imagesAndSymbols": [

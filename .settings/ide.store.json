@@ -1,4 +1,6 @@
 {
   "device": "STM32F042C6T6",
-  "toolchain": "GCC"
+  "toolchain": "GCC",
+  "core": "Cortex-M0",
+  "order": 0
 }
