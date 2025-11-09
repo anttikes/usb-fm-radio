@@ -1,3 +1,6 @@
+# Set sub-project name
+project(firmware)
+
 # Create an executable object type
 add_executable(firmware)
 
@@ -16,10 +19,6 @@ target_link_directories(firmware PRIVATE
 target_sources(firmware PRIVATE
     # Add user sources here
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Src/si4705.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/audio_callbacks.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/hid_callbacks.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/usb_descriptors.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c
 )
 
 # Add include paths
@@ -32,6 +31,15 @@ target_include_directories(firmware PRIVATE
 
 # Add TinyUSB sources to the project
 tinyusb_target_add(firmware)
+target_sources(firmware PRIVATE
+    # TinyUSB requires callbacks and descriptors defined by the user
+    ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/audio_callbacks.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/hid_callbacks.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/usb_descriptors.c    
+    
+    # Use the provided FSDEV driver
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c    
+)
 
 # Add project symbols (macros)
 target_compile_definitions(firmware PRIVATE
