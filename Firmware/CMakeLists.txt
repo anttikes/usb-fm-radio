@@ -15,7 +15,7 @@ target_link_directories(firmware PRIVATE
 # Add sources to executable
 target_sources(firmware PRIVATE
     # Add user sources here
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/si4705.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Src/si4705.c
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/audio_callbacks.c
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/hid_callbacks.c
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/usb_descriptors.c
@@ -26,6 +26,7 @@ target_sources(firmware PRIVATE
 target_include_directories(firmware PRIVATE
     # Add user defined include paths
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/
 )
 
