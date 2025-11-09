@@ -1,28 +1,28 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file     startup_stm32f042x6.s
-  * @brief    STM32F042x4/STM32F042x6 devices vector table for GCC toolchain.
-  *           This module performs:
-  *               - Set the initial SP
-  *               - Set the initial PC == Reset_Handler,
-  *               - Set the vector table entries with the exceptions ISR address
-  *               - Branches to main in the C library (which eventually
-  *                 calls main()).
-  *           After Reset the Cortex-M0 processor is in Thread mode,
-  *           priority is Privileged, and the Stack is set to Main.
+  * @file      startup_stm32f042x6.s
+  * @author    MCD Application Team
+  * @brief     STM32F042x4/STM32F042x6 devices vector table for GCC toolchain.
+  *            This module performs:
+  *                - Set the initial SP
+  *                - Set the initial PC == Reset_Handler,
+  *                - Set the vector table entries with the exceptions ISR address
+  *                - Branches to main in the C library (which eventually
+  *                  calls main()).
+  *            After Reset the Cortex-M0 processor is in Thread mode,
+  *            priority is Privileged, and the Stack is set to Main.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 Antti Keskinen
+  * Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
   .syntax unified
   .cpu cortex-m0
