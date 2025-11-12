@@ -1,0 +1,7 @@
+BasedOnStyle: Microsoft
+IndentWidth: 4
+BreakBeforeBraces: Allman
+
+# Optional: Set this to true to align pointers/references to the left (near the type)
+# For example: int* myPtr;
+PointerAlignment: Left
