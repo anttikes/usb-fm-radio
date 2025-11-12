@@ -18,7 +18,8 @@
 #define __STM32F0xx_HAL_CONF_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* Exported types ------------------------------------------------------------*/
@@ -70,18 +71,16 @@ extern "C" {
  * PLL).
  */
 #if !defined(HSE_VALUE)
-#define HSE_VALUE                                                              \
-  ((uint32_t)16000000) /*!< Value of the External oscillator in Hz */
-#endif                 /* HSE_VALUE */
+#define HSE_VALUE ((uint32_t)16000000) /*!< Value of the External oscillator in Hz */
+#endif                                 /* HSE_VALUE */
 
 /**
  * @brief In the following line adjust the External High Speed oscillator (HSE)
  * Startup Timeout value
  */
 #if !defined(HSE_STARTUP_TIMEOUT)
-#define HSE_STARTUP_TIMEOUT                                                    \
-  ((uint32_t)100) /*!< Time out for HSE start up, in ms */
-#endif            /* HSE_STARTUP_TIMEOUT */
+#define HSE_STARTUP_TIMEOUT ((uint32_t)100) /*!< Time out for HSE start up, in ms */
+#endif                                      /* HSE_STARTUP_TIMEOUT */
 
 /**
  * @brief Internal High Speed oscillator (HSI) value.
@@ -90,9 +89,8 @@ extern "C" {
  * PLL).
  */
 #if !defined(HSI_VALUE)
-#define HSI_VALUE                                                              \
-  ((uint32_t)8000000) /*!< Value of the Internal oscillator in Hz*/
-#endif                /* HSI_VALUE */
+#define HSI_VALUE ((uint32_t)8000000) /*!< Value of the Internal oscillator in Hz*/
+#endif                                /* HSI_VALUE */
 
 /**
  * @brief In the following line adjust the Internal High Speed oscillator (HSI)
@@ -106,45 +104,43 @@ extern "C" {
  * @brief Internal High Speed oscillator for ADC (HSI14) value.
  */
 #if !defined(HSI14_VALUE)
-#define HSI14_VALUE                                                            \
-  ((uint32_t)14000000) /*!< Value of the Internal High Speed oscillator for    \
-                          ADC in Hz. The real value may vary depending on the  \
-                          variations in voltage and temperature.  */
-#endif                 /* HSI14_VALUE */
+#define HSI14_VALUE                                                                                                    \
+    ((uint32_t)14000000) /*!< Value of the Internal High Speed oscillator for                                          \
+                            ADC in Hz. The real value may vary depending on the                                        \
+                            variations in voltage and temperature.  */
+#endif                   /* HSI14_VALUE */
 
 /**
  * @brief Internal High Speed oscillator for USB (HSI48) value.
  */
 #if !defined(HSI48_VALUE)
-#define HSI48_VALUE                                                            \
-  ((uint32_t)48000000) /*!< Value of the Internal High Speed oscillator for    \
-                         USB in Hz. The real value may vary depending on the   \
-                         variations in voltage and temperature.  */
-#endif                 /* HSI48_VALUE */
+#define HSI48_VALUE                                                                                                    \
+    ((uint32_t)48000000) /*!< Value of the Internal High Speed oscillator for                                          \
+                           USB in Hz. The real value may vary depending on the                                         \
+                           variations in voltage and temperature.  */
+#endif                   /* HSI48_VALUE */
 
 /**
  * @brief Internal Low Speed oscillator (LSI) value.
  */
 #if !defined(LSI_VALUE)
 #define LSI_VALUE ((uint32_t)40000)
-#endif /* LSI_VALUE */ /*!< Value of the Internal Low Speed oscillator in Hz   \
-                        The real value may vary depending on the variations    \
+#endif /* LSI_VALUE */ /*!< Value of the Internal Low Speed oscillator in Hz                                           \
+                        The real value may vary depending on the variations                                            \
                         in voltage and temperature.  */
 /**
  * @brief External Low Speed oscillator (LSI) value.
  */
 #if !defined(LSE_VALUE)
-#define LSE_VALUE                                                              \
-  ((uint32_t)32768) /*!< Value of the External Low Speed oscillator in Hz */
-#endif              /* LSE_VALUE */
+#define LSE_VALUE ((uint32_t)32768) /*!< Value of the External Low Speed oscillator in Hz */
+#endif                              /* LSE_VALUE */
 
 /**
  * @brief Time out for LSE start up value in ms.
  */
 #if !defined(LSE_STARTUP_TIMEOUT)
-#define LSE_STARTUP_TIMEOUT                                                    \
-  ((uint32_t)5000) /*!< Time out for LSE start up, in ms */
-#endif             /* LSE_STARTUP_TIMEOUT */
+#define LSE_STARTUP_TIMEOUT ((uint32_t)5000) /*!< Time out for LSE start up, in ms */
+#endif                                       /* LSE_STARTUP_TIMEOUT */
 
 /* Tip: To avoid modifying this file each time you need to use different HSE,
    ===  you can define the HSE value in your toolchain compiler preprocessor. */
@@ -153,53 +149,34 @@ extern "C" {
 /**
  * @brief This is the HAL system configuration section
  */
-#define VDD_VALUE ((uint32_t)3300) /*!< Value of VDD in mv */
-#define TICK_INT_PRIORITY                                                      \
-  ((uint32_t)3) /*!< tick interrupt priority (lowest by default)  */
-                /*  Warning: Must be set to higher priority for HAL_Delay()  */
-                /*  and HAL_GetTick() usage under interrupt context          */
+#define VDD_VALUE ((uint32_t)3300)      /*!< Value of VDD in mv */
+#define TICK_INT_PRIORITY ((uint32_t)3) /*!< tick interrupt priority (lowest by default)  */
+                                        /*  Warning: Must be set to higher priority for HAL_Delay()  */
+                                        /*  and HAL_GetTick() usage under interrupt context          */
 #define USE_RTOS 0
 #define PREFETCH_ENABLE 1
 #define INSTRUCTION_CACHE_ENABLE 0
 #define DATA_CACHE_ENABLE 0
 #define USE_SPI_CRC 0U
 
-#define USE_HAL_ADC_REGISTER_CALLBACKS                                         \
-  0U /* ADC register callback disabled       */
-#define USE_HAL_CAN_REGISTER_CALLBACKS                                         \
-  0U /* CAN register callback disabled       */
-#define USE_HAL_COMP_REGISTER_CALLBACKS                                        \
-  0U /* COMP register callback disabled      */
-#define USE_HAL_CEC_REGISTER_CALLBACKS                                         \
-  0U /* CEC register callback disabled       */
-#define USE_HAL_DAC_REGISTER_CALLBACKS                                         \
-  0U /* DAC register callback disabled       */
-#define USE_HAL_I2C_REGISTER_CALLBACKS                                         \
-  0U /* I2C register callback disabled       */
-#define USE_HAL_SMBUS_REGISTER_CALLBACKS                                       \
-  0U /* SMBUS register callback disabled     */
-#define USE_HAL_UART_REGISTER_CALLBACKS                                        \
-  0U /* UART register callback disabled      */
-#define USE_HAL_USART_REGISTER_CALLBACKS                                       \
-  0U /* USART register callback disabled     */
-#define USE_HAL_IRDA_REGISTER_CALLBACKS                                        \
-  0U /* IRDA register callback disabled      */
-#define USE_HAL_SMARTCARD_REGISTER_CALLBACKS                                   \
-  0U /* SMARTCARD register callback disabled */
-#define USE_HAL_WWDG_REGISTER_CALLBACKS                                        \
-  0U /* WWDG register callback disabled      */
-#define USE_HAL_RTC_REGISTER_CALLBACKS                                         \
-  0U /* RTC register callback disabled       */
-#define USE_HAL_SPI_REGISTER_CALLBACKS                                         \
-  0U /* SPI register callback disabled       */
-#define USE_HAL_I2S_REGISTER_CALLBACKS                                         \
-  0U /* I2S register callback disabled       */
-#define USE_HAL_TIM_REGISTER_CALLBACKS                                         \
-  0U /* TIM register callback disabled       */
-#define USE_HAL_TSC_REGISTER_CALLBACKS                                         \
-  0U /* TSC register callback disabled       */
-#define USE_HAL_PCD_REGISTER_CALLBACKS                                         \
-  0U /* PCD register callback disabled       */
+#define USE_HAL_ADC_REGISTER_CALLBACKS 0U       /* ADC register callback disabled       */
+#define USE_HAL_CAN_REGISTER_CALLBACKS 0U       /* CAN register callback disabled       */
+#define USE_HAL_COMP_REGISTER_CALLBACKS 0U      /* COMP register callback disabled      */
+#define USE_HAL_CEC_REGISTER_CALLBACKS 0U       /* CEC register callback disabled       */
+#define USE_HAL_DAC_REGISTER_CALLBACKS 0U       /* DAC register callback disabled       */
+#define USE_HAL_I2C_REGISTER_CALLBACKS 0U       /* I2C register callback disabled       */
+#define USE_HAL_SMBUS_REGISTER_CALLBACKS 0U     /* SMBUS register callback disabled     */
+#define USE_HAL_UART_REGISTER_CALLBACKS 0U      /* UART register callback disabled      */
+#define USE_HAL_USART_REGISTER_CALLBACKS 0U     /* USART register callback disabled     */
+#define USE_HAL_IRDA_REGISTER_CALLBACKS 0U      /* IRDA register callback disabled      */
+#define USE_HAL_SMARTCARD_REGISTER_CALLBACKS 0U /* SMARTCARD register callback disabled */
+#define USE_HAL_WWDG_REGISTER_CALLBACKS 0U      /* WWDG register callback disabled      */
+#define USE_HAL_RTC_REGISTER_CALLBACKS 0U       /* RTC register callback disabled       */
+#define USE_HAL_SPI_REGISTER_CALLBACKS 0U       /* SPI register callback disabled       */
+#define USE_HAL_I2S_REGISTER_CALLBACKS 0U       /* I2S register callback disabled       */
+#define USE_HAL_TIM_REGISTER_CALLBACKS 0U       /* TIM register callback disabled       */
+#define USE_HAL_TSC_REGISTER_CALLBACKS 0U       /* TSC register callback disabled       */
+#define USE_HAL_PCD_REGISTER_CALLBACKS 0U       /* PCD register callback disabled       */
 
 /* ########################## Assert Selection ############################## */
 /**
@@ -331,10 +308,9 @@ extern "C" {
  *         If expr is true, it returns no value.
  * @retval None
  */
-#define assert_param(expr)                                                     \
-  ((expr) ? (void)0U : assert_failed((uint8_t *)__FILE__, __LINE__))
+#define assert_param(expr) ((expr) ? (void)0U : assert_failed((uint8_t*)__FILE__, __LINE__))
 /* Exported functions ------------------------------------------------------- */
-void assert_failed(uint8_t *file, uint32_t line);
+void assert_failed(uint8_t* file, uint32_t line);
 #else
 #define assert_param(expr) ((void)0U)
 #endif /* USE_FULL_ASSERT */
