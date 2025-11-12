@@ -1,10 +1,8 @@
 BasedOnStyle: Microsoft
 
-Language: C
 IndentWidth: 4
 BreakBeforeBraces: Allman
-IndentExternC: false
+IndentExternBlock: NoIndent
 
-# Optional: Set this to true to align pointers/references to the left (near the type)
-# For example: int* myPtr;
+DerivePointerAlignment: false
 PointerAlignment: Left
