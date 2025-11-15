@@ -37,7 +37,7 @@ void MX_I2S1_Init(void)
     }
 }
 
-void HAL_I2S_MspInit(I2S_HandleTypeDef* i2sHandle)
+void HAL_I2S_MspInit(I2S_HandleTypeDef *i2sHandle)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -80,7 +80,7 @@ void HAL_I2S_MspInit(I2S_HandleTypeDef* i2sHandle)
     }
 }
 
-void HAL_I2S_MspDeInit(I2S_HandleTypeDef* i2sHandle)
+void HAL_I2S_MspDeInit(I2S_HandleTypeDef *i2sHandle)
 {
     if (i2sHandle->Instance == SPI1)
     {

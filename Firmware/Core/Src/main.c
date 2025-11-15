@@ -203,26 +203,26 @@ void SystemClock_Config(void)
     HAL_RCCEx_CRSConfig(&RCC_CRSInitStruct);
 }
 
-void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef* hi2s)
+void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s)
 {
     UNUSED(hi2s);
 
     tud_audio_write(&i2sBuffer[DMA_BUFFER_START], DMA_BUFFER_LENGTH);
 }
 
-void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef* hi2s)
+void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
 {
     UNUSED(hi2s);
 
     tud_audio_write(&i2sBuffer[DMA_BUFFER_MIDPOINT], DMA_BUFFER_LENGTH);
 }
 
-void HAL_I2S_ErrorCallback(I2S_HandleTypeDef* hi2s)
+void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s)
 {
     UNUSED(hi2s);
 }
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     UNUSED(htim);
 }
@@ -248,7 +248,7 @@ void Error_Handler(void)
  * @param  line: assert_param error line source number
  * @retval None
  */
-void assert_failed(uint8_t* file, uint32_t line)
+void assert_failed(uint8_t *file, uint32_t line)
 {
     UNUSED(file);
     UNUSED(line);

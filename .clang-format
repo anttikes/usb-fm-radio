@@ -3,3 +3,4 @@ BasedOnStyle: Microsoft
 Language: Cpp
 
 IndentWidth: 4
+IndentExternBlock: NoIndent

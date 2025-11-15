@@ -312,21 +312,21 @@ typedef struct _RadioDevice_t
 extern volatile RadioDevice_t radioDevice;
 
 /* Exported functions prototypes ---------------------------------------------*/
-void WaitForStatus(volatile RadioDevice_t* pRadioDevice, StatusFlags_t statusToWait);
+void WaitForStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t statusToWait);
 
-HAL_StatusTypeDef PowerUp(volatile RadioDevice_t* pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2);
-HAL_StatusTypeDef SetInterruptSources(volatile RadioDevice_t* pRadioDevice, InterruptSources_t sources);
-HAL_StatusTypeDef PowerDown(volatile RadioDevice_t* pRadioDevice);
-HAL_StatusTypeDef GetRevision(volatile RadioDevice_t* pRadioDevice, GetRevisionResponse_t* pResponse);
-HAL_StatusTypeDef SetProperty(volatile RadioDevice_t* pRadioDevice, uint16_t property, uint16_t value);
-HAL_StatusTypeDef GetProperty(volatile RadioDevice_t* pRadioDevice, uint16_t property, uint16_t* pValue);
-HAL_StatusTypeDef GetIntStatus(volatile RadioDevice_t* pRadioDevice, StatusFlags_t* pValue);
-HAL_StatusTypeDef TuneFreq(volatile RadioDevice_t* pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency);
-HAL_StatusTypeDef SeekStart(volatile RadioDevice_t* pRadioDevice, CMD_FM_SEEK_START_ARGS args);
-HAL_StatusTypeDef GetTuneStatus(volatile RadioDevice_t* pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args,
-                                GetTuneStatusResponse_t* pResponse);
-HAL_StatusTypeDef RSQStatus(volatile RadioDevice_t* pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args,
-                            RSQStatusResponse_t* pResponse);
+HAL_StatusTypeDef PowerUp(volatile RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2);
+HAL_StatusTypeDef SetInterruptSources(volatile RadioDevice_t *pRadioDevice, InterruptSources_t sources);
+HAL_StatusTypeDef PowerDown(volatile RadioDevice_t *pRadioDevice);
+HAL_StatusTypeDef GetRevision(volatile RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse);
+HAL_StatusTypeDef SetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t property, uint16_t value);
+HAL_StatusTypeDef GetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t property, uint16_t *pValue);
+HAL_StatusTypeDef GetIntStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t *pValue);
+HAL_StatusTypeDef TuneFreq(volatile RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency);
+HAL_StatusTypeDef SeekStart(volatile RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args);
+HAL_StatusTypeDef GetTuneStatus(volatile RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args,
+                                GetTuneStatusResponse_t *pResponse);
+HAL_StatusTypeDef RSQStatus(volatile RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args,
+                            RSQStatusResponse_t *pResponse);
 
 /* Private defines -----------------------------------------------------------*/
 #define SI4705_I2C_ADDRESS                                                                                             \

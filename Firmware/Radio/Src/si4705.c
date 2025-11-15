@@ -52,7 +52,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
  *
  * @retval None
  */
-void WaitForStatus(volatile RadioDevice_t* pRadioDevice, StatusFlags_t statusToWait)
+void WaitForStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t statusToWait)
 {
     while (true)
     {
@@ -67,7 +67,7 @@ void WaitForStatus(volatile RadioDevice_t* pRadioDevice, StatusFlags_t statusToW
         else
         {
             status =
-                HAL_I2C_Master_Receive(&hi2c1, radioDevice.deviceAddress, (uint8_t*)&latestStatus, 1, HAL_MAX_DELAY);
+                HAL_I2C_Master_Receive(&hi2c1, radioDevice.deviceAddress, (uint8_t *)&latestStatus, 1, HAL_MAX_DELAY);
         }
 
         if (status != HAL_OK)
@@ -93,7 +93,7 @@ void WaitForStatus(volatile RadioDevice_t* pRadioDevice, StatusFlags_t statusToW
  *
  * @retval HAL status
  */
-HAL_StatusTypeDef PowerUp(volatile RadioDevice_t* pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2)
+HAL_StatusTypeDef PowerUp(volatile RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2)
 {
     HAL_StatusTypeDef status;
     uint8_t tx_buffer[3] = {0};
@@ -128,7 +128,7 @@ HAL_StatusTypeDef PowerUp(volatile RadioDevice_t* pRadioDevice, CMD_POWER_UP_ARG
  *
  * @retval HAL status
  */
-HAL_StatusTypeDef SetInterruptSources(volatile RadioDevice_t* pRadioDevice, InterruptSources_t sources)
+HAL_StatusTypeDef SetInterruptSources(volatile RadioDevice_t *pRadioDevice, InterruptSources_t sources)
 {
     HAL_StatusTypeDef status = SetProperty(pRadioDevice, PROP_GPO_IEN, sources);
 
@@ -146,7 +146,7 @@ HAL_StatusTypeDef SetInterruptSources(volatile RadioDevice_t* pRadioDevice, Inte
  *
  * @retval None
  */
-HAL_StatusTypeDef PowerDown(volatile RadioDevice_t* pRadioDevice)
+HAL_StatusTypeDef PowerDown(volatile RadioDevice_t *pRadioDevice)
 {
     HAL_StatusTypeDef status;
     uint8_t tx_buffer[1] = {0};
@@ -181,7 +181,7 @@ HAL_StatusTypeDef PowerDown(volatile RadioDevice_t* pRadioDevice)
  *
  * @retval HAL status
  */
-HAL_StatusTypeDef GetRevision(volatile RadioDevice_t* pRadioDevice, GetRevisionResponse_t* pResponse)
+HAL_StatusTypeDef GetRevision(volatile RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse)
 {
     HAL_StatusTypeDef status;
     uint8_t tx_buffer[1] = {0};
@@ -227,7 +227,7 @@ HAL_StatusTypeDef GetRevision(volatile RadioDevice_t* pRadioDevice, GetRevisionR
  *
  * @retval HAL status
  */
-HAL_StatusTypeDef SetProperty(volatile RadioDevice_t* pRadioDevice, uint16_t property, uint16_t value)
+HAL_StatusTypeDef SetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t property, uint16_t value)
 {
     HAL_StatusTypeDef status;
     uint8_t tx_buffer[6] = {0};
@@ -262,7 +262,7 @@ HAL_StatusTypeDef SetProperty(volatile RadioDevice_t* pRadioDevice, uint16_t pro
  *
  * @retval HAL status
  */
-HAL_StatusTypeDef GetProperty(volatile RadioDevice_t* pRadioDevice, uint16_t property, uint16_t* pValue)
+HAL_StatusTypeDef GetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t property, uint16_t *pValue)
 {
     HAL_StatusTypeDef status;
     uint8_t tx_buffer[4] = {0};
@@ -304,7 +304,7 @@ HAL_StatusTypeDef GetProperty(volatile RadioDevice_t* pRadioDevice, uint16_t pro
  *
  * @retval HAL status
  */
-HAL_StatusTypeDef GetIntStatus(volatile RadioDevice_t* pRadioDevice, StatusFlags_t* pValue)
+HAL_StatusTypeDef GetIntStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t *pValue)
 {
     HAL_StatusTypeDef status;
     uint8_t tx_buffer[1] = {0};
@@ -343,7 +343,7 @@ HAL_StatusTypeDef GetIntStatus(volatile RadioDevice_t* pRadioDevice, StatusFlags
  *
  * @retval HAL status
  */
-HAL_StatusTypeDef TuneFreq(volatile RadioDevice_t* pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency)
+HAL_StatusTypeDef TuneFreq(volatile RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency)
 {
     HAL_StatusTypeDef status;
     uint8_t tx_buffer[5] = {0};
@@ -377,7 +377,7 @@ HAL_StatusTypeDef TuneFreq(volatile RadioDevice_t* pRadioDevice, CMD_FM_TUNE_FRE
  *
  * @retval HAL status
  */
-HAL_StatusTypeDef SeekStart(volatile RadioDevice_t* pRadioDevice, CMD_FM_SEEK_START_ARGS args)
+HAL_StatusTypeDef SeekStart(volatile RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args)
 {
     HAL_StatusTypeDef status;
     uint8_t tx_buffer[2] = {0};
@@ -407,8 +407,8 @@ HAL_StatusTypeDef SeekStart(volatile RadioDevice_t* pRadioDevice, CMD_FM_SEEK_ST
  *
  * @retval HAL status
  */
-HAL_StatusTypeDef GetTuneStatus(volatile RadioDevice_t* pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args,
-                                GetTuneStatusResponse_t* pResponse)
+HAL_StatusTypeDef GetTuneStatus(volatile RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args,
+                                GetTuneStatusResponse_t *pResponse)
 {
     HAL_StatusTypeDef status;
     uint8_t tx_buffer[2] = {0};
@@ -456,8 +456,8 @@ HAL_StatusTypeDef GetTuneStatus(volatile RadioDevice_t* pRadioDevice, CMD_GET_TU
  *
  * @retval HAL status
  */
-HAL_StatusTypeDef RSQStatus(volatile RadioDevice_t* pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args,
-                            RSQStatusResponse_t* pResponse)
+HAL_StatusTypeDef RSQStatus(volatile RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args,
+                            RSQStatusResponse_t *pResponse)
 {
     HAL_StatusTypeDef status;
     uint8_t tx_buffer[2] = {0};
