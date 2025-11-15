@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file           : audio_callbacks.c
@@ -15,34 +14,14 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
-
 #include "audio_config.h"
-#include <stdbool.h>
 #include "i2s.h"
 #include "tusb.h"
+#include <stdbool.h>
 
-uint32_t samplingFrequency = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE;
-audio_control_range_4_n_t(1) samplingFrequencyRange =
-{
-	.wNumSubRanges = 1,
-	.subrange[0].bMin = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE,
-	.subrange[0].bMax = CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE,
-	.subrange[0].bRes = 0,
-};
-
-bool clockValid = true;
-
+// TODO: Move these to the radio struct
 bool mute = false;
-
 uint16_t volume = 31;
-audio_control_range_2_n_t(1) volumeRange =
-{
-	.wNumSubRanges = 1,
-	.subrange[0].bMin = 0,
-	.subrange[0].bMax = 64,
-	.subrange[0].bRes = 1
-};
 
 /**
  * @brief  Invoked to handle the SET INTERFACE request
@@ -51,21 +30,24 @@ audio_control_range_2_n_t(1) volumeRange =
  *
  * @retval True if the call succeeded; false otherwise. Returning false will stall EP0
  */
-bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const * p_request)
+bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const *p_request)
 {
-	(void) rhport;
+    (void)rhport;
 
-	//uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
-	uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
+    // uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
+    uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
 
-	// Clear buffer when streaming format is changed
-	if (alt == 1) {
-		TU_BREAKPOINT();
-	} else {
-		TU_BREAKPOINT();
-	}
+    // Clear buffer when streaming format is changed
+    if (alt == 1)
+    {
+        TU_BREAKPOINT();
+    }
+    else
+    {
+        TU_BREAKPOINT();
+    }
 
-	return true;
+    return true;
 }
 
 /**
@@ -75,12 +57,12 @@ bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const * p_reque
  *
  * @retval True if the call succeeded; false otherwise. Returning false will stall EP0
  */
-bool tud_audio_set_itf_close_ep_cb(uint8_t rhport, tusb_control_request_t const * p_request)
+bool tud_audio_set_itf_close_ep_cb(uint8_t rhport, tusb_control_request_t const *p_request)
 {
-	(void) rhport;
-	(void) p_request;
+    (void)rhport;
+    (void)p_request;
 
-	return true;
+    return true;
 }
 
 /**
@@ -91,13 +73,13 @@ bool tud_audio_set_itf_close_ep_cb(uint8_t rhport, tusb_control_request_t const 
  *
  * @retval True if the call succeeded; false otherwise. Returning false will stall EP0
  */
-bool tud_audio_set_req_ep_cb(uint8_t rhport, tusb_control_request_t const * p_request, uint8_t *pBuff)
+bool tud_audio_set_req_ep_cb(uint8_t rhport, tusb_control_request_t const *p_request, uint8_t *pBuff)
 {
-	(void) rhport;
-	(void) p_request;
-	(void) pBuff;
+    (void)rhport;
+    (void)p_request;
+    (void)pBuff;
 
-	return false;
+    return false;
 }
 
 /**
@@ -107,13 +89,13 @@ bool tud_audio_set_req_ep_cb(uint8_t rhport, tusb_control_request_t const * p_re
  *
  * @retval True if the call succeeded; false otherwise. Returning false will stall EP0
  */
-bool tud_audio_set_req_itf_cb(uint8_t rhport, tusb_control_request_t const * p_request, uint8_t *pBuff)
+bool tud_audio_set_req_itf_cb(uint8_t rhport, tusb_control_request_t const *p_request, uint8_t *pBuff)
 {
-	(void) rhport;
-	(void) p_request;
-	(void) pBuff;
+    (void)rhport;
+    (void)p_request;
+    (void)pBuff;
 
-	return false;
+    return false;
 }
 
 /**
@@ -123,38 +105,55 @@ bool tud_audio_set_req_itf_cb(uint8_t rhport, tusb_control_request_t const * p_r
  *
  * @retval True if the call succeeded; false otherwise. Returning false will stall EP0
  */
-bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const * p_request, uint8_t *pBuff)
+bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p_request, uint8_t *pBuff)
 {
-	(void) rhport;
+    (void)rhport;
 
-	//uint8_t channelNum = TU_U16_LOW(p_request->wValue);       // We have only one channel so this doesn't make a difference
-	uint8_t ctrlSel = TU_U16_HIGH(p_request->wValue);
-	// uint8_t itf = TU_U16_LOW(p_request->wIndex); 			// Since we have only one audio function implemented, we do not need the itf value
-	uint8_t entityID = TU_U16_HIGH(p_request->wIndex);
+    // uint8_t channelNum = TU_U16_LOW(p_request->wValue);       // We have only one channel so this doesn't make a
+    // difference
+    uint8_t ctrlSel = TU_U16_HIGH(p_request->wValue);
+    // uint8_t itf = TU_U16_LOW(p_request->wIndex); 			// Since we have only one audio function implemented, we
+    // do not need the itf value
+    uint8_t entityID = TU_U16_HIGH(p_request->wIndex);
 
-	if (entityID == ENTITY_ID_FEATURE_UNIT) {
-		// The feature unit has master channel mute and volume
-		switch(ctrlSel)
-		{
-			case AUDIO_FU_CTRL_VOLUME:
-				TU_VERIFY(p_request->wLength == sizeof(audio_control_cur_2_t));
+    if (entityID == ENTITY_ID_FEATURE_UNIT)
+    {
+        // The feature unit has master channel mute and volume
+        switch (ctrlSel)
+        {
+        case AUDIO10_FU_CTRL_VOLUME:
+            if (p_request->bRequest != AUDIO10_CS_REQ_SET_CUR)
+            {
+                TU_BREAKPOINT();
+                return false;
+            }
 
-				volume = (uint16_t) ((audio_control_cur_2_t *) pBuff)->bCur;
-				return true;
+            // Only first form is supported
+            TU_VERIFY(p_request->wLength == 2);
 
-			case AUDIO_FU_CTRL_MUTE:
-				TU_VERIFY(p_request->wLength == sizeof(audio_control_cur_1_t));
+            volume = tu_unaligned_read16(pBuff);
+            return true;
 
-				mute = ((audio_control_cur_1_t*) pBuff)->bCur;
-				return true;
+        case AUDIO10_FU_CTRL_MUTE:
+            if (p_request->bRequest != AUDIO10_CS_REQ_SET_CUR)
+            {
+                TU_BREAKPOINT();
+                return false;
+            }
 
-			default:
-				TU_BREAKPOINT();
-				return false;
-		}
-	}
+            // Only first form is supported
+            TU_VERIFY(p_request->wLength == 1);
 
-	return false;
+            mute = pBuff[0];
+            return true;
+
+        default:
+            TU_BREAKPOINT();
+            return false;
+        }
+    }
+
+    return false;
 }
 
 /**
@@ -164,12 +163,12 @@ bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const * 
  *
  * @retval True if the call succeeded; false otherwise. Returning false will stall EP0
  */
-bool tud_audio_get_req_ep_cb(uint8_t rhport, tusb_control_request_t const * p_request)
+bool tud_audio_get_req_ep_cb(uint8_t rhport, tusb_control_request_t const *p_request)
 {
-	(void) rhport;
-	(void) p_request;
+    (void)rhport;
+    (void)p_request;
 
-	return false;
+    return false;
 }
 
 /**
@@ -179,12 +178,12 @@ bool tud_audio_get_req_ep_cb(uint8_t rhport, tusb_control_request_t const * p_re
  *
  * @retval True if the call succeeded; false otherwise. Returning false will stall EP0
  */
-bool tud_audio_get_req_itf_cb(uint8_t rhport, tusb_control_request_t const * p_request)
+bool tud_audio_get_req_itf_cb(uint8_t rhport, tusb_control_request_t const *p_request)
 {
-	(void) rhport;
-	(void) p_request;
+    (void)rhport;
+    (void)p_request;
 
-	return false;
+    return false;
 }
 
 /**
@@ -194,65 +193,54 @@ bool tud_audio_get_req_itf_cb(uint8_t rhport, tusb_control_request_t const * p_r
  *
  * @retval True if the call succeeded; false otherwise. Returning false will stall EP0
  */
-bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const * p_request)
+bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p_request)
 {
-	//uint8_t channelNum = TU_U16_LOW(p_request->wValue);       // We have only one channel so this doesn't make a difference
-	uint8_t ctrlSel = TU_U16_HIGH(p_request->wValue);
-	// uint8_t itf = TU_U16_LOW(p_request->wIndex); 			// Since we have only one audio function implemented, we do not need the itf value
-	uint8_t entityID = TU_U16_HIGH(p_request->wIndex);
+    // uint8_t channelNum = TU_U16_LOW(p_request->wValue);       // We have only one channel so this doesn't make a
+    // difference
+    uint8_t ctrlSel = TU_U16_HIGH(p_request->wValue);
+    // uint8_t itf = TU_U16_LOW(p_request->wIndex); 			// Since we have only one audio function implemented, we
+    // do not need the itf value
+    uint8_t entityID = TU_U16_HIGH(p_request->wIndex);
 
-	if (entityID == ENTITY_ID_FEATURE_UNIT) {
-		// The feature unit has master channel mute and volume
-		switch(ctrlSel)
-		{
-			case AUDIO_FU_CTRL_VOLUME:
-				switch(p_request->bRequest)
-				{
-					case AUDIO_CS_REQ_CUR:
-						return tud_control_xfer(rhport, p_request, &volume, sizeof(volume));
+    if (entityID == ENTITY_ID_FEATURE_UNIT)
+    {
+        // The feature unit has master channel mute and volume
+        switch (ctrlSel)
+        {
+        case AUDIO10_FU_CTRL_VOLUME:
+            switch (p_request->bRequest)
+            {
+            case AUDIO10_CS_REQ_GET_CUR:
+                return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &volume, sizeof(volume));
 
-					case AUDIO_CS_REQ_RANGE:
-						return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, (void*) &volumeRange, sizeof(volumeRange));
+            case AUDIO10_CS_REQ_GET_MIN: {
+                uint16_t minVolume = 0;
+                return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &minVolume, sizeof(minVolume));
+            }
 
-					default:
-						TU_BREAKPOINT();
-						return false;
-				}
+            case AUDIO10_CS_REQ_GET_MAX: {
+                uint16_t maxVolume = 64;
+                return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &maxVolume, sizeof(maxVolume));
+            }
 
-			case AUDIO_FU_CTRL_MUTE:
-				return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &mute, 1);
+            case AUDIO10_CS_REQ_GET_RES: {
+                uint16_t res = 1;
+                return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &res, sizeof(res));
+            }
 
-			default:
-				TU_BREAKPOINT();
-				return false;
-		}
-	}
+            default:
+                TU_BREAKPOINT();
+                return false;
+            }
 
-	if (entityID == ENTITY_ID_CLOCK_SOURCE) {
-		switch(ctrlSel)
-		{
-			case AUDIO_CS_CTRL_SAM_FREQ:
-				switch(p_request->bRequest)
-				{
-					case AUDIO_CS_REQ_CUR:
-						return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &samplingFrequency, sizeof(samplingFrequency));
+        case AUDIO20_FU_CTRL_MUTE:
+            return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &mute, 1);
 
-					case AUDIO_CS_REQ_RANGE:
-						return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &samplingFrequencyRange, sizeof(samplingFrequencyRange));
+        default:
+            TU_BREAKPOINT();
+            return false;
+        }
+    }
 
-					default:
-						TU_BREAKPOINT();
-						return false;
-				}
-
-				case AUDIO_CS_CTRL_CLK_VALID:
-					return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &clockValid, sizeof(clockValid));
-
-			default:
-				TU_BREAKPOINT();
-				return false;
-		}
-	}
-
-	return false;
+    return false;
 }

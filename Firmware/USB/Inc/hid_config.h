@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file           : hid_config.h
@@ -15,8 +14,6 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
-
 #ifndef __HID_CONFIG_H__
 #define __HID_CONFIG_H__
 
@@ -25,13 +22,13 @@
 //--------------------------------------------------------------------
 
 // HID buffer size
-#define CFG_TUD_HID_EP_BUFSIZE            16
+#define CFG_TUD_HID_EP_BUFSIZE 16
 
 // Interface numbers
-#define ITF_NUM_HID                       0x02
-#define ITF_NUM_HID_TOTAL                 0x01
+#define ITF_NUM_HID 0x02
+#define ITF_NUM_HID_TOTAL 0x01
 
 // Endpoint numbers
-#define EPNUM_HID                         0x02
+#define EPNUM_HID 0x02
 
 #endif /* __HID_CONFIG_H__ */

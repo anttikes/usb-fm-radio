@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file           : tusb_config.h
@@ -15,13 +14,12 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
-
 #ifndef __TUSB_CONFIG_H__
 #define __TUSB_CONFIG_H__
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 //--------------------------------------------------------------------
@@ -29,22 +27,22 @@ extern "C" {
 //--------------------------------------------------------------------
 
 // Define MCU and OS
-#define CFG_TUSB_MCU                  OPT_MCU_STM32F0
-#define CFG_TUSB_OS                   OPT_OS_NONE
+#define CFG_TUSB_MCU OPT_MCU_STM32F0
+#define CFG_TUSB_OS OPT_OS_NONE
 
 // Device mode
-#define CFG_TUD_ENABLED               1
+#define CFG_TUD_ENABLED 1
 
 // Device supports full speed max
-#define CFG_TUD_MAX_SPEED             OPT_MODE_FULL_SPEED
+#define CFG_TUD_MAX_SPEED OPT_MODE_FULL_SPEED
 
 // Define speed and port settings
-#define BOARD_DEVICE_RHPORT_SPEED     OPT_MODE_FULL_SPEED
-#define BOARD_DEVICE_RHPORT_NUM       0
-#define CFG_TUSB_RHPORT0_MODE         (OPT_MODE_DEVICE | BOARD_DEVICE_RHPORT_SPEED)
+#define BOARD_DEVICE_RHPORT_SPEED OPT_MODE_FULL_SPEED
+#define BOARD_DEVICE_RHPORT_NUM 0
+#define CFG_TUSB_RHPORT0_MODE (OPT_MODE_DEVICE | BOARD_DEVICE_RHPORT_SPEED)
 
 // Debug is off
-#define CFG_TUSB_DEBUG                0
+#define CFG_TUSB_DEBUG 0
 
 /* USB DMA on some MCUs can only access a specific SRAM region with restriction on alignment.
  * Tinyusb use follows macros to declare transferring memory so that they can be put
@@ -58,7 +56,7 @@ extern "C" {
 #endif
 
 #ifndef CFG_TUSB_MEM_ALIGN
-#define CFG_TUSB_MEM_ALIGN        __attribute__ ((aligned(4)))
+#define CFG_TUSB_MEM_ALIGN __attribute__((aligned(4)))
 #endif
 
 //--------------------------------------------------------------------
@@ -66,11 +64,11 @@ extern "C" {
 //--------------------------------------------------------------------
 
 // Specify control endpoint data packet size
-#define CFG_TUD_ENDPOINT0_SIZE    64
+#define CFG_TUD_ENDPOINT0_SIZE 64
 
 //------------- CLASS -------------//
-#define CFG_TUD_AUDIO             1
-#define CFG_TUD_HID               1
+#define CFG_TUD_AUDIO 1
+#define CFG_TUD_HID 0
 
 //--------------------------------------------------------------------
 // AUDIO CLASS DRIVER CONFIGURATION
