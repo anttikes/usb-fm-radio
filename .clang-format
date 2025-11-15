@@ -1,8 +1,5 @@
 BasedOnStyle: Microsoft
 
-IndentWidth: 4
-BreakBeforeBraces: Allman
-IndentExternBlock: NoIndent
+Language: Cpp
 
-DerivePointerAlignment: false
-PointerAlignment: Left
+IndentWidth: 4
