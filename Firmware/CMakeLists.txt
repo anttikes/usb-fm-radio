@@ -18,7 +18,8 @@ target_link_directories(firmware PRIVATE
 # Add sources to executable
 target_sources(firmware PRIVATE
     # Add user sources here
-    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Src/si4705.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Src/device.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Src/commands.c
 )
 
 # Add include paths

@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
- * @file    si4705.c
- * @brief   Implements wrapper calls for executing commands on the Si4705.
+ * @file    commands.c
+ * @brief   Implements command wrapper calls
  ******************************************************************************
  * @attention
  *
@@ -14,9 +14,10 @@
  ******************************************************************************
  */
 /* Includes ------------------------------------------------------------------*/
-#include "si4705.h"
+#include "commands.h"
+#include "common.h"
 #include "i2c.h"
-// #include "usbd_def.h"
+#include "stm32f0xx_hal_i2c.h"
 
 /* Private typedef -----------------------------------------------------------*/
 
@@ -25,25 +26,10 @@
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
-volatile RadioDevice_t radioDevice = {
-    .deviceAddress = SI4705_I2C_ADDRESS,
-    .currentState = RADIOSTATE_POWERDOWN,
-};
 
 /* Private function prototypes -----------------------------------------------*/
 
 /* Private user code ---------------------------------------------------------*/
-
-/**
- * @brief  Invoked when an EXTI event has occurred
- * @param  GPIO_Pin Specifies the port pin connected to corresponding EXTI line.
- *
- * @retval None
- */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-    UNUSED(GPIO_Pin);
-}
 
 /**
  * @brief  Synchronously waits for the specified status bit to be set via I2C polling
@@ -91,9 +77,9 @@ void WaitForStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t statusToW
  * @param  arg2 Second set of arguments for the command
  * @param  pResponse In case of "QueryLibraryId" variant, points to the structure where return data should be placed
  *
- * @retval HAL status
+ * @retval True if the command succeeded; false otherwise
  */
-HAL_StatusTypeDef PowerUp(volatile RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2)
+bool PowerUp(volatile RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2)
 {
     HAL_StatusTypeDef status;
     uint8_t tx_buffer[3] = {0};
@@ -118,7 +104,7 @@ HAL_StatusTypeDef PowerUp(volatile RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARG
 
     pRadioDevice->currentState = RADIOSTATE_POWERUP;
 
-    return status;
+    return true;
 }
 
 /**
@@ -126,52 +112,52 @@ HAL_StatusTypeDef PowerUp(volatile RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARG
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  sources Additional interrupt sources to enable
  *
- * @retval HAL status
+ * @retval True if the command succeeded; false otherwise
  */
-HAL_StatusTypeDef SetInterruptSources(volatile RadioDevice_t *pRadioDevice, InterruptSources_t sources)
+bool SetInterruptSources(volatile RadioDevice_t *pRadioDevice, InterruptSources_t sources)
 {
-    HAL_StatusTypeDef status = SetProperty(pRadioDevice, PROP_GPO_IEN, sources);
+    volatile HAL_StatusTypeDef status = SetProperty(pRadioDevice, PROP_ID_GPO_IEN, sources);
 
     if (status != HAL_OK)
     {
-        return status;
+        return false;
     }
 
-    return status;
+    return true;
 }
 
 /**
  * @brief  Sends the "Power down" command to the Si4705 chip and waits until CTS becomes set
  * @param  pRadioDevice Pointer to the radio device structure
  *
- * @retval None
+ * @retval True if the command succeeded; false otherwise
  */
-HAL_StatusTypeDef PowerDown(volatile RadioDevice_t *pRadioDevice)
+bool PowerDown(volatile RadioDevice_t *pRadioDevice)
 {
-    HAL_StatusTypeDef status;
+    volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[1] = {0};
 
     if (pRadioDevice->currentState == RADIOSTATE_POWERDOWN)
     {
-        return HAL_OK;
+        return true;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
-    tx_buffer[0] = CMD_POWER_DOWN;
+    tx_buffer[0] = CMD_ID_POWER_DOWN;
 
     status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
 
     if (status != HAL_OK)
     {
-        return status;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
     pRadioDevice->currentState = RADIOSTATE_POWERDOWN;
 
-    return status;
+    return true;
 }
 
 /**
@@ -179,11 +165,11 @@ HAL_StatusTypeDef PowerDown(volatile RadioDevice_t *pRadioDevice)
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  pResponse Pointer to the structure representing the data returned by the chip
  *
- * @retval HAL status
+ * @retval True if the command succeeded; false otherwise
  */
-HAL_StatusTypeDef GetRevision(volatile RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse)
+bool GetRevision(volatile RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse)
 {
-    HAL_StatusTypeDef status;
+    volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[1] = {0};
     uint8_t rx_buffer[16] = {0};
 
@@ -194,13 +180,13 @@ HAL_StatusTypeDef GetRevision(volatile RadioDevice_t *pRadioDevice, GetRevisionR
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
-    tx_buffer[0] = CMD_GET_REV;
+    tx_buffer[0] = CMD_ID_GET_REV;
 
     status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
 
     if (status != HAL_OK)
     {
-        return status;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
@@ -216,7 +202,7 @@ HAL_StatusTypeDef GetRevision(volatile RadioDevice_t *pRadioDevice, GetRevisionR
     pResponse->chipRevision = rx_buffer[8];
     pResponse->cid = rx_buffer[15];
 
-    return status;
+    return true;
 }
 
 /**
@@ -225,16 +211,16 @@ HAL_StatusTypeDef GetRevision(volatile RadioDevice_t *pRadioDevice, GetRevisionR
  * @param  property Identifier of the property to set
  * @param  value New value of the property
  *
- * @retval HAL status
+ * @retval True if the command succeeded; false otherwise
  */
-HAL_StatusTypeDef SetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t property, uint16_t value)
+bool SetProperty(volatile RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t value)
 {
-    HAL_StatusTypeDef status;
+    volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[6] = {0};
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
-    tx_buffer[0] = CMD_SET_PROPERTY;
+    tx_buffer[0] = CMD_ID_SET_PROPERTY;
     tx_buffer[1] = 0x00;
     tx_buffer[2] = (uint8_t)((property & 0xFF00) >> 8);
     tx_buffer[3] = (uint8_t)((property & 0x00FF) >> 0);
@@ -245,13 +231,13 @@ HAL_StatusTypeDef SetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t pro
 
     if (status != HAL_OK)
     {
-        return status;
+        return false;
     }
 
     // The programming guide says Set Property has a guaranteed timing of 10 ms, after which it is always completed
     HAL_Delay(10);
 
-    return status;
+    return true;
 }
 
 /**
@@ -260,22 +246,22 @@ HAL_StatusTypeDef SetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t pro
  * @param  property Identifier of the property to set
  * @param  pValue Pointer to the variable that will receive the value of that the property has
  *
- * @retval HAL status
+ * @retval True if the command succeeded; false otherwise
  */
-HAL_StatusTypeDef GetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t property, uint16_t *pValue)
+bool GetProperty(volatile RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t *pValue)
 {
-    HAL_StatusTypeDef status;
+    volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[4] = {0};
     uint8_t rx_buffer[4] = {0};
 
     if (pValue == NULL)
     {
-        return HAL_ERROR;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
-    tx_buffer[0] = CMD_GET_PROPERTY;
+    tx_buffer[0] = CMD_ID_GET_PROPERTY;
     tx_buffer[1] = 0x00;
     tx_buffer[2] = (uint8_t)((property & 0xFF00) >> 8);
     tx_buffer[3] = (uint8_t)((property & 0x00FF) >> 0);
@@ -284,7 +270,7 @@ HAL_StatusTypeDef GetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t pro
 
     if (status != HAL_OK)
     {
-        return status;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
@@ -294,7 +280,7 @@ HAL_StatusTypeDef GetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t pro
     // Third and fourth bytes are the high and low bytes of the return value
     (*pValue) = (uint16_t)((rx_buffer[2] << 8) | rx_buffer[3]);
 
-    return status;
+    return true;
 }
 
 /**
@@ -302,28 +288,28 @@ HAL_StatusTypeDef GetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t pro
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  property Identifier of the property to set
  *
- * @retval HAL status
+ * @retval True if the command succeeded; false otherwise
  */
-HAL_StatusTypeDef GetIntStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t *pValue)
+bool GetIntStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t *pValue)
 {
-    HAL_StatusTypeDef status;
+    volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[1] = {0};
     uint8_t rx_buffer[1] = {0};
 
     if (pValue == NULL)
     {
-        return HAL_ERROR;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
-    tx_buffer[0] = CMD_GET_INT_STATUS;
+    tx_buffer[0] = CMD_ID_GET_INT_STATUS;
 
     status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
 
     if (status != HAL_OK)
     {
-        return status;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
@@ -332,7 +318,7 @@ HAL_StatusTypeDef GetIntStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags
 
     (*pValue) = rx_buffer[0];
 
-    return status;
+    return true;
 }
 
 /**
@@ -341,16 +327,16 @@ HAL_StatusTypeDef GetIntStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags
  * @param  args Arguments for the command
  * @param  frequency Frequency to which the radio should tune itself, in 10 kHz increments
  *
- * @retval HAL status
+ * @retval True if the command succeeded; false otherwise
  */
-HAL_StatusTypeDef TuneFreq(volatile RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency)
+bool TuneFreq(volatile RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency)
 {
-    HAL_StatusTypeDef status;
+    volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[5] = {0};
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
-    tx_buffer[0] = CMD_FM_TUNE_FREQ;
+    tx_buffer[0] = CMD_ID_FM_TUNE_FREQ;
     tx_buffer[1] = args;
     tx_buffer[2] = (uint8_t)((frequency & 0xFF00) >> 8);
     tx_buffer[3] = (uint8_t)((frequency & 0x00FF) >> 0);
@@ -360,14 +346,14 @@ HAL_StatusTypeDef TuneFreq(volatile RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FRE
 
     if (status != HAL_OK)
     {
-        return status;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
     pRadioDevice->currentState = RADIOSTATE_TUNED_TO_STATION;
 
-    return status;
+    return true;
 }
 
 /**
@@ -375,28 +361,28 @@ HAL_StatusTypeDef TuneFreq(volatile RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FRE
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  args Arguments for the command
  *
- * @retval HAL status
+ * @retval True if the command succeeded; false otherwise
  */
-HAL_StatusTypeDef SeekStart(volatile RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args)
+bool SeekStart(volatile RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args)
 {
-    HAL_StatusTypeDef status;
+    volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[2] = {0};
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
-    tx_buffer[0] = CMD_FM_SEEK_START;
+    tx_buffer[0] = CMD_ID_FM_SEEK_START;
     tx_buffer[1] = args;
 
     status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
 
     if (status != HAL_OK)
     {
-        return status;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
-    return status;
+    return true;
 }
 
 /**
@@ -405,30 +391,30 @@ HAL_StatusTypeDef SeekStart(volatile RadioDevice_t *pRadioDevice, CMD_FM_SEEK_ST
  * @param  args Arguments to the command
  * @param  pResponse Pointer to a variable that will hold the response to the command
  *
- * @retval HAL status
+ * @retval True if the command succeeded; false otherwise
  */
-HAL_StatusTypeDef GetTuneStatus(volatile RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args,
-                                GetTuneStatusResponse_t *pResponse)
+bool GetTuneStatus(volatile RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args,
+                   GetTuneStatusResponse_t *pResponse)
 {
-    HAL_StatusTypeDef status;
+    volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[2] = {0};
     uint8_t rx_buffer[8] = {0};
 
     if (pResponse == NULL)
     {
-        return HAL_ERROR;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
-    tx_buffer[0] = CMD_FM_TUNE_STATUS;
+    tx_buffer[0] = CMD_ID_FM_TUNE_STATUS;
     tx_buffer[1] = args;
 
     status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
 
     if (status != HAL_OK)
     {
-        return status;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
@@ -445,7 +431,7 @@ HAL_StatusTypeDef GetTuneStatus(volatile RadioDevice_t *pRadioDevice, CMD_GET_TU
     pResponse->multipath = rx_buffer[6];
     pResponse->antennaTuningCapacitor = rx_buffer[7];
 
-    return status;
+    return true;
 }
 
 /**
@@ -454,30 +440,29 @@ HAL_StatusTypeDef GetTuneStatus(volatile RadioDevice_t *pRadioDevice, CMD_GET_TU
  * @param  args Arguments to the command
  * @param  pResponse Pointer to a variable that will hold the response to the command
  *
- * @retval HAL status
+ * @retval True if the command succeeded; false otherwise
  */
-HAL_StatusTypeDef RSQStatus(volatile RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args,
-                            RSQStatusResponse_t *pResponse)
+bool RSQStatus(volatile RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args, RSQStatusResponse_t *pResponse)
 {
-    HAL_StatusTypeDef status;
+    volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[2] = {0};
     uint8_t rx_buffer[8] = {0};
 
     if (pResponse == NULL)
     {
-        return HAL_ERROR;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
 
-    tx_buffer[0] = CMD_FM_RSQ_STATUS;
+    tx_buffer[0] = CMD_ID_FM_RSQ_STATUS;
     tx_buffer[1] = args;
 
     status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
 
     if (status != HAL_OK)
     {
-        return status;
+        return false;
     }
 
     WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
@@ -504,5 +489,5 @@ HAL_StatusTypeDef RSQStatus(volatile RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STA
     pResponse->multipath = rx_buffer[6];
     pResponse->frequencyOffset = (int8_t)rx_buffer[7];
 
-    return status;
+    return true;
 }

@@ -1,8 +1,7 @@
 /**
  ******************************************************************************
- * @file           : si4705.h
- * @version        : v1.0
- * @brief          : Header for si4705.c file.
+ * @file    common.h
+ * @brief   Header for common definitions
  ******************************************************************************
  * @attention
  *
@@ -15,8 +14,8 @@
  ******************************************************************************
  */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __SI4705_H
-#define __SI4705_H
+#ifndef __COMMON_H__
+#define __COMMON_H__
 
 #ifdef __cplusplus
 extern "C"
@@ -24,8 +23,8 @@ extern "C"
 #endif /* __cplusplus */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f0xx_hal.h"
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef enum _CMD_POWER_UP_ARGS_1
 {
@@ -285,48 +284,90 @@ typedef enum _InterruptSources_t
     INTERRUPT_SOURCES_ALL = INTERRUPT_SOURCES_ALLIEN | INTERRUPT_SOURCES_ALLREP,
 } InterruptSources_t;
 
-typedef enum _RadioState_t
+typedef enum _CommandIdentifiers_t
 {
-    /* Radio is in power-down state; send PowerUp command to wake it */
-    RADIOSTATE_POWERDOWN = 0x00,
+    // This is not really a command
+    CMD_ID_NONE = 0x00,
 
-    /* Radio is in power-up state; set properties, tune to station, or begin seek */
-    RADIOSTATE_POWERUP = 0x01,
+    CMD_ID_POWER_UP = 0x01,
+    CMD_ID_GET_REV = 0x10,
+    CMD_ID_POWER_DOWN = 0x11,
+    CMD_ID_SET_PROPERTY = 0x12,
+    CMD_ID_GET_PROPERTY = 0x13,
+    CMD_ID_GET_INT_STATUS = 0x14,
+    CMD_ID_PATCH_ARGS = 0x15,
+    CMD_ID_PATCH_DATA = 0x16,
+    CMD_ID_FM_TUNE_FREQ = 0x20,
+    CMD_ID_FM_SEEK_START = 0x21,
+    CMD_ID_FM_TUNE_STATUS = 0x22,
+    CMD_ID_FM_RSQ_STATUS = 0x23,
+    CMD_ID_FM_RDS_STATUS = 0x24,
+    CMD_ID_FM_AGC_STATUS = 0x27,
+    CMD_ID_FM_AGC_OVERRIDE = 0x28,
+    CMD_ID_GPIO_CTL = 0x80,
+    CMD_ID_GPIO_SET = 0x81
+} CommandIdentifiers_t;
 
-    /* Radio is tuned to a station, and is receiving a signal */
-    RADIOSTATE_TUNED_TO_STATION = 0x04,
-
-    /* Radio is sampling and sending digital output of the received audio signal */
-    RADIOSTATE_DIGITAL_OUTPUT_ENABLED = 0x08
-} RadioState_t;
-
-typedef struct _RadioDevice_t
+typedef enum _PropertyIdentifiers_t
 {
-    /* I2C address of the device */
-    uint16_t deviceAddress;
-
-    /* Holds the current state of the radio device */
-    RadioState_t currentState;
-} RadioDevice_t;
-
-extern volatile RadioDevice_t radioDevice;
+    PROP_ID_GPO_IEN = 0x0001,
+    PROP_ID_DIGITAL_OUTPUT_FORMAT = 0x0102,
+    PROP_ID_DIGITAL_OUTPUT_SAMPLE_RATE = 0x0104,
+    PROP_ID_REFCLK_FREQ = 0x0201,
+    PROP_ID_REFCLK_PRESCALE = 0x0202,
+    PROP_ID_FM_DEEMPHASIS = 0x1100,
+    PROP_ID_FM_CHANNEL_FILTER = 0x1102,
+    PROP_ID_FM_BLEND_STEREO_THRESHOLD = 0x1105,
+    PROP_ID_FM_BLEND_MONO_THRESHOLD = 0x1106,
+    PROP_ID_FM_ANTENNA_INPUT = 0x1107,
+    PROP_ID_FM_MAX_TUNE_ERROR = 0x1108,
+    PROP_ID_FM_RSQ_INT_SOURCE = 0x1200,
+    PROP_ID_FM_RSQ_SNR_HI_THRESHOLD = 0x1201,
+    PROP_ID_FM_RSQ_SNR_LO_THRESHOLD = 0x1202,
+    PROP_ID_FM_RSQ_RSSI_HI_THRESHOLD = 0x1203,
+    PROP_ID_FM_RSQ_RSSI_LO_THRESHOLD = 0x1204,
+    PROP_ID_FM_RSQ_MULTIPATH_HI_THRESHOLD = 0x1205,
+    PROP_ID_FM_RSQ_MULTIPATH_LO_THRESHOLD = 0x1206,
+    PROP_ID_FM_RSQ_BLEND_THRESHOLD = 0x1207,
+    PROP_ID_FM_SOFT_MUTE_RATE = 0x1300,
+    PROP_ID_FM_SOFT_MUTE_SLOPE = 0x1301,
+    PROP_ID_FM_SOFT_MUTE_MAX_ATTENUATION = 0x1302,
+    PROP_ID_FM_SOFT_MUTE_SNR_THRESHOLD = 0x1303,
+    PROP_ID_FM_SOFT_MUTE_RELEASE_RATE = 0x1304,
+    PROP_ID_FM_SOFT_MUTE_ATTACK_RATE = 0x1305,
+    PROP_ID_FM_SEEK_BAND_BOTTOM = 0x1400,
+    PROP_ID_FM_SEEK_BAND_TOP = 0x1401,
+    PROP_ID_FM_SEEK_FREQ_SPACING = 0x1402,
+    PROP_ID_FM_SEEK_TUNE_THRESHOLD = 0x1403,
+    PROP_ID_FM_SEEK_TUNE_RSSI_THRESHOLD = 0x1404,
+    PROP_ID_FM_RDS_INT_SOURCE = 0x1500,
+    PROP_ID_FM_RDS_INT_FIFO_COUNT = 0x1501,
+    PROP_ID_FM_RDS_CONFIG = 0x1502,
+    PROP_ID_FM_RDS_CONFIDENCE = 0x1503,
+    PROP_ID_FM_BLEND_RSSI_STEREO_THRESHOLD = 0x1800,
+    PROP_ID_FM_BLEND_RSSI_MONO_THRESHOLD = 0x1801,
+    PROP_ID_FM_BLEND_RSSI_ATTACK_RATE = 0x1802,
+    PROP_ID_FM_BLEND_RSSI_RELEASE_RATE = 0x1803,
+    PROP_ID_FM_BLEND_SNR_STEREO_THRESHOLD = 0x1804,
+    PROP_ID_FM_BLEND_SNR_MONO_THRESHOLD = 0x1805,
+    PROP_ID_FM_BLEND_SNR_ATTACK_RATE = 0x1806,
+    PROP_ID_FM_BLEND_SNR_RELEASE_RATE = 0x1807,
+    PROP_ID_FM_BLEND_MULTIPATH_STEREO_THRESHOLD = 0x1808,
+    PROP_ID_FM_BLEND_MULTIPATH_MONO_THRESHOLD = 0x1809,
+    PROP_ID_FM_BLEND_MULTIPATH_ATTACK_RATE = 0x180A,
+    PROP_ID_FM_BLEND_MULTIPATH_RELEASE_RATE = 0x180B,
+    PROP_ID_FM_HICUT_SNR_HIGH_THRESHOLD = 0x1A00,
+    PROP_ID_FM_HICUT_SNR_LOW_THRESHOLD = 0x1A01,
+    PROP_ID_FM_HICUT_ATTACK_RATE = 0x1A02,
+    PROP_ID_FM_HICUT_RELEASE_RATE = 0x1A03,
+    PROP_ID_FM_HICUT_MULTIPATH_TRIGGER_THRESHOLD = 0x1A04,
+    PROP_ID_FM_HICUT_MULTIPATH_END_THRESHOLD = 0x1A05,
+    PROP_ID_FM_HICUT_CUTOFF_FREQUENCY = 0x1A06,
+    PROP_ID_RX_VOLUME = 0x4000,
+    PROP_ID_RX_HARD_MUTE = 0x4001
+} PropertyIdentifiers_t;
 
 /* Exported functions prototypes ---------------------------------------------*/
-void WaitForStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t statusToWait);
-
-HAL_StatusTypeDef PowerUp(volatile RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2);
-HAL_StatusTypeDef SetInterruptSources(volatile RadioDevice_t *pRadioDevice, InterruptSources_t sources);
-HAL_StatusTypeDef PowerDown(volatile RadioDevice_t *pRadioDevice);
-HAL_StatusTypeDef GetRevision(volatile RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse);
-HAL_StatusTypeDef SetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t property, uint16_t value);
-HAL_StatusTypeDef GetProperty(volatile RadioDevice_t *pRadioDevice, uint16_t property, uint16_t *pValue);
-HAL_StatusTypeDef GetIntStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t *pValue);
-HAL_StatusTypeDef TuneFreq(volatile RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency);
-HAL_StatusTypeDef SeekStart(volatile RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args);
-HAL_StatusTypeDef GetTuneStatus(volatile RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args,
-                                GetTuneStatusResponse_t *pResponse);
-HAL_StatusTypeDef RSQStatus(volatile RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args,
-                            RSQStatusResponse_t *pResponse);
 
 /* Private defines -----------------------------------------------------------*/
 #define SI4705_I2C_ADDRESS                                                                                             \
@@ -337,84 +378,8 @@ HAL_StatusTypeDef RSQStatus(volatile RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STA
 #define SI4705_VOLUME_MAX_SETTING 63
 #define SI4705_VOLUME_MIN_SETTING 0
 
-// Supported command identifiers
-#define CMD_POWER_UP 0x01
-#define CMD_GET_REV 0x10
-#define CMD_POWER_DOWN 0x11
-#define CMD_SET_PROPERTY 0x12
-#define CMD_GET_PROPERTY 0x13
-#define CMD_GET_INT_STATUS 0x14
-#define CMD_PATCH_ARGS 0x15
-#define CMD_PATCH_DATA 0x16
-#define CMD_FM_TUNE_FREQ 0x20
-#define CMD_FM_SEEK_START 0x21
-#define CMD_FM_TUNE_STATUS 0x22
-#define CMD_FM_RSQ_STATUS 0x23
-#define CMD_FM_RDS_STATUS 0x24
-#define CMD_FM_AGC_STATUS 0x27
-#define CMD_FM_AGC_OVERRIDE 0x28
-#define CMD_GPIO_CTL 0x80
-#define CMD_GPIO_SET 0x81
-
-// Supported property identifiers
-#define PROP_GPO_IEN 0x0001
-#define PROP_DIGITAL_OUTPUT_FORMAT 0x0102
-#define PROP_DIGITAL_OUTPUT_SAMPLE_RATE 0x0104
-#define PROP_REFCLK_FREQ 0x0201
-#define PROP_REFCLK_PRESCALE 0x0202
-#define PROP_FM_DEEMPHASIS 0x1100
-#define PROP_FM_CHANNEL_FILTER 0x1102
-#define PROP_FM_BLEND_STEREO_THRESHOLD 0x1105
-#define PROP_FM_BLEND_MONO_THRESHOLD 0x1106
-#define PROP_FM_ANTENNA_INPUT 0x1107
-#define PROP_FM_MAX_TUNE_ERROR 0x1108
-#define PROP_FM_RSQ_INT_SOURCE 0x1200
-#define PROP_FM_RSQ_SNR_HI_THRESHOLD 0x1201
-#define PROP_FM_RSQ_SNR_LO_THRESHOLD 0x1202
-#define PROP_FM_RSQ_RSSI_HI_THRESHOLD 0x1203
-#define PROP_FM_RSQ_RSSI_LO_THRESHOLD 0x1204
-#define PROP_FM_RSQ_MULTIPATH_HI_THRESHOLD 0x1205
-#define PROP_FM_RSQ_MULTIPATH_LO_THRESHOLD 0x1206
-#define PROP_FM_RSQ_BLEND_THRESHOLD 0x1207
-#define PROP_FM_SOFT_MUTE_RATE 0x1300
-#define PROP_FM_SOFT_MUTE_SLOPE 0x1301
-#define PROP_FM_SOFT_MUTE_MAX_ATTENUATION 0x1302
-#define PROP_FM_SOFT_MUTE_SNR_THRESHOLD 0x1303
-#define PROP_FM_SOFT_MUTE_RELEASE_RATE 0x1304
-#define PROP_FM_SOFT_MUTE_ATTACK_RATE 0x1305
-#define PROP_FM_SEEK_BAND_BOTTOM 0x1400
-#define PROP_FM_SEEK_BAND_TOP 0x1401
-#define PROP_FM_SEEK_FREQ_SPACING 0x1402
-#define PROP_FM_SEEK_TUNE_THRESHOLD 0x1403
-#define PROP_FM_SEEK_TUNE_RSSI_THRESHOLD 0x1404
-#define PROP_FM_RDS_INT_SOURCE 0x1500
-#define PROP_FM_RDS_INT_FIFO_COUNT 0x1501
-#define PROP_FM_RDS_CONFIG 0x1502
-#define PROP_FM_RDS_CONFIDENCE 0x1503
-#define PROP_FM_BLEND_RSSI_STEREO_THRESHOLD 0x1800
-#define PROP_FM_BLEND_RSSI_MONO_THRESHOLD 0x1801
-#define PROP_FM_BLEND_RSSI_ATTACK_RATE 0x1802
-#define PROP_FM_BLEND_RSSI_RELEASE_RATE 0x1803
-#define PROP_FM_BLEND_SNR_STEREO_THRESHOLD 0x1804
-#define PROP_FM_BLEND_SNR_MONO_THRESHOLD 0x1805
-#define PROP_FM_BLEND_SNR_ATTACK_RATE 0x1806
-#define PROP_FM_BLEND_SNR_RELEASE_RATE 0x1807
-#define PROP_FM_BLEND_MULTIPATH_STEREO_THRESHOLD 0x1808
-#define PROP_FM_BLEND_MULTIPATH_MONO_THRESHOLD 0x1809
-#define PROP_FM_BLEND_MULTIPATH_ATTACK_RATE 0x180A
-#define PROP_FM_BLEND_MULTIPATH_RELEASE_RATE 0x180B
-#define PROP_FM_HICUT_SNR_HIGH_THRESHOLD 0x1A00
-#define PROP_FM_HICUT_SNR_LOW_THRESHOLD 0x1A01
-#define PROP_FM_HICUT_ATTACK_RATE 0x1A02
-#define PROP_FM_HICUT_RELEASE_RATE 0x1A03
-#define PROP_FM_HICUT_MULTIPATH_TRIGGER_THRESHOLD 0x1A04
-#define PROP_FM_HICUT_MULTIPATH_END_THRESHOLD 0x1A05
-#define PROP_FM_HICUT_CUTOFF_FREQUENCY 0x1A06
-#define PROP_RX_VOLUME 0x4000
-#define PROP_RX_HARD_MUTE 0x4001
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* __SI4705_H */
+#endif /* __COMMON_H__ */

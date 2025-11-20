@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
- * @file           : main.c
- * @brief          : Main program body
+ * @file    main.c
+ * @brief   Main program body
  ******************************************************************************
  * @attention
  *
@@ -16,14 +16,13 @@
  */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "commands.h"
+#include "device.h"
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
 #include "i2s.h"
 #include "tim.h"
-
-/* Private includes ----------------------------------------------------------*/
-#include "si4705.h"
 #include "tusb.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -35,15 +34,16 @@
 
 // This comes from the IOC tool
 #define REAL_AUDIO_FREQUENCY 48000
+
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
+uint16_t i2sBuffer[DMA_BUFFER_LENGTH];
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
-uint16_t i2sBuffer[DMA_BUFFER_LENGTH];
 
 /**
  * @brief  The application entry point.
@@ -67,11 +67,6 @@ int main(void)
     /* USB peripheral clock enable and interrupt priority */
     __HAL_RCC_USB_CLK_ENABLE();
     HAL_NVIC_SetPriority(USB_IRQn, 0, 0);
-
-    // Initialize TinyUSB
-    tusb_rhport_init_t dev_init = {.role = TUSB_ROLE_DEVICE, .speed = TUSB_SPEED_FULL};
-
-    tusb_init(BOARD_DEVICE_RHPORT_NUM, &dev_init);
 
     // Bring Si4705 out of reset, and enable the oscillator
     HAL_GPIO_WritePin(RADIO_NRST_GPIO_Port, RADIO_NRST_Pin, GPIO_PIN_SET);
@@ -104,7 +99,7 @@ int main(void)
     //	}
 
     // Set volume to half
-    if (SetProperty(&radioDevice, PROP_RX_VOLUME, 0x31U) != HAL_OK)
+    if (SetProperty(&radioDevice, PROP_ID_RX_VOLUME, 0x31U) != HAL_OK)
     {
         Error_Handler();
     }
@@ -129,14 +124,18 @@ int main(void)
         Error_Handler();
     }
 
-    // Now that the DCLK and DFS are enabled we can instruct the radio chip to
-    // start providing audio samples
-    if (SetProperty(&radioDevice, PROP_DIGITAL_OUTPUT_SAMPLE_RATE, REAL_AUDIO_FREQUENCY) != HAL_OK)
+    // Now that the DCLK and DFS are enabled we can instruct the radio chip to start providing audio samples
+    if (SetProperty(&radioDevice, PROP_ID_DIGITAL_OUTPUT_SAMPLE_RATE, REAL_AUDIO_FREQUENCY) != HAL_OK)
     {
         Error_Handler();
     }
 
     radioDevice.currentState = RADIOSTATE_DIGITAL_OUTPUT_ENABLED;
+
+    // Initialize TinyUSB
+    tusb_rhport_init_t dev_init = {.role = TUSB_ROLE_DEVICE, .speed = TUSB_SPEED_FULL};
+
+    tusb_init(BOARD_DEVICE_RHPORT_NUM, &dev_init);
 
     /* Infinite loop */
     while (1)
@@ -189,7 +188,7 @@ void SystemClock_Config(void)
         Error_Handler();
     }
 
-    /* Enable the SYSCFG APB clock */
+    /* Enable the CRS clock */
     __HAL_RCC_CRS_CLK_ENABLE();
 
     /* Configure CRS */
@@ -205,16 +204,18 @@ void SystemClock_Config(void)
 
 void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s)
 {
-    UNUSED(hi2s);
-
-    tud_audio_write(&i2sBuffer[DMA_BUFFER_START], DMA_BUFFER_LENGTH);
+    if (hi2s->Instance == SPI1)
+    {
+        tud_audio_write(&i2sBuffer[DMA_BUFFER_START], DMA_BUFFER_LENGTH);
+    }
 }
 
 void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
 {
-    UNUSED(hi2s);
-
-    tud_audio_write(&i2sBuffer[DMA_BUFFER_MIDPOINT], DMA_BUFFER_LENGTH);
+    if (hi2s->Instance == SPI1)
+    {
+        tud_audio_write(&i2sBuffer[DMA_BUFFER_MIDPOINT], DMA_BUFFER_LENGTH);
+    }
 }
 
 void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s)
