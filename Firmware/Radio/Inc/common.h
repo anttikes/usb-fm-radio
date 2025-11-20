@@ -282,7 +282,10 @@ typedef enum _InterruptSources_t
 
     /* Helper value to enable all interrupts, repeating ones included */
     INTERRUPT_SOURCES_ALL = INTERRUPT_SOURCES_ALLIEN | INTERRUPT_SOURCES_ALLREP,
-} InterruptSources_t;
+
+    /* Sentinel value, to encourage uint16_t */
+    INTERRUPT_SOURCES_SENTINEL = 0xFFFF
+} __attribute__((__packed__)) InterruptSources_t;
 
 typedef enum _CommandIdentifiers_t
 {
@@ -305,8 +308,11 @@ typedef enum _CommandIdentifiers_t
     CMD_ID_FM_AGC_STATUS = 0x27,
     CMD_ID_FM_AGC_OVERRIDE = 0x28,
     CMD_ID_GPIO_CTL = 0x80,
-    CMD_ID_GPIO_SET = 0x81
-} CommandIdentifiers_t;
+    CMD_ID_GPIO_SET = 0x81,
+
+    /* Sentinel value, to encourage uint8_t */
+    CMD_ID_SENTINEL = 0xFF
+} __attribute__((__packed__)) CommandIdentifiers_t;
 
 typedef enum _PropertyIdentifiers_t
 {
@@ -364,8 +370,11 @@ typedef enum _PropertyIdentifiers_t
     PROP_ID_FM_HICUT_MULTIPATH_END_THRESHOLD = 0x1A05,
     PROP_ID_FM_HICUT_CUTOFF_FREQUENCY = 0x1A06,
     PROP_ID_RX_VOLUME = 0x4000,
-    PROP_ID_RX_HARD_MUTE = 0x4001
-} PropertyIdentifiers_t;
+    PROP_ID_RX_HARD_MUTE = 0x4001,
+
+    /* Sentinel value, to encourage uint16_t */
+    PROP_ID_SENTINEL = 0xFFFF
+} __attribute__((__packed__)) PropertyIdentifiers_t;
 
 /* Exported functions prototypes ---------------------------------------------*/
 

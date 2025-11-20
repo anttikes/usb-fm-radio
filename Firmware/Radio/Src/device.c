@@ -17,6 +17,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "device.h"
+#include "common.h"
 #include "i2c.h"
 #include "main.h"
 #include "stm32f0xx_hal.h"
@@ -27,7 +28,6 @@ volatile RadioDevice_t radioDevice = {
     .deviceAddress = SI4705_I2C_ADDRESS,
     .currentState = RADIOSTATE_POWERDOWN,
     .currentCommand = {
-        .opcode = CMD_ID_NONE,
         .state = COMMANDSTATE_IDLE,
         .args = {0},
         .argLength = 0,
@@ -50,6 +50,7 @@ volatile RadioDevice_t radioDevice = {
 /* Exported functions --------------------------------------------------------*/
 
 /* External callbacks --------------------------------------------------------*/
+volatile uint8_t triggerCount = 0;
 
 /**
  * @brief  EXTI line detection callback.
@@ -60,7 +61,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if (GPIO_Pin == RADIO_NIRQ_Pin)
     {
-        if (radioDevice.currentCommand.state == COMMANDSTATE_WAITING_FOR_INT)
+        triggerCount++;
+
+        if (radioDevice.currentCommand.state == COMMANDSTATE_WAITING_FOR_STC)
+        {
+            radioDevice.currentCommand.state = COMMANDSTATE_WAITING_FOR_CTS;
+        }
+        else if (radioDevice.currentCommand.state == COMMANDSTATE_WAITING_FOR_CTS)
         {
             radioDevice.currentCommand.state = COMMANDSTATE_READY;
         }
@@ -77,20 +84,17 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
     if (hi2c->Instance == hi2c1.Instance)
     {
-        if (radioDevice.currentCommand.responseLength > 0)
+        if (radioDevice.currentCommand.state == COMMANDSTATE_SENDING)
         {
-            radioDevice.currentCommand.state = COMMANDSTATE_RECEIVING_RESPONSE;
-
-            if (HAL_I2C_Master_Receive_IT(&hi2c1, radioDevice.deviceAddress,
-                                          (uint8_t *)&radioDevice.currentCommand.response[0],
-                                          radioDevice.currentCommand.responseLength) != HAL_OK)
+            if (radioDevice.currentCommand.args.opCode == CMD_ID_FM_TUNE_FREQ ||
+                radioDevice.currentCommand.args.opCode == CMD_ID_FM_SEEK_START)
             {
-                // Handle error
+                radioDevice.currentCommand.state = COMMANDSTATE_WAITING_FOR_STC;
             }
-        }
-        else
-        {
-            radioDevice.currentCommand.state = COMMANDSTATE_WAITING_FOR_INT;
+            else
+            {
+                radioDevice.currentCommand.state = COMMANDSTATE_WAITING_FOR_CTS;
+            }
         }
     }
 }

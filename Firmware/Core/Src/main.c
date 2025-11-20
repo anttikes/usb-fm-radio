@@ -17,6 +17,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "commands.h"
+#include "common.h"
 #include "device.h"
 #include "dma.h"
 #include "gpio.h"
@@ -78,44 +79,32 @@ int main(void)
     HAL_Delay(1250);
 
     // Power up the radio
-    if (PowerUp(&radioDevice, POWER_UP_ARGS_1_FUNCTION_FM, POWER_UP_ARGS_2_DIGITAL_OUTPUT_2) != HAL_OK)
+    if (!PowerUp(&radioDevice,
+                 POWER_UP_ARGS_1_FUNCTION_FM | POWER_UP_ARGS_1_GPO2_OUTPUT_ENABLE |
+                     POWER_UP_ARGS_1_CTS_INTERRUPT_ENABLE,
+                 POWER_UP_ARGS_2_DIGITAL_OUTPUT_2))
     {
         Error_Handler();
     }
 
-    // Query the revision
-    //	GetRevisionResponse_t revision = { 0 };
-    //
-    //	if (GetRevision(&radioDevice, &revision) != HAL_OK)
-    //	{
-    //		return (USBD_FAIL);
-    //	}
-
-    // Configure audio format to use 24 bit samples (by default it's 16 bits)
-    //	if (SetProperty(&radioDevice, PROP_DIGITAL_OUTPUT_FORMAT, 0x0002) !=
-    // HAL_OK)
-    //	{
-    //	    return (USBD_FAIL);
-    //	}
+    // Enable the other interrupt sources
+    if (!SetInterruptSources(&radioDevice,
+                             INTERRUPT_SOURCES_CTSIEN | INTERRUPT_SOURCES_STCIEN | INTERRUPT_SOURCES_STCREP))
+    {
+        Error_Handler();
+    }
 
     // Set volume to half
-    if (SetProperty(&radioDevice, PROP_ID_RX_VOLUME, 0x31U) != HAL_OK)
+    if (!SetProperty(&radioDevice, PROP_ID_RX_VOLUME, 0x31U))
     {
         Error_Handler();
     }
 
     // Tune to Kasari
-    if (TuneFreq(&radioDevice, FM_TUNE_FREQ_ARGS_NONE, 9410) != HAL_OK)
+    if (!TuneFreq(&radioDevice, FM_TUNE_FREQ_ARGS_NONE, 9410))
     {
         Error_Handler();
     }
-
-    // Find the first available station, and wait for tune to complete
-    //	if (SeekStart(&radioDevice, SEEK_START_ARGS_UP) != HAL_OK) {
-    //		return (USBD_FAIL);
-    //	}
-
-    WaitForStatus(&radioDevice, STATUS_STCINT);
 
     // When using circular mode, the size parameter must equal the number of
     // elements in the receiving array
@@ -125,7 +114,7 @@ int main(void)
     }
 
     // Now that the DCLK and DFS are enabled we can instruct the radio chip to start providing audio samples
-    if (SetProperty(&radioDevice, PROP_ID_DIGITAL_OUTPUT_SAMPLE_RATE, REAL_AUDIO_FREQUENCY) != HAL_OK)
+    if (!SetProperty(&radioDevice, PROP_ID_DIGITAL_OUTPUT_SAMPLE_RATE, REAL_AUDIO_FREQUENCY))
     {
         Error_Handler();
     }

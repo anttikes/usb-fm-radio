@@ -16,9 +16,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
 #include "main.h"
-
-/* Private includes ----------------------------------------------------------*/
 #include "tusb.h"
+
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
@@ -32,6 +31,7 @@
 /* Private user code ---------------------------------------------------------*/
 
 /* External variables --------------------------------------------------------*/
+extern I2C_HandleTypeDef hi2c1;
 extern DMA_HandleTypeDef hdma_spi1_rx;
 extern TIM_HandleTypeDef htim14;
 
@@ -43,7 +43,6 @@ extern TIM_HandleTypeDef htim14;
  */
 void NMI_Handler(void)
 {
-
     while (1)
     {
     }
@@ -54,7 +53,6 @@ void NMI_Handler(void)
  */
 void HardFault_Handler(void)
 {
-
     while (1)
     {
     }
@@ -121,11 +119,24 @@ void TIM14_IRQHandler(void)
 }
 
 /**
- * @brief This function handles USB global Interrupt / USB wake-up interrupt
- * through EXTI line 18.
+ * @brief This function handles I2C1 event global interrupt / I2C1 wake-up interrupt through EXTI line 23.
+ */
+void I2C1_IRQHandler(void)
+{
+    if (hi2c1.Instance->ISR & (I2C_FLAG_BERR | I2C_FLAG_ARLO | I2C_FLAG_OVR))
+    {
+        HAL_I2C_ER_IRQHandler(&hi2c1);
+    }
+    else
+    {
+        HAL_I2C_EV_IRQHandler(&hi2c1);
+    }
+}
+
+/**
+ * @brief This function handles USB global Interrupt / USB wake-up interrupt through EXTI line 18.
  */
 void USB_IRQHandler(void)
 {
     tusb_int_handler(BOARD_DEVICE_RHPORT_NUM, true);
-    return;
 }

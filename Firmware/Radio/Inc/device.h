@@ -51,26 +51,29 @@ typedef enum _CommandState_t
     /* The command is currently being sent */
     COMMANDSTATE_SENDING = 0x01,
 
-    /* Command was sent, and we are waiting for CTS or STC interrupt */
-    COMMANDSTATE_WAITING_FOR_INT = 0x02,
+    /* Command was sent, and we are waiting for CTS interrupt */
+    COMMANDSTATE_WAITING_FOR_CTS = 0x02,
+
+    /* Command was sent, and we are waiting for STC interrupt */
+    COMMANDSTATE_WAITING_FOR_STC = 0x03,
 
     /* Receiving a response to a command */
-    COMMANDSTATE_RECEIVING_RESPONSE = 0x03,
+    COMMANDSTATE_RECEIVING_RESPONSE = 0x04,
 
     /* A response has been received and the command is complete */
-    COMMANDSTATE_READY = 0x03,
+    COMMANDSTATE_READY = 0x05,
 } CommandState_t;
 
 typedef struct _Command_t
 {
-    /* Command opcode */
-    CommandIdentifiers_t opcode;
-
-    /* Current status of the command */
+    /* Status of the command */
     CommandState_t state;
 
-    /* Command arguments; maximum of seven */
-    uint8_t args[7];
+    /* Command arguments; first one is the opcode, and up to seven other arguments */
+    union {
+        CommandIdentifiers_t opCode;
+        uint8_t bytes[8];
+    } args;
 
     /* Number of arguments used */
     uint8_t argLength;
