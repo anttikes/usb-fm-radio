@@ -40,6 +40,8 @@ bool TuneFreq(RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t 
 bool SeekStart(RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args);
 bool GetTuneStatus(RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args, GetTuneStatusResponse_t *pResponse);
 bool RSQStatus(RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args, RSQStatusResponse_t *pResponse);
+bool GPIOCtl(RadioDevice_t *pRadioDevice, CMD_GPIO_CTL_ARGS args);
+bool GPIOSet(RadioDevice_t *pRadioDevice, CMD_GPIO_SET_ARGS args);
 
 /* Private defines -----------------------------------------------------------*/
 

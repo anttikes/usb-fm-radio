@@ -74,13 +74,13 @@ void WaitForStatus(RadioDevice_t *pRadioDevice, StatusFlags_t statusToWait)
 }
 
 /**
- * @brief  Sends the "Power up" command to the Si4705 chip and waits until CTS becomes set
+ * @brief  Enqueues the "Power up" command
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  arg1 First set of arguments for the command
  * @param  arg2 Second set of arguments for the command
  * @param  pResponse In case of "QueryLibraryId" variant, points to the structure where return data should be placed
  *
- * @retval True if the command succeeded; false otherwise
+ * @retval True if the command was enqueued; false otherwise
  */
 bool PowerUp(RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2)
 {
@@ -96,11 +96,12 @@ bool PowerUp(RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP
 }
 
 /**
- * @brief  Uses the "GPO_IEN" property to configure the interrupt sources for status bits.
+ * @brief  Enqueues the "SET PROPERTY" command with "GPO_IEN" property identifier to configure the interrupt sources for
+ * status bits.
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  sources Additional interrupt sources to enable
  *
- * @retval True if the command succeeded; false otherwise
+ * @retval True if the command was enqueued; false otherwise
  */
 bool SetInterruptSources(RadioDevice_t *pRadioDevice, InterruptSources_t sources)
 {
@@ -108,7 +109,7 @@ bool SetInterruptSources(RadioDevice_t *pRadioDevice, InterruptSources_t sources
 }
 
 /**
- * @brief  Sends the "Power down" command to the Si4705 chip and waits until CTS becomes set
+ * @brief  Enqueues the "Power down" command
  * @param  pRadioDevice Pointer to the radio device structure
  *
  * @retval True if the command succeeded; false otherwise
@@ -170,12 +171,12 @@ bool GetRevision(RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse)
 }
 
 /**
- * @brief  Sends the "Set Property" command to the Si4705 chip and waits until CTS becomes set
+ * @brief  Enqueues the "Set Property" command
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  property Identifier of the property to set
  * @param  value New value of the property
  *
- * @retval True if the command succeeded; false otherwise
+ * @retval True if the command was enqueued; false otherwise
  */
 bool SetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t value)
 {
@@ -275,12 +276,12 @@ bool GetIntStatus(RadioDevice_t *pRadioDevice, StatusFlags_t *pValue)
 }
 
 /**
- * @brief  Sends the "FM Tune" command to the Si4705 chip and waits until CTS becomes set
+ * @brief  Enqueues the "FM Tune" command
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  args Arguments for the command
  * @param  frequency Frequency to which the radio should tune itself, in 10 kHz increments
  *
- * @retval True if the command succeeded; false otherwise
+ * @retval True if the command was enqueued; false otherwise
  */
 bool TuneFreq(RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency)
 {
@@ -430,4 +431,42 @@ bool RSQStatus(RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args, RSQStat
     pResponse->frequencyOffset = (int8_t)rx_buffer[7];
 
     return true;
+}
+
+/**
+ * @brief  Enqueues the "GPIO_CTL" command
+ * @param  pRadioDevice Pointer to the radio device structure
+ * @param  args Arguments to the command
+ *
+ * @retval True if the command was enqueued; false otherwise
+ */
+bool GPIOCtl(RadioDevice_t *pRadioDevice, CMD_GPIO_CTL_ARGS args)
+{
+    Command_t gpioCtl = {0};
+
+    gpioCtl.args.opCode = CMD_ID_GPIO_CTL;
+    gpioCtl.args.bytes[1] = args;
+    gpioCtl.argLength = 2;
+    gpioCtl.responseLength = 0;
+
+    return EnqueueCommand(pRadioDevice, &gpioCtl);
+}
+
+/**
+ * @brief  Enqueues the "GPIO_SET" command
+ * @param  pRadioDevice Pointer to the radio device structure
+ * @param  args Arguments to the command
+ *
+ * @retval True if the command was enqueued; false otherwise
+ */
+bool GPIOSet(RadioDevice_t *pRadioDevice, CMD_GPIO_SET_ARGS args)
+{
+    Command_t gpioSet = {0};
+
+    gpioSet.args.opCode = CMD_ID_GPIO_SET;
+    gpioSet.args.bytes[1] = args;
+    gpioSet.argLength = 2;
+    gpioSet.responseLength = 0;
+
+    return EnqueueCommand(pRadioDevice, &gpioSet);
 }

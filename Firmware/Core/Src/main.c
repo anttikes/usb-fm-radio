@@ -100,6 +100,17 @@ int main(void)
         Error_Handler();
     }
 
+    // Allow GPO output, and drive GPO1 and GPO3 low to reduce oscillation
+    if (!GPIOCtl(&radioDevice, GPIO_CTL_GPO1_OUTPUT_ENABLE | GPIO_CTL_GPO2_OUTPUT_ENABLE | GPIO_CTL_GPO3_OUTPUT_ENABLE))
+    {
+        Error_Handler();
+    }
+
+    if (!GPIOSet(&radioDevice, GPIO_SET_GPO2_OUTPUT_HIGH))
+    {
+        Error_Handler();
+    }
+
     // Tune to Kasari
     if (!TuneFreq(&radioDevice, FM_TUNE_FREQ_ARGS_NONE, 9410))
     {

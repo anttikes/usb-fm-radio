@@ -107,6 +107,30 @@ typedef enum _CMD_FM_RSQ_STATUS_ARGS
     FM_RSQ_STATUS_ARGS_INTACK = 0x01,
 } CMD_FM_RSQ_STATUS_ARGS;
 
+typedef enum _CMD_GPIO_CTL_ARGS
+{
+    /* When set, GPO3 Output is enabled. When unset, the output is high impedance (floating) */
+    GPIO_CTL_GPO3_OUTPUT_ENABLE = 0x80,
+
+    /* When set, GPO2 Output is enabled. When unset, the output is high impedance (floating) */
+    GPIO_CTL_GPO2_OUTPUT_ENABLE = 0x40,
+
+    /* When set, GPO1 Output is enabled. When unset, the output is high impedance (floating) */
+    GPIO_CTL_GPO1_OUTPUT_ENABLE = 0x20,
+} CMD_GPIO_CTL_ARGS;
+
+typedef enum _CMD_GPIO_SET_ARGS
+{
+    /* When set, GPO3 Output is driven high. When unset, it is driven low. */
+    GPIO_SET_GPO3_OUTPUT_HIGH = 0x80,
+
+    /* When set, GPO2 Output is driven high. When unset, it is driven low. */
+    GPIO_SET_GPO2_OUTPUT_HIGH = 0x40,
+
+    /* When set, GPO1 Output is driven high. When unset, it is driven low. */
+    GPIO_SET_GPO1_OUTPUT_HIGH = 0x20,
+} CMD_GPIO_SET_ARGS;
+
 typedef struct _GetRevisionResponse_t
 {
     /* Final 2 digits of part number, in hex */
