@@ -36,14 +36,14 @@
 
 /**
  * @brief  Enqueues the "Power up" command
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  * @param  arg1 First set of arguments for the command
  * @param  arg2 Second set of arguments for the command
  * @param  pResponse In case of "QueryLibraryId" variant, points to the structure where return data should be placed
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool PowerUp(RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2)
+bool PowerUp(RadioDevice_t *device, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2)
 {
     Command_t powerUp = {0};
 
@@ -53,29 +53,29 @@ bool PowerUp(RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP
     powerUp.argLength = 3;
     powerUp.responseLength = 0;
 
-    return EnqueueCommand(pRadioDevice, &powerUp);
+    return EnqueueCommand(device, &powerUp);
 }
 
 /**
  * @brief  Enqueues the "SET PROPERTY" command with "GPO_IEN" property identifier to configure the interrupt sources for
  * status bits.
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  * @param  sources Additional interrupt sources to enable
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool SetInterruptSources(RadioDevice_t *pRadioDevice, InterruptSources_t sources)
+bool SetInterruptSources(RadioDevice_t *device, InterruptSources_t sources)
 {
-    return SetProperty(pRadioDevice, PROP_ID_GPO_IEN, sources);
+    return SetProperty(device, PROP_ID_GPO_IEN, sources);
 }
 
 /**
  * @brief  Enqueues the "Power down" command
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool PowerDown(RadioDevice_t *pRadioDevice)
+bool PowerDown(RadioDevice_t *device)
 {
     Command_t powerDown = {0};
 
@@ -83,16 +83,16 @@ bool PowerDown(RadioDevice_t *pRadioDevice)
     powerDown.argLength = 1;
     powerDown.responseLength = 0;
 
-    return EnqueueCommand(pRadioDevice, &powerDown);
+    return EnqueueCommand(device, &powerDown);
 }
 
 /**
  * @brief  Enqueues the "Get Rev" command
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool GetRevision(RadioDevice_t *pRadioDevice)
+bool GetRevision(RadioDevice_t *device)
 {
     Command_t getRevision = {0};
 
@@ -100,7 +100,7 @@ bool GetRevision(RadioDevice_t *pRadioDevice)
     getRevision.argLength = 1;
     getRevision.responseLength = 16;
 
-    return EnqueueCommand(pRadioDevice, &getRevision);
+    return EnqueueCommand(device, &getRevision);
 
     // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
     // HAL_MAX_DELAY);
@@ -119,13 +119,13 @@ bool GetRevision(RadioDevice_t *pRadioDevice)
 
 /**
  * @brief  Enqueues the "Set Property" command
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  * @param  property Identifier of the property to set
  * @param  value New value of the property
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool SetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t value)
+bool SetProperty(RadioDevice_t *device, PropertyIdentifiers_t property, uint16_t value)
 {
     Command_t setProperty = {0};
 
@@ -138,17 +138,17 @@ bool SetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, ui
     setProperty.argLength = 6;
     setProperty.responseLength = 0;
 
-    return EnqueueCommand(pRadioDevice, &setProperty);
+    return EnqueueCommand(device, &setProperty);
 }
 
 /**
  * @brief  Enqueues the "Get Property" command
- * @param  pRadioDevice Pointer to the radio device structure
- * @param  property Identifier of the property to set
+ * @param  device Pointer to the radio device structure
+ * @param  property Identifier of the property to get
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool GetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property)
+bool GetProperty(RadioDevice_t *device, PropertyIdentifiers_t property)
 {
     Command_t getProperty = {0};
 
@@ -159,7 +159,7 @@ bool GetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property)
     getProperty.argLength = 4;
     getProperty.responseLength = 4;
 
-    return EnqueueCommand(pRadioDevice, &getProperty);
+    return EnqueueCommand(device, &getProperty);
 
     // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
     // HAL_MAX_DELAY);
@@ -172,11 +172,11 @@ bool GetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property)
 
 /**
  * @brief  Enqueues the "Get Int Status" command
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool GetIntStatus(RadioDevice_t *pRadioDevice)
+bool GetIntStatus(RadioDevice_t *device)
 {
     Command_t getIntStatus = {0};
 
@@ -184,7 +184,7 @@ bool GetIntStatus(RadioDevice_t *pRadioDevice)
     getIntStatus.argLength = 1;
     getIntStatus.responseLength = 1;
 
-    return EnqueueCommand(pRadioDevice, &getIntStatus);
+    return EnqueueCommand(device, &getIntStatus);
 
     // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
     // HAL_MAX_DELAY);
@@ -196,13 +196,13 @@ bool GetIntStatus(RadioDevice_t *pRadioDevice)
 
 /**
  * @brief  Enqueues the "FM Tune" command
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  * @param  args Arguments for the command
  * @param  frequency Frequency to which the radio should tune itself, in 10 kHz increments
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool TuneFreq(RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency)
+bool TuneFreq(RadioDevice_t *device, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency)
 {
     Command_t tuneFreq = {0};
 
@@ -214,17 +214,17 @@ bool TuneFreq(RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t 
     tuneFreq.argLength = 5;
     tuneFreq.responseLength = 0;
 
-    return EnqueueCommand(pRadioDevice, &tuneFreq);
+    return EnqueueCommand(device, &tuneFreq);
 }
 
 /**
  * @brief  Enqueues the "Seek Start" command
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  * @param  args Arguments for the command
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool SeekStart(RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args)
+bool SeekStart(RadioDevice_t *device, CMD_FM_SEEK_START_ARGS args)
 {
     Command_t seekStart = {0};
 
@@ -233,17 +233,17 @@ bool SeekStart(RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args)
     seekStart.argLength = 2;
     seekStart.responseLength = 0;
 
-    return EnqueueCommand(pRadioDevice, &seekStart);
+    return EnqueueCommand(device, &seekStart);
 }
 
 /**
  * @brief  Enqueues the "Get Tune Status" command
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  * @param  args Arguments to the command
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool GetTuneStatus(RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args)
+bool GetTuneStatus(RadioDevice_t *device, CMD_GET_TUNE_STATUS_ARGS args)
 {
     Command_t getTuneStatus = {0};
 
@@ -252,7 +252,7 @@ bool GetTuneStatus(RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args)
     getTuneStatus.argLength = 2;
     getTuneStatus.responseLength = 8;
 
-    return EnqueueCommand(pRadioDevice, &getTuneStatus);
+    return EnqueueCommand(device, &getTuneStatus);
 
     // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
     // HAL_MAX_DELAY);
@@ -272,12 +272,12 @@ bool GetTuneStatus(RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args)
 
 /**
  * @brief  Enqueues the "FM RSQ Status" command
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  * @param  args Arguments to the command
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool RSQStatus(RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args)
+bool RSQStatus(RadioDevice_t *device, CMD_FM_RSQ_STATUS_ARGS args)
 {
     Command_t rsqStatus = {0};
 
@@ -286,7 +286,7 @@ bool RSQStatus(RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args)
     rsqStatus.argLength = 2;
     rsqStatus.responseLength = 8;
 
-    return EnqueueCommand(pRadioDevice, &rsqStatus);
+    return EnqueueCommand(device, &rsqStatus);
 
     // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
     // HAL_MAX_DELAY);
@@ -316,12 +316,12 @@ bool RSQStatus(RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args)
 
 /**
  * @brief  Enqueues the "GPIO_CTL" command
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  * @param  args Arguments to the command
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool GPIOCtl(RadioDevice_t *pRadioDevice, CMD_GPIO_CTL_ARGS args)
+bool GPIOCtl(RadioDevice_t *device, CMD_GPIO_CTL_ARGS args)
 {
     Command_t gpioCtl = {0};
 
@@ -330,17 +330,17 @@ bool GPIOCtl(RadioDevice_t *pRadioDevice, CMD_GPIO_CTL_ARGS args)
     gpioCtl.argLength = 2;
     gpioCtl.responseLength = 0;
 
-    return EnqueueCommand(pRadioDevice, &gpioCtl);
+    return EnqueueCommand(device, &gpioCtl);
 }
 
 /**
  * @brief  Enqueues the "GPIO_SET" command
- * @param  pRadioDevice Pointer to the radio device structure
+ * @param  device Pointer to the radio device structure
  * @param  args Arguments to the command
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool GPIOSet(RadioDevice_t *pRadioDevice, CMD_GPIO_SET_ARGS args)
+bool GPIOSet(RadioDevice_t *device, CMD_GPIO_SET_ARGS args)
 {
     Command_t gpioSet = {0};
 
@@ -349,5 +349,5 @@ bool GPIOSet(RadioDevice_t *pRadioDevice, CMD_GPIO_SET_ARGS args)
     gpioSet.argLength = 2;
     gpioSet.responseLength = 0;
 
-    return EnqueueCommand(pRadioDevice, &gpioSet);
+    return EnqueueCommand(device, &gpioSet);
 }

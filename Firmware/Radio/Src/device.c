@@ -50,6 +50,13 @@ Command_t *PeekQueue(CommandQueue_t *queue);
 Command_t *PopQueue(CommandQueue_t *queue);
 
 /* Exported functions --------------------------------------------------------*/
+
+/**
+ * @brief  Processes the next command from the queue, if there are any
+ * @param  device Pointer to the radio device structure
+ *
+ * @retval True if the queue is empty; false otherwise
+ */
 bool ProcessCommand(RadioDevice_t *device)
 {
     if (IsQueueEmpty(&device->commands))
@@ -113,6 +120,13 @@ bool ProcessCommand(RadioDevice_t *device)
                                       currentCommand->argLength) == HAL_OK;
 }
 
+/**
+ * @brief  Enqueues the give command into the command queue of the radio device
+ * @param  device Pointer to the radio device structure
+ * @param  command Pointer to the command
+ *
+ * @retval True if the command was enqueued; false otherwise
+ */
 bool EnqueueCommand(RadioDevice_t *device, Command_t *command)
 {
     if (device == NULL || command == NULL)
@@ -221,7 +235,8 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 /* Private functions ---------------------------------------------------------*/
 
 /**
- * @brief  Determines if the command queue is empty
+ * @brief  Determines if the queue is empty
+ * @param  queue Pointer to the queue
  *
  * @retval True if the queue is empty; false otherwise
  */
@@ -237,6 +252,7 @@ bool IsQueueEmpty(CommandQueue_t *queue)
 
 /**
  * @brief  Peeks the first command from the queue without removing it
+ * @param  queue Pointer to the queue
  *
  * @retval Pointer to the first command in the queue or NULL if the queue is empty
  */
@@ -252,6 +268,7 @@ Command_t *PeekQueue(CommandQueue_t *queue)
 
 /**
  * @brief  Pops the first command from the queue, removing it
+ * @param  queue Pointer to the queue
  *
  * @retval Pointer to the first command in the queue or NULL if the queue is empty
  */
