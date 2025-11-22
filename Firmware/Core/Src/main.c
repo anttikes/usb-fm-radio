@@ -119,8 +119,6 @@ int main(void)
         Error_Handler();
     }
 
-    radioDevice.currentState = RADIOSTATE_DIGITAL_OUTPUT_ENABLED;
-
     // Initialize TinyUSB
     tusb_rhport_init_t dev_init = {.role = TUSB_ROLE_DEVICE, .speed = TUSB_SPEED_FULL};
 
@@ -130,6 +128,8 @@ int main(void)
     while (1)
     {
         tud_task();
+
+        ProcessCommand(&radioDevice);
     }
 }
 

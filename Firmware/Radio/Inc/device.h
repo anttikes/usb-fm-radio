@@ -60,7 +60,7 @@ typedef enum _CommandState_t
     /* Receiving a response to a command */
     COMMANDSTATE_RECEIVING_RESPONSE = 0x04,
 
-    /* A response has been received and the command is complete */
+    /* The command is complete */
     COMMANDSTATE_READY = 0x05,
 } CommandState_t;
 
@@ -85,6 +85,21 @@ typedef struct _Command_t
     uint8_t responseLength;
 } Command_t;
 
+typedef struct _CommandQueue_t
+{
+    /* Array of commands in the queue */
+    Command_t commands[10];
+
+    /* Number of commands in the queue */
+    uint8_t count;
+
+    /* Index of the front of the queue */
+    uint8_t front;
+
+    /* Index of the back of the queue */
+    uint8_t back;
+} CommandQueue_t;
+
 typedef struct _RadioDevice_t
 {
     /* I2C address of the device */
@@ -93,8 +108,8 @@ typedef struct _RadioDevice_t
     /* Holds the current state of the radio device */
     RadioState_t currentState;
 
-    /* Holds the current command that the device is processing */
-    Command_t currentCommand;
+    /* Holds the command queue */
+    CommandQueue_t commands;
 } RadioDevice_t;
 
 /* Exported constants --------------------------------------------------------*/
@@ -106,9 +121,12 @@ typedef struct _RadioDevice_t
 /* Exported macro ------------------------------------------------------------*/
 
 /* Exported variables --------------------------------------------------------*/
-extern volatile RadioDevice_t radioDevice;
+extern RadioDevice_t radioDevice;
 
 /* Exported functions --------------------------------------------------------*/
+bool InitializeQueue(CommandQueue_t *queue);
+bool EnqueueCommand(RadioDevice_t *device, Command_t *command);
+bool ProcessCommand(RadioDevice_t *device);
 
 #ifdef __cplusplus
 }

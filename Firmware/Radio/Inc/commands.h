@@ -27,20 +27,19 @@ extern "C"
 #include "device.h"
 
 /* Exported functions prototypes ---------------------------------------------*/
-void WaitForStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t statusToWait);
+void WaitForStatus(RadioDevice_t *pRadioDevice, StatusFlags_t statusToWait);
 
-bool PowerUp(volatile RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2);
-bool SetInterruptSources(volatile RadioDevice_t *pRadioDevice, InterruptSources_t sources);
-bool PowerDown(volatile RadioDevice_t *pRadioDevice);
-bool GetRevision(volatile RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse);
-bool SetProperty(volatile RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t value);
-bool GetProperty(volatile RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t *pValue);
-bool GetIntStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t *pValue);
-bool TuneFreq(volatile RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency);
-bool SeekStart(volatile RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args);
-bool GetTuneStatus(volatile RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args,
-                   GetTuneStatusResponse_t *pResponse);
-bool RSQStatus(volatile RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args, RSQStatusResponse_t *pResponse);
+bool PowerUp(RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2);
+bool SetInterruptSources(RadioDevice_t *pRadioDevice, InterruptSources_t sources);
+bool PowerDown(RadioDevice_t *pRadioDevice);
+bool GetRevision(RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse);
+bool SetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t value);
+bool GetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t *pValue);
+bool GetIntStatus(RadioDevice_t *pRadioDevice, StatusFlags_t *pValue);
+bool TuneFreq(RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency);
+bool SeekStart(RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args);
+bool GetTuneStatus(RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args, GetTuneStatusResponse_t *pResponse);
+bool RSQStatus(RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args, RSQStatusResponse_t *pResponse);
 
 /* Private defines -----------------------------------------------------------*/
 

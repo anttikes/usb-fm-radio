@@ -16,6 +16,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "commands.h"
 #include "common.h"
+#include "device.h"
 #include "i2c.h"
 #include "stm32f0xx_hal_def.h"
 #include "stm32f0xx_hal_i2c.h"
@@ -40,7 +41,7 @@
  *
  * @retval None
  */
-void WaitForStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t statusToWait)
+void WaitForStatus(RadioDevice_t *pRadioDevice, StatusFlags_t statusToWait)
 {
     while (true)
     {
@@ -81,53 +82,17 @@ void WaitForStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t statusToW
  *
  * @retval True if the command succeeded; false otherwise
  */
-bool PowerUp(volatile RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2)
+bool PowerUp(RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2)
 {
-    if (pRadioDevice->currentState != RADIOSTATE_POWERDOWN)
-    {
-        return false;
-    }
+    Command_t powerUp = {0};
 
-    while (pRadioDevice->currentCommand.state != COMMANDSTATE_IDLE)
-    {
-    }
+    powerUp.args.opCode = CMD_ID_POWER_UP;
+    powerUp.args.bytes[1] = arg1;
+    powerUp.args.bytes[2] = arg2;
+    powerUp.argLength = 3;
+    powerUp.responseLength = 0;
 
-    pRadioDevice->currentCommand.args.opCode = CMD_ID_POWER_UP;
-    pRadioDevice->currentCommand.args.bytes[1] = arg1;
-    pRadioDevice->currentCommand.args.bytes[2] = arg2;
-    pRadioDevice->currentCommand.argLength = 3;
-    pRadioDevice->currentCommand.responseLength = 0;
-
-    pRadioDevice->currentCommand.state = COMMANDSTATE_SENDING;
-
-    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit_IT(&hi2c1, pRadioDevice->deviceAddress,
-                                                          (uint8_t *)&pRadioDevice->currentCommand.args.bytes[0],
-                                                          pRadioDevice->currentCommand.argLength);
-
-    if (status != HAL_OK)
-    {
-        return false;
-    }
-
-    while (pRadioDevice->currentCommand.state != COMMANDSTATE_READY)
-    {
-    }
-
-    pRadioDevice->currentState = RADIOSTATE_POWERUP;
-
-    pRadioDevice->currentCommand.args.bytes[0] = 0;
-    pRadioDevice->currentCommand.args.bytes[1] = 0;
-    pRadioDevice->currentCommand.args.bytes[2] = 0;
-    pRadioDevice->currentCommand.args.bytes[3] = 0;
-    pRadioDevice->currentCommand.args.bytes[4] = 0;
-    pRadioDevice->currentCommand.args.bytes[5] = 0;
-    pRadioDevice->currentCommand.args.bytes[6] = 0;
-    pRadioDevice->currentCommand.args.bytes[7] = 0;
-    pRadioDevice->currentCommand.state = COMMANDSTATE_IDLE;
-    pRadioDevice->currentCommand.argLength = 0;
-    pRadioDevice->currentCommand.responseLength = 0;
-
-    return true;
+    return EnqueueCommand(pRadioDevice, &powerUp);
 }
 
 /**
@@ -137,7 +102,7 @@ bool PowerUp(volatile RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD
  *
  * @retval True if the command succeeded; false otherwise
  */
-bool SetInterruptSources(volatile RadioDevice_t *pRadioDevice, InterruptSources_t sources)
+bool SetInterruptSources(RadioDevice_t *pRadioDevice, InterruptSources_t sources)
 {
     return SetProperty(pRadioDevice, PROP_ID_GPO_IEN, sources);
 }
@@ -148,51 +113,15 @@ bool SetInterruptSources(volatile RadioDevice_t *pRadioDevice, InterruptSources_
  *
  * @retval True if the command succeeded; false otherwise
  */
-bool PowerDown(volatile RadioDevice_t *pRadioDevice)
+bool PowerDown(RadioDevice_t *pRadioDevice)
 {
-    if (pRadioDevice->currentState == RADIOSTATE_POWERDOWN)
-    {
-        return true;
-    }
+    Command_t powerDown = {0};
 
-    while (pRadioDevice->currentCommand.state != COMMANDSTATE_IDLE)
-    {
-    }
+    powerDown.args.opCode = CMD_ID_POWER_DOWN;
+    powerDown.argLength = 1;
+    powerDown.responseLength = 0;
 
-    pRadioDevice->currentCommand.args.opCode = CMD_ID_POWER_DOWN;
-    pRadioDevice->currentCommand.argLength = 1;
-    pRadioDevice->currentCommand.responseLength = 0;
-
-    pRadioDevice->currentCommand.state = COMMANDSTATE_SENDING;
-
-    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit_IT(&hi2c1, pRadioDevice->deviceAddress,
-                                                          (uint8_t *)&pRadioDevice->currentCommand.args.bytes[0],
-                                                          pRadioDevice->currentCommand.argLength);
-
-    if (status != HAL_OK)
-    {
-        return false;
-    }
-
-    while (pRadioDevice->currentCommand.state != COMMANDSTATE_READY)
-    {
-    }
-
-    pRadioDevice->currentState = RADIOSTATE_POWERDOWN;
-
-    pRadioDevice->currentCommand.args.bytes[0] = 0;
-    pRadioDevice->currentCommand.args.bytes[1] = 0;
-    pRadioDevice->currentCommand.args.bytes[2] = 0;
-    pRadioDevice->currentCommand.args.bytes[3] = 0;
-    pRadioDevice->currentCommand.args.bytes[4] = 0;
-    pRadioDevice->currentCommand.args.bytes[5] = 0;
-    pRadioDevice->currentCommand.args.bytes[6] = 0;
-    pRadioDevice->currentCommand.args.bytes[7] = 0;
-    pRadioDevice->currentCommand.state = COMMANDSTATE_IDLE;
-    pRadioDevice->currentCommand.argLength = 0;
-    pRadioDevice->currentCommand.responseLength = 0;
-
-    return true;
+    return EnqueueCommand(pRadioDevice, &powerDown);
 }
 
 /**
@@ -202,7 +131,7 @@ bool PowerDown(volatile RadioDevice_t *pRadioDevice)
  *
  * @retval True if the command succeeded; false otherwise
  */
-bool GetRevision(volatile RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse)
+bool GetRevision(RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse)
 {
     volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[1] = {0};
@@ -248,57 +177,20 @@ bool GetRevision(volatile RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pR
  *
  * @retval True if the command succeeded; false otherwise
  */
-bool SetProperty(volatile RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t value)
+bool SetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t value)
 {
-    if (pRadioDevice->currentState == RADIOSTATE_POWERDOWN)
-    {
-        return false;
-    }
+    Command_t setProperty = {0};
 
-    while (pRadioDevice->currentCommand.state != COMMANDSTATE_IDLE)
-    {
-    }
+    setProperty.args.opCode = CMD_ID_SET_PROPERTY;
+    setProperty.args.bytes[1] = 0x00;
+    setProperty.args.bytes[2] = (uint8_t)((property & 0xFF00) >> 8);
+    setProperty.args.bytes[3] = (uint8_t)((property & 0x00FF) >> 0);
+    setProperty.args.bytes[4] = (uint8_t)((value & 0xFF00) >> 8);
+    setProperty.args.bytes[5] = (uint8_t)((value & 0x00FF) >> 0);
+    setProperty.argLength = 6;
+    setProperty.responseLength = 0;
 
-    pRadioDevice->currentCommand.args.opCode = CMD_ID_SET_PROPERTY;
-    pRadioDevice->currentCommand.args.bytes[1] = 0x00;
-    pRadioDevice->currentCommand.args.bytes[2] = (uint8_t)((property & 0xFF00) >> 8);
-    pRadioDevice->currentCommand.args.bytes[3] = (uint8_t)((property & 0x00FF) >> 0);
-    pRadioDevice->currentCommand.args.bytes[4] = (uint8_t)((value & 0xFF00) >> 8);
-    pRadioDevice->currentCommand.args.bytes[5] = (uint8_t)((value & 0x00FF) >> 0);
-    pRadioDevice->currentCommand.argLength = 6;
-    pRadioDevice->currentCommand.responseLength = 0;
-
-    pRadioDevice->currentCommand.state = COMMANDSTATE_SENDING;
-
-    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit_IT(&hi2c1, pRadioDevice->deviceAddress,
-                                                          (uint8_t *)&pRadioDevice->currentCommand.args.bytes[0],
-                                                          pRadioDevice->currentCommand.argLength);
-
-    if (status != HAL_OK)
-    {
-        return false;
-    }
-
-    while (pRadioDevice->currentCommand.state != COMMANDSTATE_READY)
-    {
-    }
-
-    // Programming guide guarantees that it takes 10ms to complete the operation
-    HAL_Delay(10);
-
-    pRadioDevice->currentCommand.args.bytes[0] = 0;
-    pRadioDevice->currentCommand.args.bytes[1] = 0;
-    pRadioDevice->currentCommand.args.bytes[2] = 0;
-    pRadioDevice->currentCommand.args.bytes[3] = 0;
-    pRadioDevice->currentCommand.args.bytes[4] = 0;
-    pRadioDevice->currentCommand.args.bytes[5] = 0;
-    pRadioDevice->currentCommand.args.bytes[6] = 0;
-    pRadioDevice->currentCommand.args.bytes[7] = 0;
-    pRadioDevice->currentCommand.state = COMMANDSTATE_IDLE;
-    pRadioDevice->currentCommand.argLength = 0;
-    pRadioDevice->currentCommand.responseLength = 0;
-
-    return true;
+    return EnqueueCommand(pRadioDevice, &setProperty);
 }
 
 /**
@@ -309,7 +201,7 @@ bool SetProperty(volatile RadioDevice_t *pRadioDevice, PropertyIdentifiers_t pro
  *
  * @retval True if the command succeeded; false otherwise
  */
-bool GetProperty(volatile RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t *pValue)
+bool GetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t *pValue)
 {
     volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[4] = {0};
@@ -351,7 +243,7 @@ bool GetProperty(volatile RadioDevice_t *pRadioDevice, PropertyIdentifiers_t pro
  *
  * @retval True if the command succeeded; false otherwise
  */
-bool GetIntStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t *pValue)
+bool GetIntStatus(RadioDevice_t *pRadioDevice, StatusFlags_t *pValue)
 {
     volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[1] = {0};
@@ -390,50 +282,19 @@ bool GetIntStatus(volatile RadioDevice_t *pRadioDevice, StatusFlags_t *pValue)
  *
  * @retval True if the command succeeded; false otherwise
  */
-bool TuneFreq(volatile RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency)
+bool TuneFreq(RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency)
 {
-    while (pRadioDevice->currentCommand.state != COMMANDSTATE_IDLE)
-    {
-    }
+    Command_t tuneFreq = {0};
 
-    pRadioDevice->currentCommand.args.opCode = CMD_ID_FM_TUNE_FREQ;
-    pRadioDevice->currentCommand.args.bytes[1] = args;
-    pRadioDevice->currentCommand.args.bytes[2] = (uint8_t)((frequency & 0xFF00) >> 8);
-    pRadioDevice->currentCommand.args.bytes[3] = (uint8_t)((frequency & 0x00FF) >> 0);
-    pRadioDevice->currentCommand.args.bytes[4] = 0; // Manual ANTCAP tuning is not allowed at this point
-    pRadioDevice->currentCommand.argLength = 5;
-    pRadioDevice->currentCommand.responseLength = 0;
+    tuneFreq.args.opCode = CMD_ID_FM_TUNE_FREQ;
+    tuneFreq.args.bytes[1] = args;
+    tuneFreq.args.bytes[2] = (uint8_t)((frequency & 0xFF00) >> 8);
+    tuneFreq.args.bytes[3] = (uint8_t)((frequency & 0x00FF) >> 0);
+    tuneFreq.args.bytes[4] = 0; // Manual ANTCAP tuning is not allowed at this point
+    tuneFreq.argLength = 5;
+    tuneFreq.responseLength = 0;
 
-    pRadioDevice->currentCommand.state = COMMANDSTATE_SENDING;
-
-    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit_IT(&hi2c1, pRadioDevice->deviceAddress,
-                                                          (uint8_t *)&pRadioDevice->currentCommand.args.bytes[0],
-                                                          pRadioDevice->currentCommand.argLength);
-
-    if (status != HAL_OK)
-    {
-        return false;
-    }
-
-    while (pRadioDevice->currentCommand.state != COMMANDSTATE_READY)
-    {
-    }
-
-    pRadioDevice->currentState = RADIOSTATE_TUNED_TO_STATION;
-
-    pRadioDevice->currentCommand.args.bytes[0] = 0;
-    pRadioDevice->currentCommand.args.bytes[1] = 0;
-    pRadioDevice->currentCommand.args.bytes[2] = 0;
-    pRadioDevice->currentCommand.args.bytes[3] = 0;
-    pRadioDevice->currentCommand.args.bytes[4] = 0;
-    pRadioDevice->currentCommand.args.bytes[5] = 0;
-    pRadioDevice->currentCommand.args.bytes[6] = 0;
-    pRadioDevice->currentCommand.args.bytes[7] = 0;
-    pRadioDevice->currentCommand.state = COMMANDSTATE_IDLE;
-    pRadioDevice->currentCommand.argLength = 0;
-    pRadioDevice->currentCommand.responseLength = 0;
-
-    return true;
+    return EnqueueCommand(pRadioDevice, &tuneFreq);
 }
 
 /**
@@ -443,7 +304,7 @@ bool TuneFreq(volatile RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, 
  *
  * @retval True if the command succeeded; false otherwise
  */
-bool SeekStart(volatile RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args)
+bool SeekStart(RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args)
 {
     volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[2] = {0};
@@ -473,8 +334,7 @@ bool SeekStart(volatile RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args
  *
  * @retval True if the command succeeded; false otherwise
  */
-bool GetTuneStatus(volatile RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args,
-                   GetTuneStatusResponse_t *pResponse)
+bool GetTuneStatus(RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args, GetTuneStatusResponse_t *pResponse)
 {
     volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[2] = {0};
@@ -522,7 +382,7 @@ bool GetTuneStatus(volatile RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARG
  *
  * @retval True if the command succeeded; false otherwise
  */
-bool RSQStatus(volatile RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args, RSQStatusResponse_t *pResponse)
+bool RSQStatus(RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args, RSQStatusResponse_t *pResponse)
 {
     volatile HAL_StatusTypeDef status;
     uint8_t tx_buffer[2] = {0};

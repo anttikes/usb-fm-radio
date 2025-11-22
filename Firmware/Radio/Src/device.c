@@ -24,15 +24,14 @@
 
 /* Exported variables --------------------------------------------------------*/
 // clang-format off
-volatile RadioDevice_t radioDevice = {
+RadioDevice_t radioDevice = {
     .deviceAddress = SI4705_I2C_ADDRESS,
     .currentState = RADIOSTATE_POWERDOWN,
-    .currentCommand = {
-        .state = COMMANDSTATE_IDLE,
-        .args = {0},
-        .argLength = 0,
-        .response = {0},
-        .responseLength = 0
+    .commands = {
+        .commands = {{0}},
+        .count = 0,
+        .front = 0,
+        .back = 0
     }    
 };
 // clang-format on
@@ -46,11 +45,98 @@ volatile RadioDevice_t radioDevice = {
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
+bool IsQueueEmpty(CommandQueue_t *queue);
+Command_t *PeekQueue(CommandQueue_t *queue);
+Command_t *PopQueue(CommandQueue_t *queue);
 
 /* Exported functions --------------------------------------------------------*/
+bool ProcessCommand(RadioDevice_t *device)
+{
+    if (IsQueueEmpty(&device->commands))
+    {
+        return true;
+    }
+
+    Command_t *currentCommand = PeekQueue(&device->commands);
+
+    if (currentCommand == NULL)
+    {
+        return false;
+    }
+
+    if (currentCommand->state == COMMANDSTATE_READY)
+    {
+        if (currentCommand->args.opCode == CMD_ID_POWER_UP)
+        {
+            device->currentState = RADIOSTATE_POWERUP;
+        }
+        else if (currentCommand->args.opCode == CMD_ID_POWER_DOWN)
+        {
+            device->currentState = RADIOSTATE_POWERDOWN;
+        }
+        else if (currentCommand->args.opCode == CMD_ID_FM_TUNE_FREQ)
+        {
+            device->currentState = RADIOSTATE_TUNED_TO_STATION;
+        }
+        else if (currentCommand->args.opCode == CMD_ID_SET_PROPERTY)
+        {
+            PropertyIdentifiers_t property =
+                (PropertyIdentifiers_t)((currentCommand->args.bytes[2] << 8) | (currentCommand->args.bytes[3] << 0));
+
+            if (property == PROP_ID_DIGITAL_OUTPUT_SAMPLE_RATE)
+            {
+                device->currentState = RADIOSTATE_DIGITAL_OUTPUT_ENABLED;
+            }
+
+            // Programming guide guarantees that it takes 10ms to complete the operation
+            HAL_Delay(10);
+        }
+
+        PopQueue(&device->commands);
+
+        currentCommand = PeekQueue(&device->commands);
+
+        if (currentCommand == NULL)
+        {
+            return true;
+        }
+    }
+    else if (currentCommand->state != COMMANDSTATE_IDLE)
+    {
+        return true;
+    }
+
+    // All radio commands are I2C at the moment
+    currentCommand->state = COMMANDSTATE_SENDING;
+
+    return HAL_I2C_Master_Transmit_IT(&hi2c1, device->deviceAddress, (uint8_t *)&currentCommand->args,
+                                      currentCommand->argLength) == HAL_OK;
+}
+
+bool EnqueueCommand(RadioDevice_t *device, Command_t *command)
+{
+    if (device == NULL || command == NULL)
+    {
+        return false;
+    }
+
+    volatile CommandQueue_t *queue = &device->commands;
+
+    const uint8_t capacity = (uint8_t)(sizeof(queue->commands) / sizeof(queue->commands[0]));
+    if (queue->count >= capacity)
+    {
+        /* Queue full */
+        return false;
+    }
+
+    queue->commands[queue->back] = *command;
+    queue->back = (uint8_t)((queue->back + 1) % capacity);
+    queue->count++;
+
+    return true;
+}
 
 /* External callbacks --------------------------------------------------------*/
-volatile uint8_t triggerCount = 0;
 
 /**
  * @brief  EXTI line detection callback.
@@ -61,15 +147,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if (GPIO_Pin == RADIO_NIRQ_Pin)
     {
-        triggerCount++;
+        Command_t *currentCommand = PeekQueue(&radioDevice.commands);
 
-        if (radioDevice.currentCommand.state == COMMANDSTATE_WAITING_FOR_STC)
+        if (currentCommand->state == COMMANDSTATE_WAITING_FOR_STC)
         {
-            radioDevice.currentCommand.state = COMMANDSTATE_WAITING_FOR_CTS;
+            currentCommand->state = COMMANDSTATE_WAITING_FOR_CTS;
         }
-        else if (radioDevice.currentCommand.state == COMMANDSTATE_WAITING_FOR_CTS)
+        else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_CTS)
         {
-            radioDevice.currentCommand.state = COMMANDSTATE_READY;
+            currentCommand->state = COMMANDSTATE_READY;
         }
     }
 }
@@ -84,16 +170,18 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
     if (hi2c->Instance == hi2c1.Instance)
     {
-        if (radioDevice.currentCommand.state == COMMANDSTATE_SENDING)
+        Command_t *currentCommand = PeekQueue(&radioDevice.commands);
+
+        if (currentCommand->state == COMMANDSTATE_SENDING)
         {
-            if (radioDevice.currentCommand.args.opCode == CMD_ID_FM_TUNE_FREQ ||
-                radioDevice.currentCommand.args.opCode == CMD_ID_FM_SEEK_START)
+            if (currentCommand->args.opCode == CMD_ID_FM_TUNE_FREQ ||
+                currentCommand->args.opCode == CMD_ID_FM_SEEK_START)
             {
-                radioDevice.currentCommand.state = COMMANDSTATE_WAITING_FOR_STC;
+                currentCommand->state = COMMANDSTATE_WAITING_FOR_STC;
             }
             else
             {
-                radioDevice.currentCommand.state = COMMANDSTATE_WAITING_FOR_CTS;
+                currentCommand->state = COMMANDSTATE_WAITING_FOR_CTS;
             }
         }
     }
@@ -114,3 +202,37 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 }
 
 /* Private functions ---------------------------------------------------------*/
+bool IsQueueEmpty(CommandQueue_t *queue)
+{
+    if (queue == NULL)
+    {
+        return true;
+    }
+
+    return (queue->count == 0);
+}
+
+Command_t *PeekQueue(CommandQueue_t *queue)
+{
+    if (queue == NULL || queue->count == 0)
+    {
+        return NULL;
+    }
+
+    return &queue->commands[queue->front];
+}
+
+Command_t *PopQueue(CommandQueue_t *queue)
+{
+    if (queue == NULL || queue->count == 0)
+    {
+        return NULL;
+    }
+
+    Command_t *cmd = &queue->commands[queue->front];
+    const uint8_t capacity = (uint8_t)(sizeof(queue->commands) / sizeof(queue->commands[0]));
+    queue->front = (uint8_t)((queue->front + 1) % capacity);
+    queue->count--;
+
+    return cmd;
+}
