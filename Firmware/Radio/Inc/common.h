@@ -313,9 +313,6 @@ typedef enum _InterruptSources_t
 
 typedef enum _CommandIdentifiers_t
 {
-    // This is not really a command
-    CMD_ID_NONE = 0x00,
-
     CMD_ID_POWER_UP = 0x01,
     CMD_ID_GET_REV = 0x10,
     CMD_ID_POWER_DOWN = 0x11,

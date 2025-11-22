@@ -35,45 +35,6 @@
 /* Private user code ---------------------------------------------------------*/
 
 /**
- * @brief  Synchronously waits for the specified status bit to be set via I2C polling
- * @param  pRadioDevice Pointer to the radio device structure
- * @param  statusToWait Status bit to wait for
- *
- * @retval None
- */
-void WaitForStatus(RadioDevice_t *pRadioDevice, StatusFlags_t statusToWait)
-{
-    while (true)
-    {
-        HAL_StatusTypeDef status;
-        StatusFlags_t latestStatus = STATUS_NONE;
-
-        // When waiting for any other status except CTS we must use GetIntStatus command to update the status byte
-        if (statusToWait != STATUS_CLEAR_TO_SEND)
-        {
-            status = GetIntStatus(pRadioDevice, &latestStatus);
-        }
-        else
-        {
-            status =
-                HAL_I2C_Master_Receive(&hi2c1, radioDevice.deviceAddress, (uint8_t *)&latestStatus, 1, HAL_MAX_DELAY);
-        }
-
-        if (status != HAL_OK)
-        {
-            // TODO: Break out, and raise error?
-        }
-
-        if (latestStatus & statusToWait)
-        {
-            break;
-        }
-
-        HAL_Delay(1);
-    }
-}
-
-/**
  * @brief  Enqueues the "Power up" command
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  arg1 First set of arguments for the command
@@ -112,7 +73,7 @@ bool SetInterruptSources(RadioDevice_t *pRadioDevice, InterruptSources_t sources
  * @brief  Enqueues the "Power down" command
  * @param  pRadioDevice Pointer to the radio device structure
  *
- * @retval True if the command succeeded; false otherwise
+ * @retval True if the command was enqueued; false otherwise
  */
 bool PowerDown(RadioDevice_t *pRadioDevice)
 {
@@ -126,48 +87,34 @@ bool PowerDown(RadioDevice_t *pRadioDevice)
 }
 
 /**
- * @brief  Sends the "Get Rev" command to the Si4705 chip and waits until CTS becomes set
+ * @brief  Enqueues the "Get Rev" command
  * @param  pRadioDevice Pointer to the radio device structure
- * @param  pResponse Pointer to the structure representing the data returned by the chip
  *
- * @retval True if the command succeeded; false otherwise
+ * @retval True if the command was enqueued; false otherwise
  */
-bool GetRevision(RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse)
+bool GetRevision(RadioDevice_t *pRadioDevice)
 {
-    volatile HAL_StatusTypeDef status;
-    uint8_t tx_buffer[1] = {0};
-    uint8_t rx_buffer[16] = {0};
+    Command_t getRevision = {0};
 
-    if (pResponse == NULL)
-    {
-        return HAL_ERROR;
-    }
+    getRevision.args.opCode = CMD_ID_GET_REV;
+    getRevision.argLength = 1;
+    getRevision.responseLength = 16;
 
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
+    return EnqueueCommand(pRadioDevice, &getRevision);
 
-    tx_buffer[0] = CMD_ID_GET_REV;
+    // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
+    // HAL_MAX_DELAY);
 
-    status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
+    // pResponse->productNumber = rx_buffer[1];
+    // pResponse->firmwareMajor = rx_buffer[2];
+    // pResponse->firmwareMinor = rx_buffer[3];
+    // pResponse->patchId = (uint16_t)(rx_buffer[4] << 8 | rx_buffer[5]);
+    // pResponse->componentMajor = rx_buffer[6];
+    // pResponse->componentMinor = rx_buffer[7];
+    // pResponse->chipRevision = rx_buffer[8];
+    // pResponse->cid = rx_buffer[15];
 
-    if (status != HAL_OK)
-    {
-        return false;
-    }
-
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
-
-    status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer), HAL_MAX_DELAY);
-
-    pResponse->productNumber = rx_buffer[1];
-    pResponse->firmwareMajor = rx_buffer[2];
-    pResponse->firmwareMinor = rx_buffer[3];
-    pResponse->patchId = (uint16_t)(rx_buffer[4] << 8 | rx_buffer[5]);
-    pResponse->componentMajor = rx_buffer[6];
-    pResponse->componentMinor = rx_buffer[7];
-    pResponse->chipRevision = rx_buffer[8];
-    pResponse->cid = rx_buffer[15];
-
-    return true;
+    // return true;
 }
 
 /**
@@ -195,84 +142,56 @@ bool SetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, ui
 }
 
 /**
- * @brief  Sends the "Get Property" command to the Si4705 chip and waits until CTS becomes set
+ * @brief  Enqueues the "Get Property" command
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  property Identifier of the property to set
- * @param  pValue Pointer to the variable that will receive the value of that the property has
  *
- * @retval True if the command succeeded; false otherwise
+ * @retval True if the command was enqueued; false otherwise
  */
-bool GetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t *pValue)
+bool GetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property)
 {
-    volatile HAL_StatusTypeDef status;
-    uint8_t tx_buffer[4] = {0};
-    uint8_t rx_buffer[4] = {0};
+    Command_t getProperty = {0};
 
-    if (pValue == NULL)
-    {
-        return false;
-    }
+    getProperty.args.opCode = CMD_ID_GET_PROPERTY;
+    getProperty.args.bytes[1] = 0x00;
+    getProperty.args.bytes[2] = (uint8_t)((property & 0xFF00) >> 8);
+    getProperty.args.bytes[3] = (uint8_t)((property & 0x00FF) >> 0);
+    getProperty.argLength = 4;
+    getProperty.responseLength = 4;
 
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
+    return EnqueueCommand(pRadioDevice, &getProperty);
 
-    tx_buffer[0] = CMD_ID_GET_PROPERTY;
-    tx_buffer[1] = 0x00;
-    tx_buffer[2] = (uint8_t)((property & 0xFF00) >> 8);
-    tx_buffer[3] = (uint8_t)((property & 0x00FF) >> 0);
+    // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
+    // HAL_MAX_DELAY);
 
-    status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
+    // // Third and fourth bytes are the high and low bytes of the return value
+    // (*pValue) = (uint16_t)((rx_buffer[2] << 8) | rx_buffer[3]);
 
-    if (status != HAL_OK)
-    {
-        return false;
-    }
-
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
-
-    status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer), HAL_MAX_DELAY);
-
-    // Third and fourth bytes are the high and low bytes of the return value
-    (*pValue) = (uint16_t)((rx_buffer[2] << 8) | rx_buffer[3]);
-
-    return true;
+    // return true;
 }
 
 /**
- * @brief  Sends the "Get Int Status" command to the Si4705 chip and waits until CTS becomes set
+ * @brief  Enqueues the "Get Int Status" command
  * @param  pRadioDevice Pointer to the radio device structure
- * @param  property Identifier of the property to set
  *
- * @retval True if the command succeeded; false otherwise
+ * @retval True if the command was enqueued; false otherwise
  */
-bool GetIntStatus(RadioDevice_t *pRadioDevice, StatusFlags_t *pValue)
+bool GetIntStatus(RadioDevice_t *pRadioDevice)
 {
-    volatile HAL_StatusTypeDef status;
-    uint8_t tx_buffer[1] = {0};
-    uint8_t rx_buffer[1] = {0};
+    Command_t getIntStatus = {0};
 
-    if (pValue == NULL)
-    {
-        return false;
-    }
+    getIntStatus.args.opCode = CMD_ID_GET_INT_STATUS;
+    getIntStatus.argLength = 1;
+    getIntStatus.responseLength = 1;
 
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
+    return EnqueueCommand(pRadioDevice, &getIntStatus);
 
-    tx_buffer[0] = CMD_ID_GET_INT_STATUS;
+    // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
+    // HAL_MAX_DELAY);
 
-    status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
+    // (*pValue) = rx_buffer[0];
 
-    if (status != HAL_OK)
-    {
-        return false;
-    }
-
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
-
-    status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer), HAL_MAX_DELAY);
-
-    (*pValue) = rx_buffer[0];
-
-    return true;
+    // return true;
 }
 
 /**
@@ -299,138 +218,100 @@ bool TuneFreq(RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t 
 }
 
 /**
- * @brief  Sends the "Seek Start" command to the Si4705 chip and waits until CTS becomes set
+ * @brief  Enqueues the "Seek Start" command
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  args Arguments for the command
  *
- * @retval True if the command succeeded; false otherwise
+ * @retval True if the command was enqueued; false otherwise
  */
 bool SeekStart(RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args)
 {
-    volatile HAL_StatusTypeDef status;
-    uint8_t tx_buffer[2] = {0};
+    Command_t seekStart = {0};
 
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
+    seekStart.args.opCode = CMD_ID_FM_SEEK_START;
+    seekStart.args.bytes[1] = args;
+    seekStart.argLength = 2;
+    seekStart.responseLength = 0;
 
-    tx_buffer[0] = CMD_ID_FM_SEEK_START;
-    tx_buffer[1] = args;
-
-    status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
-
-    if (status != HAL_OK)
-    {
-        return false;
-    }
-
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
-
-    return true;
+    return EnqueueCommand(pRadioDevice, &seekStart);
 }
 
 /**
- * @brief  Sends the "Get Tune Status" command to the Si4705 chip and waits until CTS becomes set
+ * @brief  Enqueues the "Get Tune Status" command
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  args Arguments to the command
- * @param  pResponse Pointer to a variable that will hold the response to the command
  *
- * @retval True if the command succeeded; false otherwise
+ * @retval True if the command was enqueued; false otherwise
  */
-bool GetTuneStatus(RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args, GetTuneStatusResponse_t *pResponse)
+bool GetTuneStatus(RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args)
 {
-    volatile HAL_StatusTypeDef status;
-    uint8_t tx_buffer[2] = {0};
-    uint8_t rx_buffer[8] = {0};
+    Command_t getTuneStatus = {0};
 
-    if (pResponse == NULL)
-    {
-        return false;
-    }
+    getTuneStatus.args.opCode = CMD_ID_FM_TUNE_STATUS;
+    getTuneStatus.args.bytes[1] = args;
+    getTuneStatus.argLength = 2;
+    getTuneStatus.responseLength = 8;
 
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
+    return EnqueueCommand(pRadioDevice, &getTuneStatus);
 
-    tx_buffer[0] = CMD_ID_FM_TUNE_STATUS;
-    tx_buffer[1] = args;
+    // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
+    // HAL_MAX_DELAY);
 
-    status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
+    // pResponse->bandLimit = rx_buffer[1] & 0x80;
+    // pResponse->AFCRail = rx_buffer[1] & 0x02;
+    // pResponse->validChannel = rx_buffer[1] & 0x01;
 
-    if (status != HAL_OK)
-    {
-        return false;
-    }
+    // pResponse->frequency = (uint16_t)(rx_buffer[2] << 8 | rx_buffer[3]);
+    // pResponse->rssi = rx_buffer[4];
+    // pResponse->snr = rx_buffer[5];
+    // pResponse->multipath = rx_buffer[6];
+    // pResponse->antennaTuningCapacitor = rx_buffer[7];
 
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
-
-    status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer), HAL_MAX_DELAY);
-
-    pResponse->bandLimit = rx_buffer[1] & 0x80;
-    pResponse->AFCRail = rx_buffer[1] & 0x02;
-    pResponse->validChannel = rx_buffer[1] & 0x01;
-
-    pResponse->frequency = (uint16_t)(rx_buffer[2] << 8 | rx_buffer[3]);
-    pResponse->rssi = rx_buffer[4];
-    pResponse->snr = rx_buffer[5];
-    pResponse->multipath = rx_buffer[6];
-    pResponse->antennaTuningCapacitor = rx_buffer[7];
-
-    return true;
+    // return true;
 }
 
 /**
- * @brief  Sends the "FM RSQ Status" command to the Si4705 chip and waits until CTS becomes set
+ * @brief  Enqueues the "FM RSQ Status" command
  * @param  pRadioDevice Pointer to the radio device structure
  * @param  args Arguments to the command
- * @param  pResponse Pointer to a variable that will hold the response to the command
  *
- * @retval True if the command succeeded; false otherwise
+ * @retval True if the command was enqueued; false otherwise
  */
-bool RSQStatus(RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args, RSQStatusResponse_t *pResponse)
+bool RSQStatus(RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args)
 {
-    volatile HAL_StatusTypeDef status;
-    uint8_t tx_buffer[2] = {0};
-    uint8_t rx_buffer[8] = {0};
+    Command_t rsqStatus = {0};
 
-    if (pResponse == NULL)
-    {
-        return false;
-    }
+    rsqStatus.args.opCode = CMD_ID_FM_RSQ_STATUS;
+    rsqStatus.args.bytes[1] = args;
+    rsqStatus.argLength = 2;
+    rsqStatus.responseLength = 8;
 
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
+    return EnqueueCommand(pRadioDevice, &rsqStatus);
 
-    tx_buffer[0] = CMD_ID_FM_RSQ_STATUS;
-    tx_buffer[1] = args;
+    // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
+    // HAL_MAX_DELAY);
 
-    status = HAL_I2C_Master_Transmit(&hi2c1, pRadioDevice->deviceAddress, tx_buffer, sizeof(tx_buffer), HAL_MAX_DELAY);
+    // pResponse->blendInt = rx_buffer[1] & 0x80;
+    // pResponse->multHInt = rx_buffer[1] & 0x20;
+    // pResponse->multLInt = rx_buffer[1] & 0x10;
+    // pResponse->snrHInt = rx_buffer[1] & 0x08;
+    // pResponse->snrLInt = rx_buffer[1] & 0x04;
+    // pResponse->rssiHInt = rx_buffer[1] & 0x02;
+    // pResponse->rssiLInt = rx_buffer[1] & 0x01;
 
-    if (status != HAL_OK)
-    {
-        return false;
-    }
+    // pResponse->softMute = rx_buffer[2] & 0x08;
+    // pResponse->AFCRail = rx_buffer[2] & 0x02;
+    // pResponse->validChannel = rx_buffer[2] & 0x01;
 
-    WaitForStatus(pRadioDevice, STATUS_CLEAR_TO_SEND);
+    // pResponse->pilot = rx_buffer[3] & 0x80;
+    // pResponse->stereoBlend = (rx_buffer[3] & 0x7F);
 
-    status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer), HAL_MAX_DELAY);
+    // pResponse->rssi = rx_buffer[4];
+    // pResponse->snr = rx_buffer[5];
+    // pResponse->multipath = rx_buffer[6];
+    // pResponse->frequencyOffset = (int8_t)rx_buffer[7];
 
-    pResponse->blendInt = rx_buffer[1] & 0x80;
-    pResponse->multHInt = rx_buffer[1] & 0x20;
-    pResponse->multLInt = rx_buffer[1] & 0x10;
-    pResponse->snrHInt = rx_buffer[1] & 0x08;
-    pResponse->snrLInt = rx_buffer[1] & 0x04;
-    pResponse->rssiHInt = rx_buffer[1] & 0x02;
-    pResponse->rssiLInt = rx_buffer[1] & 0x01;
-
-    pResponse->softMute = rx_buffer[2] & 0x08;
-    pResponse->AFCRail = rx_buffer[2] & 0x02;
-    pResponse->validChannel = rx_buffer[2] & 0x01;
-
-    pResponse->pilot = rx_buffer[3] & 0x80;
-    pResponse->stereoBlend = (rx_buffer[3] & 0x7F);
-
-    pResponse->rssi = rx_buffer[4];
-    pResponse->snr = rx_buffer[5];
-    pResponse->multipath = rx_buffer[6];
-    pResponse->frequencyOffset = (int8_t)rx_buffer[7];
-
-    return true;
+    // return true;
 }
 
 /**

@@ -27,19 +27,17 @@ extern "C"
 #include "device.h"
 
 /* Exported functions prototypes ---------------------------------------------*/
-void WaitForStatus(RadioDevice_t *pRadioDevice, StatusFlags_t statusToWait);
-
 bool PowerUp(RadioDevice_t *pRadioDevice, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_2 arg2);
 bool SetInterruptSources(RadioDevice_t *pRadioDevice, InterruptSources_t sources);
 bool PowerDown(RadioDevice_t *pRadioDevice);
-bool GetRevision(RadioDevice_t *pRadioDevice, GetRevisionResponse_t *pResponse);
+bool GetRevision(RadioDevice_t *pRadioDevice);
 bool SetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t value);
-bool GetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property, uint16_t *pValue);
-bool GetIntStatus(RadioDevice_t *pRadioDevice, StatusFlags_t *pValue);
+bool GetProperty(RadioDevice_t *pRadioDevice, PropertyIdentifiers_t property);
+bool GetIntStatus(RadioDevice_t *pRadioDevice);
 bool TuneFreq(RadioDevice_t *pRadioDevice, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency);
 bool SeekStart(RadioDevice_t *pRadioDevice, CMD_FM_SEEK_START_ARGS args);
-bool GetTuneStatus(RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args, GetTuneStatusResponse_t *pResponse);
-bool RSQStatus(RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args, RSQStatusResponse_t *pResponse);
+bool GetTuneStatus(RadioDevice_t *pRadioDevice, CMD_GET_TUNE_STATUS_ARGS args);
+bool RSQStatus(RadioDevice_t *pRadioDevice, CMD_FM_RSQ_STATUS_ARGS args);
 bool GPIOCtl(RadioDevice_t *pRadioDevice, CMD_GPIO_CTL_ARGS args);
 bool GPIOSet(RadioDevice_t *pRadioDevice, CMD_GPIO_SET_ARGS args);
 
