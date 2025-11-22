@@ -139,7 +139,7 @@ bool EnqueueCommand(RadioDevice_t *device, Command_t *command)
 /* External callbacks --------------------------------------------------------*/
 
 /**
- * @brief  EXTI line detection callback.
+ * @brief  Invoked by HAL when a EXTI interrupt has occurred.
  * @param  GPIO_Pin Specifies the port pin connected to corresponding EXTI line.
  * @retval None
  */
@@ -155,13 +155,23 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         }
         else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_CTS)
         {
-            currentCommand->state = COMMANDSTATE_READY;
+            if (currentCommand->responseLength > 0)
+            {
+                currentCommand->state = COMMANDSTATE_RECEIVING_RESPONSE;
+
+                HAL_I2C_Master_Receive_IT(&hi2c1, radioDevice.deviceAddress, currentCommand->response,
+                                          currentCommand->responseLength);
+            }
+            else
+            {
+                currentCommand->state = COMMANDSTATE_READY;
+            }
         }
     }
 }
 
 /**
- * @brief  Master Tx Transfer completed callback.
+ * @brief  Invoked by HAL when I2C Master transmit has completed.
  * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
  *                the configuration information for the specified I2C.
  * @retval None
@@ -188,7 +198,7 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 }
 
 /**
- * @brief  Master Rx Transfer completed callback.
+ * @brief  Invoked by HAL when I2C Master receive has completed.
  * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
  *                the configuration information for the specified I2C.
  * @retval None
@@ -197,11 +207,24 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
     if (hi2c->Instance == hi2c1.Instance)
     {
-        // Handle I2C reception complete
+        Command_t *currentCommand = PeekQueue(&radioDevice.commands);
+
+        if (currentCommand->state == COMMANDSTATE_RECEIVING_RESPONSE)
+        {
+            // TODO: Process the response in some way
+
+            currentCommand->state = COMMANDSTATE_READY;
+        }
     }
 }
 
 /* Private functions ---------------------------------------------------------*/
+
+/**
+ * @brief  Determines if the command queue is empty
+ *
+ * @retval True if the queue is empty; false otherwise
+ */
 bool IsQueueEmpty(CommandQueue_t *queue)
 {
     if (queue == NULL)
@@ -212,6 +235,11 @@ bool IsQueueEmpty(CommandQueue_t *queue)
     return (queue->count == 0);
 }
 
+/**
+ * @brief  Peeks the first command from the queue without removing it
+ *
+ * @retval Pointer to the first command in the queue or NULL if the queue is empty
+ */
 Command_t *PeekQueue(CommandQueue_t *queue)
 {
     if (queue == NULL || queue->count == 0)
@@ -222,6 +250,11 @@ Command_t *PeekQueue(CommandQueue_t *queue)
     return &queue->commands[queue->front];
 }
 
+/**
+ * @brief  Pops the first command from the queue, removing it
+ *
+ * @retval Pointer to the first command in the queue or NULL if the queue is empty
+ */
 Command_t *PopQueue(CommandQueue_t *queue)
 {
     if (queue == NULL || queue->count == 0)

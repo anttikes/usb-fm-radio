@@ -111,7 +111,7 @@ void DMA1_Channel2_3_IRQHandler(void)
 }
 
 /**
- * @brief This function handles TIM14 global interrupt.
+ * @brief This function handles TIM14 interrupt.
  */
 void TIM14_IRQHandler(void)
 {
@@ -119,7 +119,7 @@ void TIM14_IRQHandler(void)
 }
 
 /**
- * @brief This function handles I2C1 event global interrupt / I2C1 wake-up interrupt through EXTI line 23.
+ * @brief This function handles I2C1 event global / I2C1 wake-up interrupt.
  */
 void I2C1_IRQHandler(void)
 {
@@ -134,7 +134,7 @@ void I2C1_IRQHandler(void)
 }
 
 /**
- * @brief This function handles USB global Interrupt / USB wake-up interrupt through EXTI line 18.
+ * @brief This function handles USB global / USB wake-up interrupt.
  */
 void USB_IRQHandler(void)
 {
