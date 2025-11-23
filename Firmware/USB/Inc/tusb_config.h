@@ -68,7 +68,7 @@ extern "C"
 
 //------------- CLASS -------------//
 #define CFG_TUD_AUDIO 1
-#define CFG_TUD_HID 0
+#define CFG_TUD_HID 1
 
 //--------------------------------------------------------------------
 // AUDIO CLASS DRIVER CONFIGURATION

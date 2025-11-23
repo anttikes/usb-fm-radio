@@ -22,6 +22,7 @@
 #include "i2c.h"
 #include "main.h"
 #include "stm32f0xx_hal.h"
+#include "tusb.h"
 
 /* Exported variables --------------------------------------------------------*/
 // clang-format off
@@ -241,7 +242,16 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 
         if (currentCommand->state == COMMANDSTATE_RECEIVING_RESPONSE)
         {
-            // TODO: Process the response in some way
+            uint8_t report[CFG_TUD_HID_EP_BUFSIZE - 1] = {0};
+
+            report[0] = currentCommand->responseLength;
+
+            for (uint8_t i = 0; i < currentCommand->responseLength; i++)
+            {
+                report[i + 1] = currentCommand->response[i];
+            }
+
+            tud_hid_report(currentCommand->args.opCode, report, CFG_TUD_HID_EP_BUFSIZE - 1);
 
             currentCommand->state = COMMANDSTATE_READY;
         }

@@ -85,10 +85,12 @@ static inline size_t board_usb_get_serial(uint16_t desc_str1[], size_t maxChars)
 // HID Report Descriptor
 //--------------------------------------------------------------------+
 
-// uint8_t const desc_hid_report[] =
-// {
-// 	TUD_HID_REPORT_DESC_GENERIC_INOUT(CFG_TUD_HID_EP_BUFSIZE)
-// };
+// clang-format off
+uint8_t const desc_hid_report[] = 
+{
+	TUD_HID_REPORT_DESC_GENERIC_INOUT(CFG_TUD_HID_EP_BUFSIZE)
+};
+// clang-format on
 
 //--------------------------------------------------------------------+
 // String Descriptors
@@ -190,7 +192,6 @@ tusb_desc_device_t const desc_device = {
 	.iProduct = STRID_PRODUCT,
 	.iSerialNumber = STRID_SERIAL,
 
-
 	.bNumConfigurations = 0x01
 };
 // clang-format on
@@ -209,7 +210,7 @@ uint8_t const *tud_descriptor_device_cb(void)
 // Configuration Descriptor
 //--------------------------------------------------------------------+
 
-#define ITF_NUM_TOTAL ITF_NUM_AUDIO_TOTAL //+ ITF_NUM_HID_TOTAL
+#define ITF_NUM_TOTAL ITF_NUM_AUDIO_TOTAL + ITF_NUM_HID_TOTAL
 
 // clang-format off
 #define CONFIG_TOTAL_LEN (0\
@@ -333,16 +334,16 @@ uint8_t const desc_configuration[] =
 	),
 
 	/* HID Input/Output (Class-specific 6.1 & Appendix E, Class-specific 6.2.1, Standard 9.6.6 and Standard 9.6.6)  */
-	// TUD_HID_INOUT_DESCRIPTOR(
-	// 	ITF_NUM_HID,                                             /* bInterfaceNumber */
-	// 	0x00,                                                    /* iInterface */
-	// 	HID_ITF_PROTOCOL_NONE,                                   /* bInterfaceSubClass & bInterfaceProtocol */
-	// 	sizeof(desc_hid_report),                                       /* wDescriptorLength */
-	// 	EPNUM_HID,                                               /* bEndpointAddress (OUT) */
-	// 	0x80 | EPNUM_HID,                                        /* bEndpointAddress (IN) */
-	// 	CFG_TUD_HID_EP_BUFSIZE,                                        /* wMaxPacketSize */
-	// 	0x0A                                               /* bInterval */
-	// ),
+	TUD_HID_INOUT_DESCRIPTOR(
+		ITF_NUM_HID,                                             /* bInterfaceNumber */
+		0x00,                                                    /* iInterface */
+		HID_ITF_PROTOCOL_NONE,                                   /* bInterfaceSubClass & bInterfaceProtocol */
+		sizeof(desc_hid_report),                                       /* wDescriptorLength */
+		EPNUM_HID,                                               /* bEndpointAddress (OUT) */
+		0x80 | EPNUM_HID,                                        /* bEndpointAddress (IN) */
+		CFG_TUD_HID_EP_BUFSIZE,                                        /* wMaxPacketSize */
+		0x0A                                               /* bInterval */
+	),
 };
 // clang-format on
 

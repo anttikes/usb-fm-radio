@@ -22,7 +22,10 @@
 //--------------------------------------------------------------------
 
 // HID buffer size
-#define CFG_TUD_HID_EP_BUFSIZE 16
+//  - One byte for report ID
+//  - One byte for report size
+//  - 16 bytes for data
+#define CFG_TUD_HID_EP_BUFSIZE 18
 
 // Interface numbers
 #define ITF_NUM_HID 0x02
