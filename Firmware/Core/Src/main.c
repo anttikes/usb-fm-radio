@@ -202,6 +202,14 @@ void SystemClock_Config(void)
     HAL_RCCEx_CRSConfig(&RCC_CRSInitStruct);
 }
 
+/* External callbacks --------------------------------------------------------*/
+
+/**
+ * @brief  Rx Transfer half completed callbacks
+ * @param  hi2s pointer to a I2S_HandleTypeDef structure that contains
+ *         the configuration information for I2S module
+ * @retval None
+ */
 void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s)
 {
     if (hi2s->Instance == SPI1)
@@ -210,6 +218,12 @@ void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s)
     }
 }
 
+/**
+ * @brief  Rx Transfer completed callbacks
+ * @param  hi2s pointer to a I2S_HandleTypeDef structure that contains
+ *         the configuration information for I2S module
+ * @retval None
+ */
 void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
 {
     if (hi2s->Instance == SPI1)
@@ -218,14 +232,17 @@ void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
     }
 }
 
-void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s)
-{
-    UNUSED(hi2s);
-}
-
+/**
+ * @brief  Period elapsed callback in non-blocking mode
+ * @param  htim TIM handle
+ * @retval None
+ */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    UNUSED(htim);
+    if (radioDevice.currentState == RADIOSTATE_DIGITAL_OUTPUT_ENABLED)
+    {
+        RSQStatus(&radioDevice, FM_RSQ_STATUS_ARGS_NONE);
+    }
 }
 
 /**
