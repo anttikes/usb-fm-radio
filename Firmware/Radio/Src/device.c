@@ -17,6 +17,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "device.h"
+#include "commands.h"
 #include "common.h"
 #include "i2c.h"
 #include "main.h"
@@ -172,7 +173,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     {
         Command_t *currentCommand = PeekQueue(&radioDevice.commandQueue);
 
-        if (currentCommand->state == COMMANDSTATE_WAITING_FOR_STC)
+        if (currentCommand == NULL)
+        {
+            // No command to process; this usually indicates e.g. RDS or RSQ interrupt
+            // so send the GetInterruptStatus command
+            GetIntStatus(&radioDevice);
+        }
+        else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_STC)
         {
             currentCommand->state = COMMANDSTATE_WAITING_FOR_CTS;
         }
