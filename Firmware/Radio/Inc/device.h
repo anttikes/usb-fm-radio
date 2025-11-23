@@ -109,7 +109,7 @@ typedef struct _RadioDevice_t
     RadioState_t currentState;
 
     /* Holds the command queue */
-    CommandQueue_t commands;
+    CommandQueue_t commandQueue;
 } RadioDevice_t;
 
 /* Exported constants --------------------------------------------------------*/

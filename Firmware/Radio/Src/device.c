@@ -27,7 +27,7 @@
 RadioDevice_t radioDevice = {
     .deviceAddress = SI4705_I2C_ADDRESS,
     .currentState = RADIOSTATE_POWERDOWN,
-    .commands = {
+    .commandQueue = {
         .commands = {{0}},
         .count = 0,
         .front = 0,
@@ -59,12 +59,12 @@ Command_t *PopQueue(CommandQueue_t *queue);
  */
 bool ProcessCommand(RadioDevice_t *device)
 {
-    if (IsQueueEmpty(&device->commands))
+    if (IsQueueEmpty(&device->commandQueue))
     {
         return true;
     }
 
-    Command_t *currentCommand = PeekQueue(&device->commands);
+    Command_t *currentCommand = PeekQueue(&device->commandQueue);
 
     if (currentCommand == NULL)
     {
@@ -108,9 +108,9 @@ bool ProcessCommand(RadioDevice_t *device)
             HAL_Delay(10);
         }
 
-        PopQueue(&device->commands);
+        PopQueue(&device->commandQueue);
 
-        currentCommand = PeekQueue(&device->commands);
+        currentCommand = PeekQueue(&device->commandQueue);
 
         if (currentCommand == NULL)
         {
@@ -143,7 +143,7 @@ bool EnqueueCommand(RadioDevice_t *device, Command_t *command)
         return false;
     }
 
-    volatile CommandQueue_t *queue = &device->commands;
+    volatile CommandQueue_t *queue = &device->commandQueue;
 
     const uint8_t capacity = (uint8_t)(sizeof(queue->commands) / sizeof(queue->commands[0]));
     if (queue->count >= capacity)
@@ -170,7 +170,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if (GPIO_Pin == RADIO_NIRQ_Pin)
     {
-        Command_t *currentCommand = PeekQueue(&radioDevice.commands);
+        Command_t *currentCommand = PeekQueue(&radioDevice.commandQueue);
 
         if (currentCommand->state == COMMANDSTATE_WAITING_FOR_STC)
         {
@@ -203,7 +203,7 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
     if (hi2c->Instance == hi2c1.Instance)
     {
-        Command_t *currentCommand = PeekQueue(&radioDevice.commands);
+        Command_t *currentCommand = PeekQueue(&radioDevice.commandQueue);
 
         if (currentCommand->state == COMMANDSTATE_SENDING)
         {
@@ -230,7 +230,7 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
     if (hi2c->Instance == hi2c1.Instance)
     {
-        Command_t *currentCommand = PeekQueue(&radioDevice.commands);
+        Command_t *currentCommand = PeekQueue(&radioDevice.commandQueue);
 
         if (currentCommand->state == COMMANDSTATE_RECEIVING_RESPONSE)
         {
