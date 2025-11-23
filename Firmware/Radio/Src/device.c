@@ -90,9 +90,18 @@ bool ProcessCommand(RadioDevice_t *device)
             PropertyIdentifiers_t property =
                 (PropertyIdentifiers_t)((currentCommand->args.bytes[2] << 8) | (currentCommand->args.bytes[3] << 0));
 
+            uint16_t value = (uint16_t)((currentCommand->args.bytes[4] << 8) | (currentCommand->args.bytes[5] << 0));
+
             if (property == PROP_ID_DIGITAL_OUTPUT_SAMPLE_RATE)
             {
-                device->currentState = RADIOSTATE_DIGITAL_OUTPUT_ENABLED;
+                if (value != 0)
+                {
+                    device->currentState = RADIOSTATE_DIGITAL_OUTPUT_ENABLED;
+                }
+                else
+                {
+                    device->currentState = RADIOSTATE_TUNED_TO_STATION;
+                }
             }
 
             // Programming guide guarantees that it takes 10ms to complete the operation
