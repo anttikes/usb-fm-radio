@@ -69,9 +69,6 @@ int main(void)
     __HAL_RCC_USB_CLK_ENABLE();
     HAL_NVIC_SetPriority(USB_IRQn, 0, 0);
 
-    // Start the HAL timer
-    HAL_TIM_Base_Start_IT(&htim14);
-
     // Bring Si4705 out of reset, and enable the oscillator
     HAL_GPIO_WritePin(RADIO_NRST_GPIO_Port, RADIO_NRST_Pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(RCLK_EN_GPIO_Port, RCLK_EN_Pin, GPIO_PIN_SET);

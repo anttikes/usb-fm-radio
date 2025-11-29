@@ -22,6 +22,7 @@
 #include "i2c.h"
 #include "main.h"
 #include "stm32f0xx_hal.h"
+#include "tim.h"
 #include "tusb.h"
 
 /* Exported variables --------------------------------------------------------*/
@@ -86,6 +87,8 @@ bool ProcessCommand(RadioDevice_t *device)
         else if (currentCommand->args.opCode == CMD_ID_FM_TUNE_FREQ)
         {
             device->currentState = RADIOSTATE_TUNED_TO_STATION;
+
+            HAL_TIM_Base_Start_IT(&htim14);
         }
         else if (currentCommand->args.opCode == CMD_ID_SET_PROPERTY)
         {
