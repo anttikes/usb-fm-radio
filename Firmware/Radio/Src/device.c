@@ -109,7 +109,8 @@ bool ProcessCommand(RadioDevice_t *device)
                 }
             }
 
-            // Programming guide guarantees that it takes 10ms to complete the operation
+            // Tuner programming guide outlines that a property
+            // set operation always completes in 10 ms
             HAL_Delay(10);
         }
 
@@ -122,16 +123,38 @@ bool ProcessCommand(RadioDevice_t *device)
             return true;
         }
     }
-    else if (currentCommand->state != COMMANDSTATE_IDLE)
+    else if (currentCommand->state == COMMANDSTATE_RESPONSE_RECEIVED)
     {
-        return true;
+        uint8_t report[CFG_TUD_HID_EP_BUFSIZE - 1] = {0};
+
+        report[0] = currentCommand->responseLength;
+
+        for (uint8_t i = 0; i < currentCommand->responseLength; i++)
+        {
+            report[i + 1] = currentCommand->response[i];
+        }
+
+        currentCommand->state = COMMANDSTATE_READY;
+
+        return tud_hid_report(currentCommand->args.opCode, report, CFG_TUD_HID_EP_BUFSIZE - 1);
+    }
+    else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_RESPONSE_RETRIEVAL)
+    {
+        currentCommand->state = COMMANDSTATE_RECEIVING_RESPONSE;
+
+        return HAL_I2C_Master_Receive_IT(&hi2c1, device->deviceAddress, (uint8_t *)&currentCommand->response,
+                                         currentCommand->responseLength) == HAL_OK;
+    }
+    else if (currentCommand->state == COMMANDSTATE_IDLE)
+    {
+        currentCommand->state = COMMANDSTATE_SENDING;
+
+        return HAL_I2C_Master_Transmit_IT(&hi2c1, device->deviceAddress, (uint8_t *)&currentCommand->args,
+                                          currentCommand->argLength) == HAL_OK;
     }
 
-    // All radio commands are I2C at the moment
-    currentCommand->state = COMMANDSTATE_SENDING;
-
-    return HAL_I2C_Master_Transmit_IT(&hi2c1, device->deviceAddress, (uint8_t *)&currentCommand->args,
-                                      currentCommand->argLength) == HAL_OK;
+    // Current command is executing; nothing to do at this time
+    return true;
 }
 
 /**
@@ -180,7 +203,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         if (currentCommand == NULL)
         {
             // No command to process; this usually indicates e.g. RDS or RSQ interrupt
-            // so send the GetInterruptStatus command
+            // so schedule the GetIntStatus command
             GetIntStatus(&radioDevice);
         }
         else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_STC)
@@ -191,10 +214,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         {
             if (currentCommand->responseLength > 0)
             {
-                currentCommand->state = COMMANDSTATE_RECEIVING_RESPONSE;
-
-                HAL_I2C_Master_Receive_IT(&hi2c1, radioDevice.deviceAddress, currentCommand->response,
-                                          currentCommand->responseLength);
+                currentCommand->state = COMMANDSTATE_WAITING_FOR_RESPONSE_RETRIEVAL;
             }
             else
             {
@@ -245,18 +265,7 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 
         if (currentCommand->state == COMMANDSTATE_RECEIVING_RESPONSE)
         {
-            uint8_t report[CFG_TUD_HID_EP_BUFSIZE - 1] = {0};
-
-            report[0] = currentCommand->responseLength;
-
-            for (uint8_t i = 0; i < currentCommand->responseLength; i++)
-            {
-                report[i + 1] = currentCommand->response[i];
-            }
-
-            tud_hid_report(currentCommand->args.opCode, report, CFG_TUD_HID_EP_BUFSIZE - 1);
-
-            currentCommand->state = COMMANDSTATE_READY;
+            currentCommand->state = COMMANDSTATE_RESPONSE_RECEIVED;
         }
     }
 }

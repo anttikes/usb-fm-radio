@@ -57,11 +57,17 @@ typedef enum _CommandState_t
     /* Command was sent, and we are waiting for STC interrupt */
     COMMANDSTATE_WAITING_FOR_STC = 0x03,
 
+    /* Command is waiting for a response retrieval to be sent */
+    COMMANDSTATE_WAITING_FOR_RESPONSE_RETRIEVAL = 0x04,
+
     /* Receiving a response to a command */
-    COMMANDSTATE_RECEIVING_RESPONSE = 0x04,
+    COMMANDSTATE_RECEIVING_RESPONSE = 0x05,
+
+    /* Response received, waiting for response to be sent via USB */
+    COMMANDSTATE_RESPONSE_RECEIVED = 0x06,
 
     /* The command is complete */
-    COMMANDSTATE_READY = 0x05,
+    COMMANDSTATE_READY = 0x07,
 } CommandState_t;
 
 typedef struct _Command_t
