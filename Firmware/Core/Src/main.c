@@ -239,7 +239,8 @@ void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    if (radioDevice.currentState == RADIOSTATE_DIGITAL_OUTPUT_ENABLED)
+    if (radioDevice.currentState == RADIOSTATE_TUNED_TO_STATION ||
+        radioDevice.currentState == RADIOSTATE_DIGITAL_OUTPUT_ENABLED)
     {
         RSQStatus(&radioDevice, FM_RSQ_STATUS_ARGS_NONE);
     }
