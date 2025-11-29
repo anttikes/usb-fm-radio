@@ -117,6 +117,9 @@ typedef enum _CMD_GPIO_CTL_ARGS
 
     /* When set, GPO1 Output is enabled. When unset, the output is high impedance (floating) */
     GPIO_CTL_GPO1_OUTPUT_ENABLE = 0x20,
+
+    /* All GPOs are set to high impedance (floating) */
+    GPIO_CTL_GPO_OUTPUT_DISABLE = 0x00,
 } CMD_GPIO_CTL_ARGS;
 
 typedef enum _CMD_GPIO_SET_ARGS
@@ -129,6 +132,9 @@ typedef enum _CMD_GPIO_SET_ARGS
 
     /* When set, GPO1 Output is driven high. When unset, it is driven low. */
     GPIO_SET_GPO1_OUTPUT_HIGH = 0x20,
+
+    /* All GPOs are driven low */
+    GPIO_SET_GPO_OUTPUT_NONE = 0x00,
 } CMD_GPIO_SET_ARGS;
 
 typedef struct _GetRevisionResponse_t
