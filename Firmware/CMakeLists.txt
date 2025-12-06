@@ -1,6 +1,3 @@
-# Set sub-project name
-project(firmware)
-
 # Create an executable object type
 add_executable(firmware)
 
