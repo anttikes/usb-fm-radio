@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 4.0)
 
 #
 # This file is generated only once,
@@ -11,6 +11,20 @@ cmake_minimum_required(VERSION 3.22)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
+
+# Set the project name
+project(usb-fm-radio)
+
+# If you need to debug the environment or CMake variables then uncomment the following lines
+message("Environment variables: ")
+execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")
+
+message("CMAKE variables: ")
+get_cmake_property(_variableNames VARIABLES)
+list (SORT _variableNames)
+foreach (_variableName ${_variableNames})
+    message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
 
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)

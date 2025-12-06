@@ -1,12 +1,23 @@
 {
     "editor.formatOnSave": true,
     "cmake.cmakePath": "cube-cmake",
-    "cmake.configureArgs": [
-        "-DCMAKE_COMMAND=cube-cmake"
-    ],
-    "cmake.preferredGenerators": [
-        "Ninja"
-    ],
+    "cmake.options.advanced": {
+        "cpack": {
+            "projectStatusVisibility": "hidden"
+        },
+        "workflow": {
+            "projectStatusVisibility": "hidden"
+        },
+        "ctest": {
+            "projectStatusVisibility": "hidden"
+        },
+        "debug": {
+            "projectStatusVisibility": "hidden"
+        },
+        "launch": {
+            "projectStatusVisibility": "hidden"
+        }
+    },
     "stm32cube-ide-clangd.path": "cube",
     "stm32cube-ide-clangd.arguments": [
         "starm-clangd",
