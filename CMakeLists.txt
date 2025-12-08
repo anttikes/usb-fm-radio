@@ -44,8 +44,8 @@ message("Build type: " ${CMAKE_BUILD_TYPE})
 # Enable CMake support for ASM and C languages
 enable_language(C ASM)
 
-# Add subdirectory for Firmware
-add_subdirectory(Firmware)
-
-# Add subdirectory for GUI
-#add_subdirectory(GUI)
+if("${BUILD_TARGET}" STREQUAL "firmware")
+    add_subdirectory(Firmware)
+elseif("${BUILD_TARGET}" STREQUAL "gui")
+    add_subdirectory(GUI)
+endif()

@@ -7,7 +7,7 @@ add_subdirectory(cmake/stm32cubemx)
 # Add TinyUSB functions
 add_subdirectory(thirdparty/tinyusb/src)
 
-# Link directories setup
+# Linker search path setup
 target_link_directories(firmware PRIVATE
     # Add user defined library search paths
 )

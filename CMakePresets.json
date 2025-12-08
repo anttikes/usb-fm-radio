@@ -2,37 +2,60 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "default",
+            "name": "firmware",
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/${presetName}",
-		    "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
+            "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
             "cacheVariables": {
+                "BUILD_TARGET": "firmware"
             }
         },
         {
-            "name": "Debug",
-            "inherits": "default",
+            "name": "gui",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "toolchainFile": "${sourceDir}/cmake/gcc-mingw-windows-pc.cmake",
+            "environment": {
+                "PATH": "C:/Qt/Tools/mingw1310_64/bin"
+            },
+            "cacheVariables": {
+                "BUILD_TARGET": "gui",
+                "Qt6_ROOT": "C:/Qt/6.10.1/mingw_64/"
+            }
+        },
+        {
+            "name": "firmware-debug",
+            "displayName": "Debug (Firmware)",
+            "inherits": "firmware",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
-            "name": "Release",
-            "inherits": "default",
+            "name": "firmware-release",
+            "displayName": "Release (Firmware)",
+            "inherits": "firmware",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
-        }
-    ],
-    "buildPresets": [
-        {
-            "name": "Debug",
-            "configurePreset": "Debug"
         },
         {
-            "name": "Release",
-            "configurePreset": "Release"
+            "name": "gui-debug",
+            "displayName": "Debug (GUI)",
+            "inherits": "gui",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "gui-release",
+            "displayName": "Release (GUI)",
+            "inherits": "firmware",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
         }
     ]
 }
