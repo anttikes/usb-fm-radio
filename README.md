@@ -1,8 +1,8 @@
 # USB FM Radio - Firmware
 
 > [!IMPORTANT]
-> This repository uses Git submodules; use `git clone --recursive-submodules <url>` when cloning it.
-> If you cloned without the switch then `git submodule update --init --recursive` will get you up to date.
+> This repository uses Git submodules; use `git clone <url>` when cloning it, and then `.\Initialize-Submodules.ps1` to init the submodules
+> Using recursive submodule init during clone will download quite a lot of unnecessary stuff.
 
 > [!IMPORTANT]
 > This repository is still under heavy development, and quite many of the things are still unfinished.
