@@ -22,7 +22,10 @@
             },
             "cacheVariables": {
                 "BUILD_TARGET": "gui",
-                "Qt6_ROOT": "C:/Qt/6.10.1/mingw_64/"
+                "Qt6_ROOT": "C:/Qt/6.10.1/mingw_64/",
+                "QT_QML_GENERATE_QMLLS_INI": "ON",
+                "CMAKE_CXX_FLAGS_DEBUG_INIT": "-DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT": "-DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG"
             }
         },
         {
