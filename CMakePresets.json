@@ -7,54 +7,19 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
-            "cacheVariables": {
-                "BUILD_TARGET": "firmware"
-            }
+            "cacheVariables": {}
         },
         {
-            "name": "gui",
-            "hidden": true,
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "toolchainFile": "${sourceDir}/cmake/gcc-mingw-windows-pc.cmake",
-            "environment": {
-                "PATH": "C:/Qt/Tools/mingw1310_64/bin"
-            },
-            "cacheVariables": {
-                "BUILD_TARGET": "gui",
-                "Qt6_ROOT": "C:/Qt/6.10.1/mingw_64/",
-                "QT_QML_GENERATE_QMLLS_INI": "ON",
-                "CMAKE_CXX_FLAGS_DEBUG_INIT": "-DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG",
-                "CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT": "-DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG"
-            }
-        },
-        {
-            "name": "firmware-debug",
-            "displayName": "Debug (Firmware)",
+            "name": "debug",
+            "displayName": "Debug",
             "inherits": "firmware",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
-            "name": "firmware-release",
-            "displayName": "Release (Firmware)",
-            "inherits": "firmware",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            }
-        },
-        {
-            "name": "gui-debug",
-            "displayName": "Debug (GUI)",
-            "inherits": "gui",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
-        },
-        {
-            "name": "gui-release",
-            "displayName": "Release (GUI)",
+            "name": "release",
+            "displayName": "Release",
             "inherits": "firmware",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"

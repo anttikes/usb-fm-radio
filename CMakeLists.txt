@@ -13,39 +13,29 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
 # Set the project name
-project(usb-fm-radio)
+set(PROJECT_NAME "firmware")
+project("${PROJECT_NAME}")
 
-# If you need to debug the environment or CMake variables then uncomment the following lines
-message("Environment variables: ")
-execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")
+# If you need to debug the environment variables, uncomment these two lines
+# message("Environment variables: ")
+# execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")
 
-message("CMAKE variables: ")
-get_cmake_property(_variableNames VARIABLES)
-list (SORT _variableNames)
-foreach (_variableName ${_variableNames})
-    message(STATUS "${_variableName}=${${_variableName}}")
-endforeach()
-
-# Define the build type
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug")
-endif()
-
-# Set the project name
-set(CMAKE_PROJECT_NAME usb-fm-radio)
+# If you need to debug the CMake variables, uncomment these lines
+# message("CMAKE variables: ")
+# get_cmake_property(_variableNames VARIABLES)
+# list (SORT _variableNames)
+# foreach (_variableName ${_variableNames})
+#     message(STATUS "${_variableName}=${${_variableName}}")
+# endforeach()
 
 # Enable compile command to ease indexing with e.g. clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
-
-# Core project settings
-project(${CMAKE_PROJECT_NAME})
-message("Build type: " ${CMAKE_BUILD_TYPE})
 
 # Enable CMake support for ASM and C languages
 enable_language(C ASM)
 
 # Create an executable object type
-add_executable(firmware)
+add_executable("${PROJECT_NAME}")
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
@@ -54,19 +44,19 @@ add_subdirectory(cmake/stm32cubemx)
 add_subdirectory(thirdparty/tinyusb/src)
 
 # Linker search path setup
-target_link_directories(firmware PRIVATE
+target_link_directories("${PROJECT_NAME}" PRIVATE
     # Add user defined library search paths
 )
 
 # Add sources to executable
-target_sources(firmware PRIVATE
+target_sources("${PROJECT_NAME}" PRIVATE
     # Add user sources here
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Src/device.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Src/commands.c
 )
 
 # Add include paths
-target_include_directories(firmware PRIVATE
+target_include_directories("${PROJECT_NAME}" PRIVATE
     # Add user defined include paths
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Inc
@@ -74,8 +64,8 @@ target_include_directories(firmware PRIVATE
 )
 
 # Add TinyUSB sources to the project
-tinyusb_target_add(firmware)
-target_sources(firmware PRIVATE
+tinyusb_target_add("${PROJECT_NAME}")
+target_sources("${PROJECT_NAME}" PRIVATE
     # TinyUSB requires callbacks and descriptors defined by the user
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/audio_callbacks.c
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/hid_callbacks.c
@@ -86,7 +76,7 @@ target_sources(firmware PRIVATE
 )
 
 # Add project symbols (macros)
-target_compile_definitions(firmware PRIVATE
+target_compile_definitions("${PROJECT_NAME}" PRIVATE
     # Add user defined symbols
 )
 
@@ -94,7 +84,7 @@ target_compile_definitions(firmware PRIVATE
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 
 # Add linked libraries
-target_link_libraries(firmware
+target_link_libraries("${PROJECT_NAME}"
     stm32cubemx
 
     # Add user defined libraries

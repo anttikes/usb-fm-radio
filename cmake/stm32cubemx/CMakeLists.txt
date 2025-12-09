@@ -56,9 +56,7 @@ set(STM32_Drivers_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/STM32CubeF0/Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_pcd_ex.c
 )
 
-# Drivers Midllewares
-
-
+# Drivers Middlewares
 
 # Link directories setup
 set(MX_LINK_DIRS
