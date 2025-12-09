@@ -1,6 +1,6 @@
 [submodule "Firmware/ThirdParty/tinyusb"]
-	path = Firmware/ThirdParty/tinyusb
+	path = ThirdParty/tinyusb
 	url = https://github.com/hathach/tinyusb.git
 [submodule "Firmware/ThirdParty/STM32CubeF0"]
-	path = Firmware/ThirdParty/STM32CubeF0
+	path = ThirdParty/STM32CubeF0
 	url = https://github.com/STMicroelectronics/STM32CubeF0
