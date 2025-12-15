@@ -1,8 +1,8 @@
 # USB FM Radio - Firmware
 
 > [!IMPORTANT]
-> This repository uses Git submodules; use `git clone <url>` when cloning it, and then `.\Initialize-Submodules.ps1` to init the submodules
-> Using recursive submodule init during clone will download quite a lot of unnecessary stuff.
+> This repository uses Git submodules; use `git clone <url>` when cloning it, and then `.\Initialize-Submodules.ps1` to init the submodules.
+> You can also use recursive submodule init during clone but that'll download quite a lot of unnecessary stuff.
 
 > [!IMPORTANT]
 > This repository is still under heavy development, and quite many of the things are still unfinished.
