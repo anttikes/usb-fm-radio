@@ -19,15 +19,15 @@ project(usb-fm-radio)
 enable_language(C ASM)
 
 # If you need to debug the environment or CMake variables then uncomment the following lines
-message("Environment variables: ")
-execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")
+#message("Environment variables: ")
+#execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")
 
-message("CMAKE variables: ")
-get_cmake_property(_variableNames VARIABLES)
-list (SORT _variableNames)
-foreach (_variableName ${_variableNames})
-    message(STATUS "${_variableName}=${${_variableName}}")
-endforeach()
+#message("CMAKE variables: ")
+#get_cmake_property(_variableNames VARIABLES)
+#list (SORT _variableNames)
+#foreach (_variableName ${_variableNames})
+#    message(STATUS "${_variableName}=${${_variableName}}")
+#endforeach()
 
 # Enable compile command to ease indexing with e.g. clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
