@@ -2,18 +2,26 @@
 
 ## Overview
 
-This intent of this repository is to present a fully working USB FM Radio hardware device, consisting of the electronic schematic and PCB layout files drawn with KiCad, a C-language firmware implementation for the microcontroller and a GUI application for operating the radio device from Windows and Linux.
+This repository presents a USB FM Radio hardware device, consisting of the electronic schematic and PCB layout files drawn with KiCad, a C-language firmware implementation for an STM32 microcontroller and a GUI application for operating the radio device from Windows and Linux.
 
 > [!IMPORTANT]
-> This repository uses Git submodules; use `git clone --recursive-submodules <url>` when cloning it.
-> If you cloned without the switch then `git submodule update --init --recursive` will get you up to date.
+> This repository uses Git submodules. You can either use `git clone --recursive-submodules <url>` to clone everything but that takes quite a lot of disk space.
+> 
+>An alternative is to first clone this repository with `git clone <url>`, then initialize the necessary submodules like this:
+> ```
+> cd usb-fm-radio
+> git submodule update --init
+>
+> cd Firmware/ThirdParty/STM32CubeF0
+> git submodule update --init -- "Drivers/STM32F0xx_HAL_Driver" "Drivers/CMSIS/Device/ST/STM32F0xx"
+> ```
 
 > [!IMPORTANT]
 > This repository is still under heavy development, and quite many of the things are still unfinished.
 
-Demonstration highlights:
+Highlights:
  - The schematic consists of an STM32F042-based microcontroller, Si4705-D60 FM Radio Receiver, SG-3030CM crystal oscillator, a radio frontend and the supporting circuitry
- - The microcontroller controls the radio chip via an I2C interface, and receives audio from the tuner via an I2S interface
+ - The microcontroller controls the radio chip via an I2C interface, and receives digital audio from the tuner via an I2S interface
  - The firmware presents a USB 2.0 -compliant USB Audio device for the host computer, together with a Human Interface Device (HID) device for controlling the tuner chip
  - The GUI application allows the user to control the device, tune to a station, adjust volume, and other operations
 
