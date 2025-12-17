@@ -1,3 +1,37 @@
+cmake_minimum_required(VERSION 4.0)
+
+#
+# This file is generated only once,
+# and is not re-generated if converter is called multiple times.
+#
+# User is free to modify the file as much as necessary
+#
+
+# Setup compiler settings
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS ON)
+
+# Set the project name
+project(usb-fm-radio)
+
+# Enable CMake support for C++ language
+enable_language(CXX)
+
+# If you need to debug the environment or CMake variables then uncomment the following lines
+#message("Environment variables: ")
+#execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")
+
+#message("CMAKE variables: ")
+#get_cmake_property(_variableNames VARIABLES)
+#list (SORT _variableNames)
+#foreach (_variableName ${_variableNames})
+#    message(STATUS "${_variableName}=${${_variableName}}")
+#endforeach()
+
+# Enable compile command to ease indexing with e.g. clangd
+set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
+
 find_package(Qt6 6.8 REQUIRED COMPONENTS Quick)
 
 qt_standard_project_setup(REQUIRES 6.8)
