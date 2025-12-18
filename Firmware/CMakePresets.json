@@ -6,10 +6,7 @@
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/${presetName}",
-            "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
-            "cacheVariables": {
-                "BUILD_TARGET": "firmware"
-            }
+            "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake"
         },
         {
             "name": "firmware-debug",
