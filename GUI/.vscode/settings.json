@@ -1,5 +1,6 @@
 {    
     "cmake.cmakePath": "c:/cmake-4.2.0/bin/cmake.exe",
+    "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
     "cmake.configureArgs": [
         "-DCMAKE_MAKE_PROGRAM='c:/ninja-1.13.2/ninja.exe'"
     ]

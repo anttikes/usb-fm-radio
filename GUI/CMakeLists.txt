@@ -11,8 +11,8 @@ project(usb-fm-radio)
 enable_language(CXX)
 
 # If you need to debug the environment or CMake variables then uncomment the following lines
-#message("Environment variables: ")
-#execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")
+message("Environment variables: ")
+execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")
 
 #message("CMAKE variables: ")
 #get_cmake_property(_variableNames VARIABLES)

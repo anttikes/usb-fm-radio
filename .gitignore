@@ -1,8 +1,0 @@
-# Eclipse workspace metadata
-.metadata
-
-# Ignore build output
-build/
-
-# Ignore auto-generated clangd file
-.clangd
