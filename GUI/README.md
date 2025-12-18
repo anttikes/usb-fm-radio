@@ -11,8 +11,8 @@ From the installer, you should select the following individual components. The v
 - Qt -> Qt 6.10.1 -> Additional Libraries -> Qt Language Server
 - Qt -> Qt 6.10.1 -> Additional Libraries -> Qt Serial Bus
 - Qt -> Build Tools -> MinGW 13.1.0 64-bit (or newer)
-
-If you also work on the firmware portions, you do not need CMake or Ninja, as the STM32Cube Bundle Manager extension downloads them for you. If you only want to build the GUI, then also choose `CMake` and `Ninja` from the Qt Online Installer's individual component list.
+- Qt -> Build Tools -> CMake 3.30.5 (or newer)
+- Qt -> Build Tools -> Ninja 1.12.1 (or newer)
 
 ## Deployment and debugging
 

@@ -1,6 +1,6 @@
 {
     "recommendations": [
         "theqtcompany.qt-qml",
-        "theqtcompany.qt-cpp"
+        "llvm-vs-code-extensions.vscode-clangd"
     ]
 }

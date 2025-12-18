@@ -1,16 +1,8 @@
 cmake_minimum_required(VERSION 4.0)
 
-#
-# This file is generated only once,
-# and is not re-generated if converter is called multiple times.
-#
-# User is free to modify the file as much as necessary
-#
-
 # Setup compiler settings
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS ON)
 
 # Set the project name
 project(usb-fm-radio)
@@ -48,20 +40,9 @@ qt_add_qml_module(appGUI
 )
 
 set_target_properties(appGUI PROPERTIES
-    MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"
-    MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
-    MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
 
 target_link_libraries(appGUI
     PRIVATE Qt6::Quick
-)
-
-include(GNUInstallDirs)
-
-install(TARGETS appGUI
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

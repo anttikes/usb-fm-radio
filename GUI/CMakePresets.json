@@ -1,0 +1,37 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "gui",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/",
+            "toolchainFile": "$env{VSCODE_QT_INSTALLATION}/lib/cmake/Qt6/qt.toolchain.cmake",
+            "environment": {
+                "VSCODE_QT_INSTALLATION": "C:/Qt/6.10.1/mingw_64",
+                "PATH": "$env{VSCODE_QT_INSTALLATION}/bin;C:/Qt/Tools/mingw1310_64/bin"
+            },
+            "cacheVariables": {
+                "QT_QML_GENERATE_QMLLS_INI": "ON",
+                "CMAKE_CXX_FLAGS_DEBUG_INIT": "-DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT": "-DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG"
+            }
+        },
+        {
+            "name": "gui-debug",
+            "displayName": "Debug",
+            "inherits": "gui",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "gui-release",
+            "displayName": "Release",
+            "inherits": "gui",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        }
+    ]
+}
