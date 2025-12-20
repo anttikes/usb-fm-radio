@@ -1,4 +1,4 @@
-{    
+{
     "cmake.cmakePath": "C:/Qt/Tools/CMake_64/bin/cmake.exe",
-    "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json"    
+    "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json"
 }
