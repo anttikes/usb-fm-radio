@@ -14,6 +14,8 @@ From the installer, you should select the following individual components. The v
 - Qt -> Build Tools -> CMake 3.30.5 (or newer)
 - Qt -> Build Tools -> Ninja 1.12.1 (or newer)
 
+Finally adjust the paths in `CMakePresets.json` and `.vscode\settings.json` so that the CMake and Ninja installed by Qt are found. The Qt installation directory itself comes from an environment variable provided by the Qt VS Code extension.
+
 ## Deployment and debugging
 
 The `launch.json` file has the necessary wirings for debugging the application.

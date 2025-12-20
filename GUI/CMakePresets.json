@@ -9,7 +9,7 @@
             "toolchainFile": "$env{VSCODE_QT_INSTALLATION}/lib/cmake/Qt6/qt.toolchain.cmake",
             "environment": {
                 "VSCODE_QT_INSTALLATION": "C:/Qt/6.10.1/mingw_64",
-                "PATH": "$env{VSCODE_QT_INSTALLATION}/bin;C:/Qt/Tools/mingw1310_64/bin"
+                "PATH": "$env{VSCODE_QT_INSTALLATION}/bin;C:/Qt/Tools/mingw1310_64/bin;C:/Qt/Tools/Ninja"
             },
             "cacheVariables": {
                 "QT_QML_GENERATE_QMLLS_INI": "ON",
