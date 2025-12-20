@@ -2,7 +2,7 @@
     "recommendations": [
         "dan-c-underwood.arm",
         "zixuanwang.linkerscript",
-        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.cpptools",
         "stmicroelectronics.stm32cube-ide-bundles-manager",
         "stmicroelectronics.stm32cube-ide-debug-stlink-gdbserver",
         "stmicroelectronics.stm32cube-ide-registers"

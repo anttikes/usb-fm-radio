@@ -1,0 +1,8 @@
+BasedOnStyle: Microsoft
+
+Language: Cpp
+
+IndentWidth: 4
+IndentExternBlock: NoIndent
+BinPackArguments: false
+BinPackParameters: false
