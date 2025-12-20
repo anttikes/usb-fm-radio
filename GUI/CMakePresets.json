@@ -12,7 +12,6 @@
                 "PATH": "$env{VSCODE_QT_INSTALLATION}/bin;C:/Qt/Tools/mingw1310_64/bin;C:/Qt/Tools/Ninja"
             },
             "cacheVariables": {
-                "QT_QML_GENERATE_QMLLS_INI": "ON",
                 "CMAKE_CXX_FLAGS_DEBUG_INIT": "-DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG",
                 "CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT": "-DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG"
             }
