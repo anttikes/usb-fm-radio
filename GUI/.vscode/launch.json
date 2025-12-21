@@ -5,7 +5,7 @@
             "name": "Debug GUI",
             "type": "cppdbg",
             "request": "launch",
-            "miDebuggerPath": "${config:qt-core.qtInstallationRoot}/Tools/mingw1310_64/bin/gdb.exe",
+            "miDebuggerPath": "${command:qt-cpp.minGWgdb}",
             "MIMode": "gdb",
             "cwd": "${workspaceFolder}",
             "program": "${command:cmake.launchTargetPath}",
@@ -15,13 +15,28 @@
             "environment": [
                 {
                     "name": "Path",
-                    "value": "${config:qt-core.qtInstallationRoot}/Tools/mingw1310_64/bin;${config:qt-core.qtInstallationRoot}/6.10.1/mingw_64/bin"
+                    "value": "${env:PATH};${command:qt-cpp.qtDir}"
+                },
+                {
+                    "name": "QML_IMPORT_PATH",
+                    "value": "${command:qt-cpp.QML_IMPORT_PATH}"
+                },
+                {
+                    "name": "QT_QPA_PLATFORM_PLUGIN_PATH",
+                    "value": "${command:qt-cpp.QT_QPA_PLATFORM_PLUGIN_PATH}"
                 },
                 {
                     "name": "QML_IMPORT_TRACE",
                     "value": "1"
                 }
             ],
+            "sourceFileMap": {
+                "Q:/qt5_workdir/w/s": "${command:qt-cpp.sourceDirectory}",
+                "C:/work/build/qt5_workdir/w/s": "${command:qt-cpp.sourceDirectory}",
+                "c:/users/qt/work/qt": "${command:qt-cpp.sourceDirectory}",
+                "c:/Users/qt/work/install": "${command:qt-cpp.sourceDirectory}",
+                "/Users/qt/work/qt": "${command:qt-cpp.sourceDirectory}"
+            },
             "presentation": {
                 "hidden": true
             }

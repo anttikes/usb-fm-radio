@@ -8,15 +8,11 @@ This project is designed to use Qt 6.10.1 together with several development tool
 
 From the installer, you should select the following individual components:
 - Qt -> Qt 6.10.1 -> MinGW 13.1.0 64-bit
-- Qt -> Qt 6.10.1 -> Additional Libraries -> Qt Language Server
-- Qt -> Qt 6.10.1 -> Additional Libraries -> Qt Serial Bus
+- Qt -> Qt 6.10.1 -> Qt Debug Information Files
 - Qt -> Build Tools -> MinGW 13.1.0 64-bit
-- Qt -> Build Tools -> CMake 3.30.5
-- Qt -> Build Tools -> Ninja 1.12.1
 
-After installation ensure that `CMakePresets.json` configures the `Qt6_DIR` environment variable correctly. It must point to the root folder where you installed Qt. Adjust `Qt6_VERSION` if you wish to deviate from 6.10.1.
+The Qt Core extension configures the CMake kit properly, so we use that for building. We do not need CMake or Ninja from the Qt installer as we utilize the "cube-cmake" executable provided by the STM32 extensions. If you wish to develop this project in isolation, without the STM32 extensions or bundles it provides you will need to manually install CMake and Ninja, and ensure they are found from the PATH environment variable when VS Code is started.
 
+## Debugging
 
-## Deployment and debugging
-
-The `launch.json` file has the necessary wirings for debugging the application. It uses the Qt Core extension's `qt-core.qtInstallationRoot` to find the installation directory. Similar approach is not possible in `CMakePresets.json` because the preset file is evaluated by CMake and thus no macros which apply to VS Code are evaluated.
+The `launch.json` file has the necessary wirings for debugging both the C++ and the QML portions. It uses the Qt C++ extension's commands to set things up properly.

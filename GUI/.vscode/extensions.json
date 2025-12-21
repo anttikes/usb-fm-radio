@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "theqtcompany.qt-qml",
+        "theqtcompany.qt-cpp",
         "ms-vscode.cpptools"
     ]
 }

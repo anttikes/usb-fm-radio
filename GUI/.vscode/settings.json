@@ -1,3 +1,4 @@
 {
+    "cmake.cmakePath": "cube-cmake",
     "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json"
 }
