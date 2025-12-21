@@ -7,7 +7,7 @@
         {
             "type": "stlinkgdbtarget",
             "request": "launch",
-            "name": "Launch ST-Link GDB Server",
+            "name": "Debug with STM32 GDB",
             "origin": "snippet",
             "cwd": "${workspaceFolder}",
             "preBuild": "${command:st-stm32-ide-debug-launch.build}",

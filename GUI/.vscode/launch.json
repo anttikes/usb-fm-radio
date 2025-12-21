@@ -1,0 +1,49 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug GUI",
+            "type": "cppdbg",
+            "request": "launch",
+            "miDebuggerPath": "${config:qt-core.qtInstallationRoot}/Tools/mingw1310_64/bin/gdb.exe",
+            "MIMode": "gdb",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [
+                "-qmljsdebugger=host:localhost,port:12150,block,services:DebugMessages,QmlDebugger,V8Debugger"
+            ],
+            "environment": [
+                {
+                    "name": "Path",
+                    "value": "${config:qt-core.qtInstallationRoot}/Tools/mingw1310_64/bin;${config:qt-core.qtInstallationRoot}/6.10.1/mingw_64/bin"
+                },
+                {
+                    "name": "QML_IMPORT_TRACE",
+                    "value": "1"
+                }
+            ],
+            "presentation": {
+                "hidden": true
+            }
+        },
+        {
+            "name": "Attach to QML",
+            "type": "qml",
+            "request": "attach",
+            "port": "12150",
+            "host": "localhost",
+            "presentation": {
+                "hidden": true
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug with GDB & QML",
+            "configurations": [
+                "Debug GUI",
+                "Attach to QML"
+            ]
+        }
+    ]
+}
