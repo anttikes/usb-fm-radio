@@ -6,10 +6,12 @@
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/",
-            "toolchainFile": "$env{VSCODE_QT_INSTALLATION}/lib/cmake/Qt6/qt.toolchain.cmake",
+            "toolchainFile": "$env{Qt6_DIR}/$env{Qt6_VERSION}/mingw_64/lib/cmake/Qt6/qt.toolchain.cmake",
+            "cmakeExecutable": "$env{Qt6_DIR}/Tools/CMake_64/bin/cmake.exe",
             "environment": {
-                "VSCODE_QT_INSTALLATION": "C:/Qt/6.10.1/mingw_64",
-                "PATH": "$env{VSCODE_QT_INSTALLATION}/bin;C:/Qt/Tools/mingw1310_64/bin;C:/Qt/Tools/Ninja"
+                "Qt6_DIR": "C:/Qt/",
+                "Qt6_VERSION": "6.10.1",
+                "PATH": "$env{Qt6_DIR}/Tools/mingw1310_64/bin;$env{Qt6_DIR}/Tools/Ninja"
             },
             "cacheVariables": {
                 "CMAKE_CXX_FLAGS_DEBUG_INIT": "-DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG",

@@ -4,18 +4,19 @@ This folder contains the graphical user interface application for controlling th
 
 ## Working on the project
 
-To build this project you will need the Qt 6.10 or later development tools installed. To install them, visit [this page](https://www.qt.io/development/download-qt-installer-oss) and choose the right installer for your host system.
+This project is designed to use Qt 6.10.1 together with several development tools it provides. To install them, visit [this page](https://www.qt.io/development/download-qt-installer-oss) and choose the right installer for your host system.
 
-From the installer, you should select the following individual components. The version numbers are for guidance only, you can also choose newer components:
+From the installer, you should select the following individual components:
 - Qt -> Qt 6.10.1 -> MinGW 13.1.0 64-bit
 - Qt -> Qt 6.10.1 -> Additional Libraries -> Qt Language Server
 - Qt -> Qt 6.10.1 -> Additional Libraries -> Qt Serial Bus
-- Qt -> Build Tools -> MinGW 13.1.0 64-bit (or newer)
-- Qt -> Build Tools -> CMake 3.30.5 (or newer)
-- Qt -> Build Tools -> Ninja 1.12.1 (or newer)
+- Qt -> Build Tools -> MinGW 13.1.0 64-bit
+- Qt -> Build Tools -> CMake 3.30.5
+- Qt -> Build Tools -> Ninja 1.12.1
 
-Finally adjust the paths in `CMakePresets.json` and `.vscode\settings.json` so that the CMake and Ninja installed by Qt are found. The Qt installation directory itself comes from an environment variable provided by the Qt VS Code extension.
+After installation ensure that `CMakePresets.json` configures the `Qt6_DIR` environment variable correctly. It must point to the root folder where you installed Qt. Adjust `Qt6_VERSION` if you wish to deviate from 6.10.1.
+
 
 ## Deployment and debugging
 
-The `launch.json` file has the necessary wirings for debugging the application.
+The `launch.json` file has the necessary wirings for debugging the application. It uses the Qt Core extension's `qt-core.qtInstallationRoot` to find the installation directory. Similar approach is not possible in `CMakePresets.json` because the preset file is evaluated by CMake and thus no macros which apply to VS Code are evaluated.
