@@ -39,6 +39,12 @@ qt_add_qml_module(appGUI
         Main.qml
 )
 
+qt_add_resources(appGUI
+    "images"
+    PREFIX "/images"
+    FILES icon.png    
+)
+
 set_target_properties(appGUI PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
