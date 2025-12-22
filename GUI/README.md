@@ -11,8 +11,8 @@ From the installer, you should select the following individual components:
 - Qt -> Qt 6.10.1 -> Qt Debug Information Files
 - Qt -> Build Tools -> MinGW 13.1.0 64-bit
 
-The Qt Core extension configures the CMake kit properly, so we use that for building. We do not need CMake or Ninja from the Qt installer as we utilize the "cube-cmake" executable provided by the STM32 extensions. If you wish to develop this project in isolation, without the STM32 extensions or bundles it provides you will need to manually install CMake and Ninja, and ensure they are found from the PATH environment variable when VS Code is started.
+The Qt Core extension configures the CMake kit properly, so we use that for building. We do not need CMake or Ninja from the Qt installer as we utilize the STM32 extension's `cube` CLI tool and install CMake & Ninja locally to the workspace folder. If you wish to develop this project in isolation without the STM32 extensions or bundles it provides you will need to manually install CMake and Ninja, and ensure they are found from the PATH environment variable when VS Code is started.
 
 ## Debugging
 
-The `launch.json` file has the necessary wirings for debugging both the C++ and the QML portions. It uses the Qt C++ extension's commands to set things up properly.
+The `launch.json` file has the necessary wirings for debugging both the C++ and the QML portions. It uses the Qt C++ extension's commands to set the debugger and symbol file paths for Qt. Starting the debug session takes a long while since GDB likes to load symbol files of Windows' shared DLLs. Using `set auto-solib-add off` will not work, probably due to a bug in VS Code.

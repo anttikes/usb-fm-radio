@@ -1,6 +1,6 @@
 {
-    "cmake.cmakePath": "cube-cmake",
     "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
+    "cmake.cmakePath": "cube-cmake",
     "cmake.configureArgs": [
         "-DCMAKE_COMMAND=cube-cmake"
     ]
