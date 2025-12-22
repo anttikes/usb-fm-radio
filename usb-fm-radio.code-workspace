@@ -26,8 +26,7 @@
 				"statusBarVisibility": "hidden"
 			},
 			"launch": {
-				"projectStatusVisibility": "hidden",
-				"statusBarVisibility": "hidden"
+				"projectStatusVisibility": "hidden"
 			}
 		},
 		"editor.formatOnSave": true
