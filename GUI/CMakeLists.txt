@@ -29,20 +29,20 @@ find_package(Qt6 6.8 REQUIRED COMPONENTS Quick)
 qt_standard_project_setup(REQUIRES 6.8)
 
 qt_add_executable(appGUI
-    main.cpp
+    "src/main.cpp"
 )
 
 qt_add_qml_module(appGUI
     URI GUI
     VERSION 1.0
     QML_FILES
-        Main.qml
+        "Main.qml"
 )
 
 qt_add_resources(appGUI
-    "images"
-    PREFIX "/images"
-    FILES icon.png    
+    "resources"
+    PREFIX "/"
+    FILES "resources/icon.png"
 )
 
 set_target_properties(appGUI PROPERTIES
