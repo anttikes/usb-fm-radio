@@ -10,19 +10,24 @@
 	"settings": {
 		"cmake.options.advanced": {
 			"cpack": {
-				"projectStatusVisibility": "hidden"
+				"projectStatusVisibility": "hidden",
+				"statusBarVisibility": "hidden"
 			},
 			"workflow": {
-				"projectStatusVisibility": "hidden"
+				"projectStatusVisibility": "hidden",
+				"statusBarVisibility": "hidden"
 			},
 			"ctest": {
-				"projectStatusVisibility": "hidden"
+				"projectStatusVisibility": "hidden",
+				"statusBarVisibility": "hidden"
 			},
 			"debug": {
-				"projectStatusVisibility": "hidden"
+				"projectStatusVisibility": "hidden",
+				"statusBarVisibility": "hidden"
 			},
 			"launch": {
-				"projectStatusVisibility": "hidden"
+				"projectStatusVisibility": "hidden",
+				"statusBarVisibility": "hidden"
 			}
 		},
 		"editor.formatOnSave": true

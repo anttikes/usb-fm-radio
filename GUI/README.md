@@ -10,8 +10,10 @@ From the installer, you should select the following individual components:
 - Qt -> Qt 6.10.1 -> MinGW 13.1.0 64-bit
 - Qt -> Qt 6.10.1 -> Qt Debug Information Files
 - Qt -> Build Tools -> MinGW 13.1.0 64-bit
+- Qt -> Build Tools -> CMake 3.30.5
+- Qt -> Build Tools -> Ninja 1.12.1
 
-The Qt Core extension configures the CMake kit properly, so we use that for building. We do not need CMake or Ninja from the Qt installer as we utilize the STM32 extension's `cube` CLI tool and install CMake & Ninja locally to the workspace folder. If you wish to develop this project in isolation without the STM32 extensions or bundles it provides you will need to manually install CMake and Ninja, and ensure they are found from the PATH environment variable when VS Code is started.
+After installing, you must add the CMake and Ninja binary folders to your user-specific PATH variable, and restart VS Code process if it is running. The Qt Core extension configures the CMake kit when it is first started so initially you might be missing a kit choice in the CMake drop-down.
 
 ## Debugging
 
