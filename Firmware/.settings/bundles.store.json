@@ -19,6 +19,14 @@
     {
       "name": "stlink-gdbserver",
       "version": "7.11.0+st.1"
+    },
+    {
+      "name": "gnu-tools-for-stm32-13_3_1-description",
+      "version": "1.0.1+st.1"
+    },
+    {
+      "name": "programmer",
+      "version": "2.20.0"
     }
   ]
 }
