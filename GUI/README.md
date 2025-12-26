@@ -18,3 +18,7 @@ After installing, you must add the CMake and Ninja binary folders to your user-s
 ## Debugging
 
 The `launch.json` file has the necessary wirings for debugging both the C++ and the QML portions. It uses the Qt C++ extension's commands to set the debugger and symbol file paths for Qt. Starting the debug session takes a long while since GDB likes to load symbol files of Windows' shared DLLs. Using `set auto-solib-add off` will not work, probably due to a bug in VS Code.
+
+## Acknowledgements
+
+This repository uses fonts from the DSEG7 series font family. Copyright, license terms and other information related to this font can be found from [keshikan/DSEG](https://github.com/keshikan/DSEG).

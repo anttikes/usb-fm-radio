@@ -37,6 +37,13 @@ qt_add_qml_module(appGUI
     VERSION 1.0
     QML_FILES
         "Main.qml"
+        "components/TitleBar.qml"
+        "components/TunerDial.qml" 
+        "components/GlowingText.qml"
+        "components/DigitalDisplay.qml"
+        "components/RDSPanel.qml"
+        "components/ModernButton.qml"
+        "components/SignalSection.qml"        
 )
 
 qt_add_resources(appGUI
@@ -44,6 +51,8 @@ qt_add_resources(appGUI
     PREFIX "/"
     FILES 
         "resources/icon.png"
+        "resources/DSEG7ClassicMini-Bold.ttf"
+        "resources/DSEG7ClassicMini-Regular.ttf"
 )
 
 # Debug version attaches the console so console logging works as expected
