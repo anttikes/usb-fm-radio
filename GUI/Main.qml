@@ -8,8 +8,10 @@ import "./components"
 
 Window {
     id: mainWindow
-    width: 1024
-    height: 640
+
+    minimumWidth: 1024
+    minimumHeight: 640
+
     visible: true
     title: qsTr("USB FM Radio")
 
@@ -50,60 +52,67 @@ Window {
             windowToControl: mainWindow
         }
 
-        TunerDial {
-            id: tunerDial
-
-            anchors.top: titleBar.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-
-            anchors.topMargin: 10
-            anchors.leftMargin: 20
-            anchors.rightMargin: 20
-
-            currentFrequency: 94.7
-        }
-
-        DigitalDisplay {
-            id: digitalDisplay
-
-            anchors.top: tunerDial.bottom
-            anchors.topMargin: 5
-            anchors.horizontalCenter: tunerDial.horizontalCenter
-
-            currentFrequency: 94.7
-        }
-
         ColumnLayout {
-            anchors.top: tunerDial.bottom
+            anchors.top: titleBar.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
+            anchors.topMargin: 10
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
+            anchors.bottomMargin: 20
+
             spacing: 0
 
-            ColumnLayout {
-                Layout.margins: 20
-                spacing: 15
+            TunerDial {
+                Layout.fillWidth: true
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 20
+                currentFrequency: 94.7
+            }
 
-                    ModernButton {}
+            RowLayout {
+                id: layout
 
-                    ModernButton {}
+                Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+
+                ModernButton {
+                    icon.source: "qrc:/resources/backward-solid-full.svg"
+
+                    icon.width: 40
+                    icon.height: 30
+
+                    icon.color: hovered ? '#98bcd6' : '#87a8bf'
                 }
 
-                // RDS Information Panel
-                RDSPanel {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 120
+                DigitalDisplay {
+                    id: digitalDisplay
 
-                    stationName: "BBC R3"
-                    progType: "Classical"
-                    radioText: "Now Playing: Beethoven - Symphony No. 7"
+                    currentFrequency: 94.7
                 }
+
+                ModernButton {
+                    id: control
+
+                    hoverEnabled: true
+
+                    icon.source: "qrc:/resources/forward-solid-full.svg"
+
+                    icon.width: 40
+                    icon.height: 30
+
+                    icon.color: hovered ? '#98bcd6' : '#87a8bf'
+                }
+            }
+
+            RDSPanel {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                stationName: "BBC R3"
+                progType: "Classical"
+                radioText: "Now Playing: Beethoven - Symphony No. 7"
             }
         }
     }

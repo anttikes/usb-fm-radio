@@ -24,7 +24,7 @@ enable_language(CXX)
 # Enable compile command to ease indexing with e.g. clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
-find_package(Qt6 6.8 REQUIRED COMPONENTS Quick)
+find_package(Qt6 6.8 REQUIRED COMPONENTS Quick QuickControls2)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
@@ -51,6 +51,8 @@ qt_add_resources(appGUI
     PREFIX "/"
     FILES 
         "resources/icon.png"
+        "resources/backward-solid-full.svg"
+        "resources/forward-solid-full.svg"
         "resources/DSEG7ClassicMini-Bold.ttf"
         "resources/DSEG7ClassicMini-Regular.ttf"
 )
@@ -67,5 +69,5 @@ else()
 endif()
 
 target_link_libraries(appGUI
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick Qt6::QuickControls2
 )
