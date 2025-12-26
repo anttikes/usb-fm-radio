@@ -7,7 +7,9 @@ Item {
     property alias font: text.font
     property alias color: text.color
 
+    property alias brightness: effect.brightness
     property alias contrast: effect.contrast
+    property alias blur: effect.blur
 
     width: text.width
     height: text.height

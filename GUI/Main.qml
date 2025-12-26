@@ -83,7 +83,7 @@ Window {
                     icon.width: 40
                     icon.height: 30
 
-                    icon.color: hovered ? '#98bcd6' : '#87a8bf'
+                    icon.color: hovered ? '#afd8f5' : '#ACD6EE'
                 }
 
                 DigitalDisplay {
@@ -102,7 +102,7 @@ Window {
                     icon.width: 40
                     icon.height: 30
 
-                    icon.color: hovered ? '#98bcd6' : '#87a8bf'
+                    icon.color: hovered ? '#afd8f5' : '#ACD6EE'
                 }
             }
 
@@ -111,8 +111,7 @@ Window {
                 Layout.fillHeight: true
 
                 stationName: "BBC R3"
-                progType: "Classical"
-                radioText: "Now Playing: Beethoven - Symphony No. 7"
+                radioText: "Beethoven - Symphony No. 7"
             }
         }
     }
