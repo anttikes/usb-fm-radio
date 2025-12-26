@@ -42,12 +42,20 @@ qt_add_qml_module(appGUI
 qt_add_resources(appGUI
     "resources"
     PREFIX "/"
-    FILES "resources/icon.png"
+    FILES 
+        "resources/icon.png"
 )
 
-set_target_properties(appGUI PROPERTIES
-    WIN32_EXECUTABLE TRUE
-)
+# Debug version attaches the console so console logging works as expected
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set_target_properties(appGUI PROPERTIES
+        WIN32_EXECUTABLE FALSE
+    )
+else()
+    set_target_properties(appGUI PROPERTIES
+        WIN32_EXECUTABLE TRUE
+    )
+endif()
 
 target_link_libraries(appGUI
     PRIVATE Qt6::Quick

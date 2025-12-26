@@ -10,7 +10,7 @@
             "cwd": "${workspaceFolder}",
             "program": "${command:cmake.launchTargetPath}",
             "args": [
-                "-qmljsdebugger=host:localhost,port:12150,block,services:DebugMessages,QmlDebugger,V8Debugger"
+                "-qmljsdebugger=host:localhost,port:12150,block,services:DebugMessages,QmlDebugger,V8Debugger,QmlInspector,DebugTranslation"
             ],
             "environment": [
                 {
