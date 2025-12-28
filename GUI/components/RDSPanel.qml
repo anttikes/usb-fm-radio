@@ -36,12 +36,12 @@ Item {
 
             GradientStop {
                 position: 0.0
-                color: Qt.rgba(0.24, 0.24, 0.23)
+                color: '#3d3d3b'
             }
 
             GradientStop {
                 position: 1.0
-                color: Qt.rgba(0.38, 0.38, 0.37)
+                color: '#4B4A48'
             }
         }
 
@@ -49,6 +49,8 @@ Item {
         Rectangle {
             anchors.fill: parent
             anchors.margins: 7
+
+            radius: 6
 
             gradient: Gradient {
 
@@ -67,8 +69,6 @@ Item {
                     color: '#000000'
                 }
             }
-
-            radius: 6
 
             ColumnLayout {
                 anchors.top: parent.top

@@ -41,6 +41,8 @@ Item {
             anchors.fill: parent
             anchors.margins: 7
 
+            radius: 6
+
             gradient: Gradient {
 
                 GradientStop {
