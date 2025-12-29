@@ -113,6 +113,10 @@ Window {
                 stationName: "BBC R3"
                 radioText: "Beethoven - Symphony No. 7"
             }
+
+            SignalIndicators {
+                Layout.topMargin: 10
+            }
         }
     }
 

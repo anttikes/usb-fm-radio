@@ -43,7 +43,8 @@ qt_add_qml_module(appGUI
         "components/DigitalDisplay.qml"
         "components/RDSPanel.qml"
         "components/ModernButton.qml"
-        "components/SignalSection.qml"        
+        "components/GradientBar.qml"        
+        "components/SignalIndicators.qml"        
 )
 
 qt_add_resources(appGUI
