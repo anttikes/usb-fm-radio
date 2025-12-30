@@ -72,10 +72,7 @@ Window {
             }
 
             RowLayout {
-                id: layout
-
                 Layout.alignment: Qt.AlignHCenter
-                Layout.fillWidth: true
 
                 ModernButton {
                     icon.source: "qrc:/resources/backward-solid-full.svg"
@@ -114,8 +111,30 @@ Window {
                 radioText: "Beethoven - Symphony No. 7"
             }
 
-            SignalIndicators {
-                Layout.topMargin: 10
+            RowLayout {
+                Layout.alignment: Qt.AlignLeft
+
+                SignalIndicators {
+                    Layout.alignment: Qt.AlignLeft
+                    Layout.topMargin: 10
+
+                    receivedSignalStrength: 70
+                    signalToNoise: 30
+                }
+
+                StereoIndicator {
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
+
+                    isStereo: true
+                }
+
+                PowerButton {
+                    Layout.rightMargin: 20
+                    Layout.alignment: Qt.AlignRight
+
+                    hasPower: true
+                }
             }
         }
     }

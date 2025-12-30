@@ -44,7 +44,9 @@ qt_add_qml_module(appGUI
         "components/RDSPanel.qml"
         "components/ModernButton.qml"
         "components/GradientBar.qml"        
-        "components/SignalIndicators.qml"        
+        "components/SignalIndicators.qml"
+        "components/StereoIndicator.qml"
+        "components/PowerButton.qml"
 )
 
 qt_add_resources(appGUI
@@ -56,6 +58,8 @@ qt_add_resources(appGUI
         "resources/forward-solid-full.svg"
         "resources/DSEG7ClassicMini-Bold.ttf"
         "resources/DSEG7ClassicMini-Regular.ttf"
+        "resources/StereoIndicator.png"
+        "resources/PowerButton.png"
 )
 
 # Debug version attaches the console so console logging works as expected
