@@ -41,12 +41,18 @@ Button {
 
                 GradientStop {
                     position: 0.0
-                    color: !root.enabled ? '#50504E' : root.pressed ? '#3a3a38' : root.hovered ? '#8e8e8c' : '#767674'
+                    color: !root.enabled ? '#50504E' : // Disabled
+                    root.pressed ? '#3a3a38' :         // Pressed
+                    root.hovered ? '#8e8e8c' :         // Hovered
+                    '#767674'                          // Default
                 }
 
                 GradientStop {
                     position: 0.5
-                    color: !root.enabled ? '#3D3D3B' : root.pressed ? '#2f2f2d' : root.hovered ? '#5a5a58' : '#444442'
+                    color: !root.enabled ? '#3D3D3B' : // Disabled
+                    root.pressed ? '#2f2f2d' :         // Pressed
+                    root.hovered ? '#5a5a58' :         // Hovered
+                    '#444442'                          // Default
                 }
             }
         }
