@@ -1,11 +1,9 @@
 import QtQuick
 
-Rectangle {
+Item {
     id: root
 
     height: 40
-
-    color: "transparent"
 
     required property Window windowToControl
     required property real mainWindowRadius
