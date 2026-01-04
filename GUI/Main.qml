@@ -123,10 +123,14 @@ Window {
                 }
 
                 StereoIndicator {
+                    Layout.leftMargin: 120
                     Layout.alignment: Qt.AlignHCenter
-                    Layout.fillWidth: true
 
                     isStereo: true
+                }
+
+                Item {
+                    Layout.fillWidth: true
                 }
 
                 PowerButton {
