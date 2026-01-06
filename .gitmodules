@@ -4,3 +4,6 @@
 [submodule "Firmware/ThirdParty/STM32CubeF0"]
 	path = Firmware/ThirdParty/STM32CubeF0
 	url = https://github.com/STMicroelectronics/STM32CubeF0
+[submodule "GUI/ThirdParty/hidapi"]
+	path = GUI/ThirdParty/hidapi
+	url = https://github.com/libusb/hidapi.git
