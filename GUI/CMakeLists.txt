@@ -24,14 +24,19 @@ enable_language(CXX)
 # Enable compile command to ease indexing with e.g. clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
+# Search for relevant packages
 find_package(Qt6 6.8 REQUIRED COMPONENTS Quick QuickControls2)
 
+# Setup a Qt project
 qt_standard_project_setup(REQUIRES 6.8)
 
+# Configure the executable and its source files
 qt_add_executable(appGUI
     "src/main.cpp"
+    "src/tunercontrol.cpp"
 )
 
+# Configure the QML portions
 qt_add_qml_module(appGUI
     URI GUI
     VERSION 1.0
@@ -49,6 +54,7 @@ qt_add_qml_module(appGUI
         "components/PowerButton.qml"
 )
 
+# Configure resources
 qt_add_resources(appGUI
     "resources"
     PREFIX "/"
@@ -62,7 +68,15 @@ qt_add_resources(appGUI
         "resources/PowerButton.png"
 )
 
-# Debug version attaches the console so console logging works as expected
+# Configure hidapi build options
+set(HIDAPI_WITH_LIBUSB FALSE)
+set(HIDAPI_PRINT_VERSION TRUE)
+set(BUILD_SHARED_LIBS FALSE)
+
+# hidapi supports CMake via the "subdirectory" method; this makes 'hidapi::hidapi' target available for linking
+add_subdirectory("./ThirdParty/hidapi")
+
+# The debug version attaches a console so console logging works as expected
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set_target_properties(appGUI PROPERTIES
         WIN32_EXECUTABLE FALSE
@@ -73,6 +87,7 @@ else()
     )
 endif()
 
+# Link the necessary libraries
 target_link_libraries(appGUI
-    PRIVATE Qt6::Quick Qt6::QuickControls2
+    PRIVATE Qt6::Quick Qt6::QuickControls2 hidapi::hidapi
 )
