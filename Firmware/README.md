@@ -4,9 +4,17 @@ This folder contains the firmware application for the STM32 microcontroller.
 
 ## Working on the project
 
-To build this project you will need the STM32CubeIDE from ST Microelectronics, and the STM32F0Cube firmware package for the IDE (for code generation purposes). Using CubeIDE requires you to register an account with ST Microelectronics, as otherwise you will not be able to download the firmware package.
+To build this project you will need Visual Studio Code and the STM32Cube extensions from ST Microelectronics. Once you open the multi-root workspace file from the root directory, VS Code should recommend these extensions for you.
 
-At a later stage this repository will migrated to VS Code and cleaner sub-module usage.
+After the extensions are installed they should prompt you for downloading and installing the following bundles that have been configured in the `.settings\bundles.store.json` file:
+ - CMake
+ - Ninja
+ - GNU Tools for STM32
+ - ST ARM clangd
+ - STLink GDB Server
+ - ST MCU Programmer
+
+During the installation of the extensions and the bundles you may need to restart Visual Studio Code. Once everything is installed open the CMake pane in VS Code, select the "Firmware" folder and hit the "Build" button from the VS Code's status bar.
 
 ## Deployment and debugging
 

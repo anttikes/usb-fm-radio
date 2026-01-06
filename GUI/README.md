@@ -4,7 +4,7 @@ This folder contains the graphical user interface application for controlling th
 
 ## Working on the project
 
-This project is designed to use Qt 6.10.1 together with several development tools it provides. To install them, visit [this page](https://www.qt.io/development/download-qt-installer-oss) and choose the right installer for your host system.
+This project uses Qt 6.10.1 together with several development tools provided by the installer. Begin by visiting [this page](https://www.qt.io/development/download-qt-installer-oss) and choose the right Qt Maintenance Tool installer for your system.
 
 From the installer, you should select the following individual components:
 - Qt -> Qt 6.10.1 -> MinGW 13.1.0 64-bit
@@ -13,7 +13,7 @@ From the installer, you should select the following individual components:
 - Qt -> Build Tools -> CMake 3.30.5
 - Qt -> Build Tools -> Ninja 1.12.1
 
-After installing, you must add the CMake and Ninja binary folders to your user-specific PATH variable, and restart VS Code process if it is running. The Qt Core extension configures the CMake kit when it is first started so initially you might be missing a kit choice in the CMake drop-down.
+After installing, you must add the CMake and Ninja binary folders to your user-specific PATH variable, and restart VS Code. The Qt Core extension should configure the CMake kit when it is first started and once configure you should be able to select the "GUI" folder from the CMake pane in VS Code, and build it with "Build" from the VS Code's status bar.
 
 ## Debugging
 

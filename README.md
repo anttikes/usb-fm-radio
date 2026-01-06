@@ -25,6 +25,12 @@ Highlights:
  - The firmware presents a USB 2.0 -compliant USB Audio device for the host computer, together with a Human Interface Device (HID) device for controlling the tuner chip
  - The GUI application allows the user to control the device, tune to a station, adjust volume, and other operations
 
+## Prerequirements & Getting started
+
+This repository is structured to as a "multi-root workspace" for Visual Studio Code. Thus, you will need VS Code, and you can install it from [here](https://code.visualstudio.com/Download). After installing, open the `usb-fm-radio.code-workspace` file from the root folder.
+
+Both firmware and GUI portions have specific requirements regarding their build environment. Review the README.md files in each subdirectory for more details.
+
 ## Copyright and License
 
 This repository consists of both original work by the author, and from code provided by third parties. Therefore it falls under several copyrights and licenses.
