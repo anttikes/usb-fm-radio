@@ -130,7 +130,6 @@ typedef struct _RadioDevice_t
 extern RadioDevice_t radioDevice;
 
 /* Exported functions --------------------------------------------------------*/
-bool InitializeQueue(CommandQueue_t *queue);
 bool EnqueueCommand(RadioDevice_t *device, Command_t *command);
 bool ProcessCommand(RadioDevice_t *device);
 
