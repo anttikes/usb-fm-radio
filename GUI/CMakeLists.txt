@@ -31,13 +31,13 @@ find_package(Qt6 6.8 REQUIRED COMPONENTS Quick QuickControls2)
 qt_standard_project_setup(REQUIRES 6.8)
 
 # Configure the executable and its source files
-qt_add_executable(appGUI
+qt_add_executable(USBRadio
     "src/main.cpp"
     "src/tunercontrol.cpp"
 )
 
 # Configure the QML portions
-qt_add_qml_module(appGUI
+qt_add_qml_module(USBRadio
     URI GUI
     VERSION 1.0
     QML_FILES
@@ -55,7 +55,7 @@ qt_add_qml_module(appGUI
 )
 
 # Configure resources
-qt_add_resources(appGUI
+qt_add_resources(USBRadio
     "resources"
     PREFIX "/"
     FILES 
@@ -78,16 +78,18 @@ add_subdirectory("./ThirdParty/hidapi")
 
 # The debug version attaches a console so console logging works as expected
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set_target_properties(appGUI PROPERTIES
+    set_target_properties(USBRadio
+        PROPERTIES
         WIN32_EXECUTABLE FALSE
     )
 else()
-    set_target_properties(appGUI PROPERTIES
+    set_target_properties(USBRadio
+        PROPERTIES
         WIN32_EXECUTABLE TRUE
     )
 endif()
 
 # Link the necessary libraries
-target_link_libraries(appGUI
+target_link_libraries(USBRadio
     PRIVATE Qt6::Quick Qt6::QuickControls2 hidapi::hidapi
 )
