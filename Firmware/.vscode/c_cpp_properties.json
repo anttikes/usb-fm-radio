@@ -1,12 +1,10 @@
 {
-    "version": 4,
     "configurations": [
         {
             "name": "STM32",
-            "compileCommands": [
-                "${workspaceFolder}/compile_commands.json"
-            ],
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
             "intelliSenseMode": "windows-gcc-arm"
         }
-    ]
+    ],
+    "version": 4
 }

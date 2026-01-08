@@ -3,4 +3,3 @@ build/
 
 # Ignore generated files
 .cache
-compile_commands.json
