@@ -24,10 +24,6 @@
                 {
                     "name": "QT_QPA_PLATFORM_PLUGIN_PATH",
                     "value": "${command:qt-cpp.QT_QPA_PLATFORM_PLUGIN_PATH}"
-                },
-                {
-                    "name": "QML_IMPORT_TRACE",
-                    "value": "1"
                 }
             ],
             "sourceFileMap": {
