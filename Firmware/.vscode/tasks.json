@@ -1,0 +1,30 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Flash with STM32 Programmer",
+            "command": "${command:stm32cube-ide-core.get-cube-path}/cube",
+            "args": [
+                "programmer",
+                "-c",
+                "port=SWD",
+                "mode=UR",
+                "-d",
+                "${command:cmake.launchTargetPath}",
+                "-v",
+                "fast",
+                "-hardRst"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+    ]
+}
