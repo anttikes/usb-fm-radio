@@ -24,9 +24,9 @@ TIM_HandleTypeDef htim14;
 void MX_TIM14_Init(void)
 {
     htim14.Instance = TIM14;
-    htim14.Init.Prescaler = 2929;
+    htim14.Init.Prescaler = 799;
     htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim14.Init.Period = 65529;
+    htim14.Init.Period = 47999;
     htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 
