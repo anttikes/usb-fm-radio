@@ -83,8 +83,11 @@ bool ProcessCommand(RadioDevice_t *device)
         else if (currentCommand->args.opCode == CMD_ID_POWER_DOWN)
         {
             device->currentState = RADIOSTATE_POWERDOWN;
+
+            HAL_TIM_Base_Stop(&htim14);
         }
-        else if (currentCommand->args.opCode == CMD_ID_FM_TUNE_FREQ)
+        else if (currentCommand->args.opCode == CMD_ID_FM_TUNE_FREQ ||
+                 currentCommand->args.opCode == CMD_ID_FM_SEEK_START)
         {
             device->currentState = RADIOSTATE_TUNED_TO_STATION;
 
