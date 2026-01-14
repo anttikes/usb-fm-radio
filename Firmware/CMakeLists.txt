@@ -49,15 +49,15 @@ target_link_directories(firmware PRIVATE
 # Add sources to executable
 target_sources(firmware PRIVATE
     # Add user sources here
-    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Src/device.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Src/commands.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/device.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/commands.c
 )
 
 # Add include paths
 target_include_directories(firmware PRIVATE
     # Add user defined include paths
-    ${CMAKE_CURRENT_SOURCE_DIR}/USB/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/USB
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/
 )
 
@@ -65,9 +65,9 @@ target_include_directories(firmware PRIVATE
 tinyusb_target_add(firmware)
 target_sources(firmware PRIVATE
     # TinyUSB requires callbacks and descriptors defined by the user
-    ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/audio_callbacks.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/hid_callbacks.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/USB/Src/usb_descriptors.c    
+    ${CMAKE_CURRENT_SOURCE_DIR}/USB/audio_callbacks.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/USB/hid_callbacks.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/USB/usb_descriptors.c    
     
     # Use the provided FSDEV driver
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c    

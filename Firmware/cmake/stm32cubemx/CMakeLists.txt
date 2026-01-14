@@ -10,7 +10,7 @@ set(MX_Defines_Syms
 
 # STM32CubeMX generated include paths
 set(MX_Include_Dirs
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/STM32CubeF0/Drivers/STM32F0xx_HAL_Driver/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/STM32CubeF0/Drivers/STM32F0xx_HAL_Driver/Inc/Legacy
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/STM32CubeF0/Drivers/CMSIS/Device/ST/STM32F0xx/Include
@@ -19,22 +19,22 @@ set(MX_Include_Dirs
 
 # STM32CubeMX generated application sources
 set(MX_Application_Src
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/main.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/gpio.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/dma.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/i2c.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/i2s.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/tim.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/stm32f0xx_it.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/stm32f0xx_hal_msp.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/sysmem.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/syscalls.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/main.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/gpio.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/dma.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/i2c.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/i2s.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/tim.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/stm32f0xx_it.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/stm32f0xx_hal_msp.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/sysmem.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/syscalls.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../startup_stm32f042x6.s
 )
 
 # STM32 HAL/LL Drivers
 set(STM32_Drivers_Src
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/system_stm32f0xx.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/system_stm32f0xx.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/STM32CubeF0/Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_usb.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/STM32CubeF0/Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_i2c.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/STM32CubeF0/Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_i2c_ex.c
