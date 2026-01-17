@@ -2,6 +2,8 @@
 
 This folder contains the graphical user interface application for controlling the radio device.
 
+![Main Screen](docs/MainScreen.png)
+
 ## Working on the project
 
 This project uses Qt 6.10.1 together with several development tools provided by the installer. Begin by visiting [this page](https://www.qt.io/development/download-qt-installer-oss) and choose the right Qt Maintenance Tool installer for your system.
