@@ -243,7 +243,7 @@ bool SeekStart(RadioDevice_t *device, CMD_FM_SEEK_START_ARGS args)
  *
  * @retval True if the command was enqueued; false otherwise
  */
-bool GetTuneStatus(RadioDevice_t *device, CMD_GET_TUNE_STATUS_ARGS args)
+bool TuneStatus(RadioDevice_t *device, CMD_GET_TUNE_STATUS_ARGS args)
 {
     Command_t getTuneStatus = {0};
 

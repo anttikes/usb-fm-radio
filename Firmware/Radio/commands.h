@@ -36,7 +36,7 @@ bool GetProperty(RadioDevice_t *device, PropertyIdentifiers_t property);
 bool GetIntStatus(RadioDevice_t *device);
 bool TuneFreq(RadioDevice_t *device, CMD_FM_TUNE_FREQ_ARGS args, uint16_t frequency);
 bool SeekStart(RadioDevice_t *device, CMD_FM_SEEK_START_ARGS args);
-bool GetTuneStatus(RadioDevice_t *device, CMD_GET_TUNE_STATUS_ARGS args);
+bool TuneStatus(RadioDevice_t *device, CMD_GET_TUNE_STATUS_ARGS args);
 bool RSQStatus(RadioDevice_t *device, CMD_FM_RSQ_STATUS_ARGS args);
 bool GPIOCtl(RadioDevice_t *device, CMD_GPIO_CTL_ARGS args);
 bool GPIOSet(RadioDevice_t *device, CMD_GPIO_SET_ARGS args);
