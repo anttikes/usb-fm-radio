@@ -92,6 +92,8 @@ bool ProcessCommand(RadioDevice_t *device)
             device->currentState = RADIOSTATE_TUNED_TO_STATION;
 
             HAL_TIM_Base_Start_IT(&htim14);
+
+            TuneStatus(device, GET_TUNE_STATUS_ARGS_NONE);
         }
         else if (currentCommand->args.opCode == CMD_ID_SET_PROPERTY)
         {
@@ -338,7 +340,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if (radioDevice.currentState == RADIOSTATE_TUNED_TO_STATION ||
         radioDevice.currentState == RADIOSTATE_DIGITAL_OUTPUT_ENABLED)
     {
-        bool succeeded = TuneStatus(&radioDevice, GET_TUNE_STATUS_ARGS_NONE);
+        bool succeeded = RSQStatus(&radioDevice, FM_RSQ_STATUS_ARGS_NONE);
 
         if (!succeeded)
         {
