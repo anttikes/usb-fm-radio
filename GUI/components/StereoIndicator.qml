@@ -5,7 +5,8 @@ import QtQuick.Layouts
 ColumnLayout {
     id: root
 
-    property bool isStereo
+    property bool pilot: false
+    property real stereoBlend: 0.0
 
     width: implicitWidth
     height: implicitHeight
@@ -99,13 +100,13 @@ ColumnLayout {
 
                 // Bloom effect
                 shadowEnabled: true
-                shadowColor: root.isStereo ? "#A8D6F2" : '#fd0000'
+                shadowColor: root.pilot ? "#A8D6F2" : '#fd0000'
                 shadowBlur: 0.8
                 shadowHorizontalOffset: 0
                 shadowVerticalOffset: 0
 
                 // Intensity
-                brightness: root.isStereo ? 0.3 : 0.5
+                brightness: !root.pilot ? 0.5 : (root.stereoBlend / 100.0) * 0.3
                 contrast: 0.2
 
                 // Adding a slight blur to the text itself makes it

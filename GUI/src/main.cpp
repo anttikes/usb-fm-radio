@@ -1,8 +1,12 @@
-#include "tunercontrol.h"
+#include "DeviceManager.h"
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include <QQuickStyle>
+
+bool hidapi_initialize();
+void hidapi_deinitialize();
 
 int main(int argc, char *argv[])
 {
@@ -15,12 +19,42 @@ int main(int argc, char *argv[])
 
     engine.loadFromModule("GUI", "Main");
 
-    CTunerControl *pTunerControl = new CTunerControl(&app);
-
-    if (pTunerControl->initialize() == false)
+    if (hidapi_initialize() == false)
     {
         return -1;
     }
 
-    return app.exec();
+    int retVal = app.exec();
+
+    hidapi_deinitialize();
+
+    return retVal;
+}
+
+bool hidapi_initialize()
+{
+    int res = hid_init();
+
+    if (res < 0)
+    {
+        QString error = QString::fromWCharArray(hid_error(NULL));
+
+        qDebug() << "Failed to initialize hidapi: " << error;
+
+        return false;
+    }
+
+    return true;
+}
+
+void hidapi_deinitialize()
+{
+    int res = hid_exit();
+
+    if (res < 0)
+    {
+        QString error = QString::fromWCharArray(hid_error(NULL));
+
+        qDebug() << "Failed to de-initialize hidapi: " << error;
+    }
 }

@@ -9,7 +9,7 @@ Item {
 
     height: 90
 
-    required property real currentFrequency
+    property real currentFrequency
 
     readonly property real minFreq: 87.5
     readonly property real maxFreq: 108.0

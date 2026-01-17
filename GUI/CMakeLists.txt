@@ -33,7 +33,15 @@ qt_standard_project_setup(REQUIRES 6.8)
 # Configure the executable and its source files
 qt_add_executable(USBRadio
     "src/main.cpp"
-    "src/tunercontrol.cpp"
+    "src/Device.cpp"
+    "src/DeviceManager.cpp"
+    "src/Reports.h" # This isn't really a source file, but uses the MOC system so needs to be listed
+)
+
+# Configure include paths so auto-generated code can find the headers
+target_include_directories(USBRadio
+    PUBLIC
+    "src"
 )
 
 # Configure the QML portions

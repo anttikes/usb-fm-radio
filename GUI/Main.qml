@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Layouts
 import QtQuick.Effects
+import GUI 1.0
 
 import "./components"
 
@@ -18,6 +19,10 @@ Window {
     // Remove native borders and make background transparent so our custom shapes show
     flags: Qt.Window | Qt.FramelessWindowHint
     color: "transparent"
+
+    Component.onCompleted: {
+        DeviceManager.enumerateDevices();
+    }
 
     // Main window background
     Rectangle {
@@ -115,18 +120,35 @@ Window {
                 Layout.alignment: Qt.AlignLeft
 
                 SignalIndicators {
+                    id: signalIndicators
+
                     Layout.alignment: Qt.AlignLeft
                     Layout.topMargin: 10
 
-                    receivedSignalStrength: 70
-                    signalToNoise: 30
+                    Connections {
+                        target: DeviceManager
+
+                        function onRsqStatusReportReceived(report) {
+                            signalIndicators.receivedSignalStrength = report.receivedSignalStrength;
+                            signalIndicators.signalToNoiseRatio = report.signalToNoiseRatio;
+                        }
+                    }
                 }
 
                 StereoIndicator {
+                    id: stereoIndicator
+
                     Layout.leftMargin: 120
                     Layout.alignment: Qt.AlignHCenter
 
-                    isStereo: true
+                    Connections {
+                        target: DeviceManager
+
+                        function onRsqStatusReportReceived(report) {
+                            stereoIndicator.pilot = report.pilot;
+                            stereoIndicator.stereoBlend = report.stereoBlend;
+                        }
+                    }
                 }
 
                 Item {

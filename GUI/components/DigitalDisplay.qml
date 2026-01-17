@@ -8,7 +8,7 @@ Item {
     width: 220
     height: 90
 
-    required property real currentFrequency
+    property real currentFrequency
 
     FontLoader {
         id: lcdFont

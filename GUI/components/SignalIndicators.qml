@@ -4,17 +4,15 @@ import QtQuick.Layouts
 ColumnLayout {
     id: root
 
+    property alias receivedSignalStrengthMin: signalStrength.from
+    property alias receivedSignalStrengthMax: signalStrength.to
     property alias receivedSignalStrength: signalStrength.value
     property alias receivedSignalStrengthUnit: signalStrength.unit
 
-    property alias signalToNoise: signalToNoise.value
-    property alias signalToNoiseUnit: signalToNoise.unit
-
-    property alias signalStrengthMin: signalStrength.from
-    property alias signalStrengthMax: signalStrength.to
-
-    property alias signalToNoiseMin: signalToNoise.from
-    property alias signalToNoiseMax: signalToNoise.to
+    property alias signalToNoiseRatioMin: signalToNoiseRatio.from
+    property alias signalToNoiseRatioMax: signalToNoiseRatio.to
+    property alias signalToNoiseRatio: signalToNoiseRatio.value
+    property alias signalToNoiseRatioUnit: signalToNoiseRatio.unit
 
     width: implicitWidth
     height: implicitHeight
@@ -52,7 +50,7 @@ ColumnLayout {
     }
 
     GradientBar {
-        id: signalToNoise
+        id: signalToNoiseRatio
 
         //Layout.topMargin: 5
 
