@@ -8,7 +8,18 @@ Item {
     width: 220
     height: 90
 
-    property real currentFrequency
+    property real currentFrequency: 0.0
+
+    onCurrentFrequencyChanged: {
+        if (currentFrequency === 0.0) {
+            frequencyText.text = "";
+            mhzText.text = "";
+            return;
+        }
+
+        frequencyText.text = `${root.currentFrequency.toFixed(1)}`;
+        mhzText.text = `MHz`;
+    }
 
     FontLoader {
         id: lcdFont
@@ -72,17 +83,14 @@ Item {
 
                     Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
-                    text: `${root.currentFrequency.toFixed(1)}`
-
                     font.family: lcdFont.name
                     font.pointSize: 34
                 }
 
                 GlowingText {
+                    id: mhzText
                     Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                     Layout.bottomMargin: -20
-
-                    text: `MHz`
 
                     font.bold: true
                     font.pointSize: 14

@@ -98,6 +98,8 @@ ColumnLayout {
 
                 source: stereoImage
 
+                visible: root.enabled
+
                 // Bloom effect
                 shadowEnabled: true
                 shadowColor: root.pilot ? "#A8D6F2" : '#fd0000'

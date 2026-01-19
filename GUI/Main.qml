@@ -80,6 +80,8 @@ Window {
                 Layout.alignment: Qt.AlignHCenter
 
                 ModernButton {
+                    enabled: DeviceManager.selectedDeviceIndex >= 0
+
                     icon.source: "qrc:/resources/backward-solid-full.svg"
 
                     icon.width: 40
@@ -90,14 +92,10 @@ Window {
 
                 DigitalDisplay {
                     id: digitalDisplay
-
-                    currentFrequency: 94.7
                 }
 
                 ModernButton {
-                    id: control
-
-                    hoverEnabled: true
+                    enabled: DeviceManager.selectedDeviceIndex >= 0
 
                     icon.source: "qrc:/resources/forward-solid-full.svg"
 
@@ -112,8 +110,8 @@ Window {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                stationName: "BBC R3"
-                radioText: "Beethoven - Symphony No. 7"
+                stationName: DeviceManager.selectedDeviceIndex >= 0 ? "BBC R3" : qsTr("No radios detected; please connect a radio to the USB")
+                radioText: DeviceManager.selectedDeviceIndex >= 0 ? "Beethoven - Symphony No. 7" : ""
             }
 
             RowLayout {
@@ -141,6 +139,8 @@ Window {
                     Layout.leftMargin: 120
                     Layout.alignment: Qt.AlignHCenter
 
+                    enabled: DeviceManager.selectedDeviceIndex >= 0
+
                     Connections {
                         target: DeviceManager
 
@@ -159,7 +159,8 @@ Window {
                     Layout.rightMargin: 20
                     Layout.alignment: Qt.AlignRight
 
-                    hasPower: true
+                    enabled: DeviceManager.selectedDeviceIndex >= 0
+                    hasPower: false
                 }
             }
         }
