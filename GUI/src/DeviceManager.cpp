@@ -66,6 +66,7 @@ void DeviceManager::setSelectedDeviceIndex(int newIndex)
     if (newIndex != m_selectedDeviceIndex)
     {
         m_selectedDeviceIndex = newIndex;
+
         emit selectedDeviceIndexChanged(m_selectedDeviceIndex);
     }
 }
@@ -113,6 +114,13 @@ void DeviceManager::onDevicesChanged(QList<Device> newDevices)
             emit selectedDeviceIndexChanged(newIndex);
         }
     }
+    else if (m_selectedDeviceIndex != -1)
+    {
+        // Previously selected device is now gone
+        m_selectedDeviceIndex = -1;
+
+        emit selectedDeviceIndexChanged(m_selectedDeviceIndex);
+    }
 }
 
 void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
@@ -124,6 +132,7 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
         if (m_currentDevice)
         {
             hid_close(m_currentDevice);
+            m_currentDevice = nullptr;
         }
     }
     else
