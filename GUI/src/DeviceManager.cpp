@@ -1,30 +1,37 @@
 #include "DeviceManager.h"
 #include <QDebug>
+#include <QThreadPool>
 #include <hidapi.h>
 
 DeviceManager *DeviceManager::s_instance = nullptr;
 
 DeviceManager::DeviceManager(QObject *parent)
-    : QObject(parent), m_deviceDetectionTimer(this), m_reportPollerTimer(this), m_currentDevice(nullptr),
+    : QObject(parent), m_deviceWorker(nullptr), m_reportPollerTimer(this), m_currentDevice(nullptr),
       m_selectedDeviceIndex(-1)
 {
     s_instance = this;
 
-    connect(&m_deviceDetectionTimer,
-            &QTimer::timeout,
-            this,
-            &DeviceManager::onDeviceDetectionTimerTimeout,
-            Qt::QueuedConnection);
+    m_deviceWorker = new DeviceWorker();
+
+    connect(m_deviceWorker, &DeviceWorker::devicesChanged, this, &DeviceManager::onDevicesChanged);
+
+    QThreadPool::globalInstance()->start(m_deviceWorker);
+
     connect(
         &m_reportPollerTimer, &QTimer::timeout, this, &DeviceManager::onReportPollerTimerTimeout, Qt::QueuedConnection);
     connect(this, &DeviceManager::selectedDeviceIndexChanged, this, &DeviceManager::onSelectedDeviceIndexChanged);
-
-    m_deviceDetectionTimer.start(5000);
 }
 
 DeviceManager::~DeviceManager()
 {
-    m_deviceDetectionTimer.stop();
+    m_devices.clear();
+
+    if (m_deviceWorker)
+    {
+        m_deviceWorker->stop();
+        // The worker is auto-deleted by the thread pool
+    }
+
     m_reportPollerTimer.stop();
 
     if (m_currentDevice)
@@ -32,9 +39,6 @@ DeviceManager::~DeviceManager()
         hid_close(m_currentDevice);
         m_currentDevice = nullptr;
     }
-
-    qDeleteAll(m_devices);
-    m_devices.clear();
 }
 
 DeviceManager *DeviceManager::instance()
@@ -42,7 +46,7 @@ DeviceManager *DeviceManager::instance()
     return s_instance;
 }
 
-QList<Device *> DeviceManager::devices() const
+QList<Device> DeviceManager::devices() const
 {
     return m_devices;
 }
@@ -54,49 +58,28 @@ int DeviceManager::selectedDeviceIndex() const
 
 void DeviceManager::setSelectedDeviceIndex(int newIndex)
 {
-    if (newIndex != m_selectedDeviceIndex && newIndex >= -1 && newIndex < m_devices.size())
+    if (newIndex > m_devices.size())
+    {
+        return;
+    }
+
+    if (newIndex != m_selectedDeviceIndex)
     {
         m_selectedDeviceIndex = newIndex;
         emit selectedDeviceIndexChanged(m_selectedDeviceIndex);
     }
 }
 
-Device *DeviceManager::selectedDevice() const
-{
-    if (m_selectedDeviceIndex >= 0 && m_selectedDeviceIndex < m_devices.size())
-    {
-        return m_devices[m_selectedDeviceIndex];
-    }
-
-    return nullptr;
-}
-
-void DeviceManager::onDeviceDetectionTimerTimeout()
-{
-    enumerateDevices();
-}
-
-void DeviceManager::enumerateDevices()
+void DeviceManager::onDevicesChanged(QList<Device> newDevices)
 {
     QString currentPath;
     if (m_selectedDeviceIndex != -1)
     {
-        currentPath = m_devices[m_selectedDeviceIndex]->path();
+        currentPath = m_devices[m_selectedDeviceIndex].path();
     }
 
-    hid_device_info *devs = hid_enumerate(0x0483, 0x5740);
-
-    qDeleteAll(m_devices);
     m_devices.clear();
-
-    for (hid_device_info *dev = devs; dev; dev = dev->next)
-    {
-        m_devices.append(new Device(dev, this));
-    }
-
-    hid_free_enumeration(devs);
-
-    emit devicesChanged(m_devices);
+    m_devices.append(newDevices);
 
     // Auto-choose the previously selected device if it is still present
     int newIndex = -1;
@@ -104,7 +87,7 @@ void DeviceManager::enumerateDevices()
     {
         for (int i = 0; i < m_devices.size(); ++i)
         {
-            if (m_devices[i]->path() == currentPath)
+            if (m_devices[i].path() == currentPath)
             {
                 newIndex = i;
                 break;
@@ -118,9 +101,17 @@ void DeviceManager::enumerateDevices()
         newIndex = 0;
     }
 
+    // If a choice was made, determine if we need to announce it
     if (newIndex > -1)
     {
-        setSelectedDeviceIndex(newIndex);
+        m_selectedDeviceIndex = newIndex;
+
+        QString newPath = m_devices[newIndex].path();
+
+        if (newPath != currentPath)
+        {
+            emit selectedDeviceIndexChanged(newIndex);
+        }
     }
 }
 
@@ -139,9 +130,9 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
     {
         auto selectedDevice = m_devices[newIndex];
 
-        m_currentDevice = hid_open(selectedDevice->vendorId(),
-                                   selectedDevice->productId(),
-                                   (const wchar_t *)selectedDevice->serialNumber().utf16());
+        m_currentDevice = hid_open(selectedDevice.vendorId(),
+                                   selectedDevice.productId(),
+                                   (const wchar_t *)selectedDevice.serialNumber().utf16());
 
         if (m_currentDevice)
         {

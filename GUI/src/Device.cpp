@@ -1,6 +1,6 @@
 #include "Device.h"
 
-Device::Device(hid_device_info *deviceInfo, QObject *parent) : QObject(parent)
+Device::Device(hid_device_info *deviceInfo)
 {
     m_vendorId = deviceInfo->vendor_id;
     m_productId = deviceInfo->product_id;

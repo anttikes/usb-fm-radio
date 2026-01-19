@@ -20,10 +20,6 @@ Window {
     flags: Qt.Window | Qt.FramelessWindowHint
     color: "transparent"
 
-    Component.onCompleted: {
-        DeviceManager.enumerateDevices();
-    }
-
     // Main window background
     Rectangle {
         id: appBackground

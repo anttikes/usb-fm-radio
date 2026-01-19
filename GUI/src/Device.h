@@ -1,16 +1,14 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
-#include <QObject>
+#include <QMetaObject>
 #include <QString>
 #include <QtQml/qqmlregistration.h>
 #include <hidapi.h>
 
-class Device : public QObject
+class Device
 {
-    Q_OBJECT
-    QML_ELEMENT
-    QML_UNCREATABLE("Objects of this type are created and managed by the DeviceManager")
+    Q_GADGET
 
     Q_PROPERTY(unsigned short vendorId READ vendorId CONSTANT)
     Q_PROPERTY(unsigned short productId READ productId CONSTANT)
@@ -20,7 +18,7 @@ class Device : public QObject
     Q_PROPERTY(QString path READ path CONSTANT)
 
   public:
-    explicit Device(hid_device_info *deviceInfo, QObject *parent = nullptr);
+    explicit Device(hid_device_info *deviceInfo);
 
     unsigned short vendorId() const;
     unsigned short productId() const;

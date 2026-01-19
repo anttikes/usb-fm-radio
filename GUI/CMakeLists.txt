@@ -35,6 +35,7 @@ qt_add_executable(USBRadio
     "src/main.cpp"
     "src/Device.cpp"
     "src/DeviceManager.cpp"
+    "src/DeviceWorker.cpp"
     "src/Reports.h" # This isn't really a source file, but uses the MOC system so needs to be listed
 )
 

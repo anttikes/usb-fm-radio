@@ -2,6 +2,7 @@
 #define DEVICEMANAGER_H
 
 #include "Device.h"
+#include "DeviceWorker.h"
 #include "Reports.h"
 #include <QList>
 #include <QObject>
@@ -15,7 +16,7 @@ class DeviceManager : public QObject
     QML_SINGLETON
     QML_ELEMENT
 
-    Q_PROPERTY(QList<Device *> devices READ devices NOTIFY devicesChanged)
+    Q_PROPERTY(QList<Device> devices READ devices NOTIFY devicesChanged)
     Q_PROPERTY(
         int selectedDeviceIndex READ selectedDeviceIndex WRITE setSelectedDeviceIndex NOTIFY selectedDeviceIndexChanged)
 
@@ -25,32 +26,28 @@ class DeviceManager : public QObject
     explicit DeviceManager(QObject *parent = nullptr);
     ~DeviceManager();
 
-    QList<Device *> devices() const;
+    QList<Device> devices() const;
 
     int selectedDeviceIndex() const;
     void setSelectedDeviceIndex(int newIndex);
 
-    Device *selectedDevice() const;
-
   signals:
-    void devicesChanged(QList<Device *> newDevices);
+    void devicesChanged(QList<Device> newDevices);
     void selectedDeviceIndexChanged(int newIndex);
-
     void rsqStatusReportReceived(RSQStatusReport report);
 
   public slots:
-    void enumerateDevices();
+    void onDevicesChanged(QList<Device> newDevices);
 
   private slots:
-    void onDeviceDetectionTimerTimeout();
     void onSelectedDeviceIndexChanged(int newIndex);
     void onReportPollerTimerTimeout();
 
   private:
-    QTimer m_deviceDetectionTimer;
-    QTimer m_reportPollerTimer;
-    QList<Device *> m_devices;
     int m_selectedDeviceIndex;
+    QList<Device> m_devices;
+    DeviceWorker *m_deviceWorker;
+    QTimer m_reportPollerTimer;
     hid_device *m_currentDevice;
     static DeviceManager *s_instance;
 };
