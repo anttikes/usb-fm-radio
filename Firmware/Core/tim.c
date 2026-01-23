@@ -36,9 +36,9 @@ void MX_TIM14_Init(void)
     }
 }
 
-void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
-    if (tim_baseHandle->Instance == TIM14)
+    if (htim->Instance == TIM14)
     {
         /* TIM14 clock enable */
         __HAL_RCC_TIM14_CLK_ENABLE();
@@ -49,9 +49,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     }
 }
 
-void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *tim_baseHandle)
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *htim)
 {
-    if (tim_baseHandle->Instance == TIM14)
+    if (htim->Instance == TIM14)
     {
         /* Peripheral clock disable */
         __HAL_RCC_TIM14_CLK_DISABLE();
