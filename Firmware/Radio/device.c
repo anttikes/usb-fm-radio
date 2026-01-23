@@ -275,6 +275,44 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
     }
 }
 
+/**
+ * @brief  Period elapsed callback in non-blocking mode
+ * @param  htim TIM handle
+ * @retval None
+ */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    if (htim->Instance == TIM14)
+    {
+        // Timer used to periodically query RSQ status when tuned to a station
+        if (radioDevice.currentState == RADIOSTATE_TUNED_TO_STATION ||
+            radioDevice.currentState == RADIOSTATE_DIGITAL_OUTPUT_ENABLED)
+        {
+            bool succeeded = RSQStatus(&radioDevice, FM_RSQ_STATUS_ARGS_NONE);
+
+            if (!succeeded)
+            {
+                // Queue is full; when the device is streaming data there's a noise
+                // problem which sometimes causes the CTS signal to be missed,
+                // and thus the current command never completes
+
+                // To recover, we clear the queue, and send a fault report
+                memset(radioDevice.commandQueue.commands, 0, 10 * sizeof(Command_t));
+                radioDevice.commandQueue.front = 0;
+                radioDevice.commandQueue.back = 0;
+                radioDevice.commandQueue.count = 0;
+
+                Command_t fault = {0};
+
+                fault.state = COMMANDSTATE_RESPONSE_RECEIVED;
+                fault.args.bytes[0] = 0xAA; // This isn't a real command identifier, so can't use 'opCode'
+
+                EnqueueCommand(&radioDevice, &fault);
+            }
+        }
+    }
+}
+
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -328,38 +366,4 @@ Command_t *PopQueue(CommandQueue_t *queue)
     queue->count--;
 
     return cmd;
-}
-
-/**
- * @brief  Period elapsed callback in non-blocking mode
- * @param  htim TIM handle
- * @retval None
- */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-    if (radioDevice.currentState == RADIOSTATE_TUNED_TO_STATION ||
-        radioDevice.currentState == RADIOSTATE_DIGITAL_OUTPUT_ENABLED)
-    {
-        bool succeeded = RSQStatus(&radioDevice, FM_RSQ_STATUS_ARGS_NONE);
-
-        if (!succeeded)
-        {
-            // Queue is full; when the device is streaming data there's a noise
-            // problem which sometimes causes the CTS signal to be missed,
-            // and thus the current command never completes
-
-            // To recover, we clear the queue, and send a fault report
-            memset(radioDevice.commandQueue.commands, 0, 10 * sizeof(Command_t));
-            radioDevice.commandQueue.front = 0;
-            radioDevice.commandQueue.back = 0;
-            radioDevice.commandQueue.count = 0;
-
-            Command_t fault = {0};
-
-            fault.state = COMMANDSTATE_RESPONSE_RECEIVED;
-            fault.args.bytes[0] = 0xAA; // This isn't a real command identifier, so can't use 'opCode'
-
-            EnqueueCommand(&radioDevice, &fault);
-        }
-    }
 }
