@@ -225,9 +225,9 @@ uint8_t const desc_configuration[] =
 {
 	/* Standard Configuration Descriptor */
 	TUD_CONFIG_DESCRIPTOR(
-		1,                                                   /* bConfigurationValue */
-		ITF_NUM_TOTAL,                                       /* bNumInterfaces */
-		0x00,                                                /* iConfiguration */
+		1,                                                       /* bConfigurationValue */
+		ITF_NUM_TOTAL,                                           /* bNumInterfaces */
+		0x00,                                                    /* iConfiguration */
 		CONFIG_TOTAL_LEN,                                        /* wTotalLength */
 		0x80,                                                    /* bmAttributes */
 		100                                                      /* bMaxPower (in mA) */
@@ -235,9 +235,9 @@ uint8_t const desc_configuration[] =
 
 	/* Standard AC Interface Descriptor (4.3.1) */
 	TUD_AUDIO10_DESC_STD_AC(
-		ITF_NUM_AUDIO_CONTROL,                              /* bInterfaceNumber */
-		0x00,                                               /* bNumEndpoints */
-		0x00                                                /* iInterface */
+		ITF_NUM_AUDIO_CONTROL,                                   /* bInterfaceNumber */
+		0x00,                                                    /* bNumEndpoints */
+		0x00                                                     /* iInterface */
 	),
 
 	/* Class-Specific AC Interface Header Descriptor (4.3.2) */
@@ -252,60 +252,60 @@ uint8_t const desc_configuration[] =
 	/* Input Terminal Descriptor (4.7.2.4) */
 	// Terminal id, terminal type, associated terminal, clock id, channel count, channel config, string index for channel names, control, string index
 	TUD_AUDIO10_DESC_INPUT_TERM(
-		ENTITY_ID_INPUT_TERMINAL,                           /* bTerminalId */
+		ENTITY_ID_INPUT_TERMINAL,                                /* bTerminalId */
 		0x0710,                                                  /* wTerminalType */
-		0x00,                                               /* bAssocTerminal */
-		0x02,                                               /* bNrChannels */
+		0x00,                                                    /* bAssocTerminal */
+		0x02,                                                    /* bNrChannels */
 		AUDIO10_CHANNEL_CONFIG_LEFT_FRONT |                      /* bmChannelConfig */
 		AUDIO10_CHANNEL_CONFIG_RIGHT_FRONT,
-		0x00,                                               /* iChannelNames */
-		0x00                                                /* iTerminal */
+		0x00,                                                    /* iChannelNames */
+		0x00                                                     /* iTerminal */
 	),
 
 	/* Feature Unit Descriptor (4.7.2.8) */
 	TUD_AUDIO10_DESC_FEATURE_UNIT(
-		ENTITY_ID_FEATURE_UNIT,                                 /* bUnitId */
-		ENTITY_ID_INPUT_TERMINAL,                               /* bSourceId */
-		0x00,                                                   /* iFeature */
-		AUDIO10_FU_CONTROL_BM_MUTE |                                 /* bmaControls (master) */
+		ENTITY_ID_FEATURE_UNIT,                                  /* bUnitId */
+		ENTITY_ID_INPUT_TERMINAL,                                /* bSourceId */
+		0x00,                                                    /* iFeature */
+		AUDIO10_FU_CONTROL_BM_MUTE |                             /* bmaControls (master) */
 		AUDIO10_FU_CONTROL_BM_VOLUME, 
-		0x00,                                                        /* bmaControls (logical channel 1) */
-		0x00                                                         /* bmaControls (logical channel 2) */		
+		0x00,                                                    /* bmaControls (logical channel 1) */
+		0x00                                                     /* bmaControls (logical channel 2) */		
 	),
 
 	/* Output Terminal Descriptor (4.7.2.5) */
 	// Terminal id, terminal type, associated terminal, source terminal, clock id, controls, string index
 	TUD_AUDIO10_DESC_OUTPUT_TERM(
-		ENTITY_ID_OUTPUT_TERMINAL,                              /* bTerminalId */
-		AUDIO_TERM_TYPE_USB_STREAMING,                               /* wTerminalType */
-		0x00,                                                   /* bAssocTerminal */
-		ENTITY_ID_FEATURE_UNIT,                                 /* bSourceId */
-		0x00                                                    /* iTerminal */
+		ENTITY_ID_OUTPUT_TERMINAL,                               /* bTerminalId */
+		AUDIO_TERM_TYPE_USB_STREAMING,                           /* wTerminalType */
+		0x00,                                                    /* bAssocTerminal */
+		ENTITY_ID_FEATURE_UNIT,                                  /* bSourceId */
+		0x00                                                     /* iTerminal */
 	),
 
 	/* Standard AS Interface Descriptor (4.9.1) */
 	/* "Mute" interface */
 	TUD_AUDIO10_DESC_STD_AS_INT(
-		ITF_NUM_AUDIO_STREAMING,                                /* bInterfaceNumber */
-		ALTERNATIVE_SETTING_DISABLE,                            /* bAlternateSetting */
-		0x00,                                                   /* bNumEndpoints */
-		0x00                                                    /* iInterface */
+		ITF_NUM_AUDIO_STREAMING,                                 /* bInterfaceNumber */
+		ALTERNATIVE_SETTING_DISABLE,                             /* bAlternateSetting */
+		0x00,                                                    /* bNumEndpoints */
+		0x00                                                     /* iInterface */
 	),
 
 	/* Standard AS Interface Descriptor (4.9.1) */
 	/* Real interface with endpoints */
 	TUD_AUDIO10_DESC_STD_AS_INT(
-		ITF_NUM_AUDIO_STREAMING,                                /* bInterfaceNumber */
-		ALTERNATIVE_SETTING_ENABLE,                             /* bAlternateSetting */
-		0x01,                                                   /* bNumEndpoints */
-		0x00                                                    /* iInterface */
+		ITF_NUM_AUDIO_STREAMING,                                 /* bInterfaceNumber */
+		ALTERNATIVE_SETTING_ENABLE,                              /* bAlternateSetting */
+		0x01,                                                    /* bNumEndpoints */
+		0x00                                                     /* iInterface */
 	),
 
 	/* Class-Specific AS Interface Descriptor (4.9.2) */
 	TUD_AUDIO10_DESC_CS_AS_INT(
 		ENTITY_ID_OUTPUT_TERMINAL,                               /* bTerminalLink */
-		0x01,                                 				      /* bDelay */
-		AUDIO10_FORMAT_TYPE_I                                         /* bFormatType */		
+		0x01,                                 				     /* bDelay */
+		AUDIO10_FORMAT_TYPE_I                                    /* bFormatType */		
 	),
 
 	/* Type I Format Type Descriptor (2.3.1.6 - Audio Formats) */
@@ -313,7 +313,7 @@ uint8_t const desc_configuration[] =
 		CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_TX,                      /* bNrChannels */
 		CFG_TUD_AUDIO_FUNC_1_FORMAT_1_N_BYTES_PER_SAMPLE_TX,     /* bSubslotSize */
 		CFG_TUD_AUDIO_FUNC_1_SAMPLE_BIT_RESOLUTION,              /* bBitResolution */
-		CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE                              /* tSamFrequencies (3 bytes per frequency) */
+		CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE                         /* tSamFrequencies (3 bytes per frequency) */
 	),
 
 	/* Standard AS Isochronous Audio Data Endpoint Descriptor (4.10.1.1) */
@@ -321,7 +321,7 @@ uint8_t const desc_configuration[] =
 		0x80 | EPNUM_AUDIO,                                      /* bEndpointAddress */
 		TUSB_XFER_ISOCHRONOUS |                                  /* bmAttributes */
 		TUSB_ISO_EP_ATT_ASYNCHRONOUS,
-		CFG_TUD_AUDIO_FUNC_1_EP_IN_SZ_MAX,                             /* wMaxPacketSize */
+		CFG_TUD_AUDIO_FUNC_1_EP_IN_SZ_MAX,                       /* wMaxPacketSize */
 		0x01,                                                    /* bInterval */
 		0x00                                                     /* bSynchAddress */				
 	),
@@ -330,7 +330,7 @@ uint8_t const desc_configuration[] =
 	TUD_AUDIO10_DESC_CS_AS_ISO_EP(
 		AUDIO10_CS_AS_ISO_DATA_EP_ATT_MAX_PACKETS_ONLY,          /* bmAttributes */
 		AUDIO10_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_UNDEFINED,     /* bLockDelayUnits */
-		0x0000                                                         /* wLockDelay */
+		0x0000                                                   /* wLockDelay */
 	),
 
 	/* HID Input/Output (Class-specific 6.1 & Appendix E, Class-specific 6.2.1, Standard 9.6.6 and Standard 9.6.6)  */
@@ -338,11 +338,11 @@ uint8_t const desc_configuration[] =
 		ITF_NUM_HID,                                             /* bInterfaceNumber */
 		0x00,                                                    /* iInterface */
 		HID_ITF_PROTOCOL_NONE,                                   /* bInterfaceSubClass & bInterfaceProtocol */
-		sizeof(desc_hid_report),                                       /* wDescriptorLength */
+		sizeof(desc_hid_report),                                 /* wDescriptorLength */
 		EPNUM_HID,                                               /* bEndpointAddress (OUT) */
 		0x80 | EPNUM_HID,                                        /* bEndpointAddress (IN) */
-		CFG_TUD_HID_EP_BUFSIZE,                                        /* wMaxPacketSize */
-		0x0A                                               /* bInterval */
+		CFG_TUD_HID_EP_BUFSIZE,                                  /* wMaxPacketSize */
+		0x0A                                                     /* bInterval */
 	),
 };
 // clang-format on
