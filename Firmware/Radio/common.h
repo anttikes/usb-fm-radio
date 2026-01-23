@@ -26,7 +26,7 @@ extern "C"
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef enum _CMD_POWER_UP_ARGS_1
+typedef enum _CMD_POWER_UP_ARGS_1 : uint8_t
 {
     /* Execute the "FM Receive" operation */
     POWER_UP_ARGS_1_FUNCTION_FM = 0x00,
@@ -44,7 +44,7 @@ typedef enum _CMD_POWER_UP_ARGS_1
     POWER_UP_ARGS_1_CTS_INTERRUPT_ENABLE = 0x80,
 } CMD_POWER_UP_ARGS_1;
 
-typedef enum _CMD_POWER_UP_ARGS_2
+typedef enum _CMD_POWER_UP_ARGS_2 : uint8_t
 {
     /* Analog audio output (LOUT and ROUT pins) */
     POWER_UP_ARGS_2_ANALOG_OUTPUT = 0x05,
@@ -59,7 +59,7 @@ typedef enum _CMD_POWER_UP_ARGS_2
     POWER_UP_ARGS_2_ANALOG_AND_DIGITAL_OUTPUT = 0xB5,
 } CMD_POWER_UP_ARGS_2;
 
-typedef enum _CMD_FM_TUNE_FREQ_ARGS
+typedef enum _CMD_FM_TUNE_FREQ_ARGS : uint8_t
 {
     /* No arguments */
     FM_TUNE_FREQ_ARGS_NONE = 0x00,
@@ -72,7 +72,7 @@ typedef enum _CMD_FM_TUNE_FREQ_ARGS
     FM_TUNE_FREQ_ARGS_FREEZE = 0x02,
 } CMD_FM_TUNE_FREQ_ARGS;
 
-typedef enum _CMD_FM_SEEK_START_ARGS
+typedef enum _CMD_FM_SEEK_START_ARGS : uint8_t
 {
     /* No arguments */
     SEEK_START_ARGS_NONE = 0x00,
@@ -84,7 +84,7 @@ typedef enum _CMD_FM_SEEK_START_ARGS
     SEEK_START_ARGS_UP = 0x08
 } CMD_FM_SEEK_START_ARGS;
 
-typedef enum _CMD_GET_TUNE_STATUS_ARGS
+typedef enum _CMD_GET_TUNE_STATUS_ARGS : uint8_t
 {
     /* No arguments */
     GET_TUNE_STATUS_ARGS_NONE = 0x00,
@@ -96,7 +96,7 @@ typedef enum _CMD_GET_TUNE_STATUS_ARGS
     GET_TUNE_STATUS_ARGS_CANCEL = 0x02
 } CMD_GET_TUNE_STATUS_ARGS;
 
-typedef enum _CMD_FM_RSQ_STATUS_ARGS
+typedef enum _CMD_FM_RSQ_STATUS_ARGS : uint8_t
 {
     /* No arguments */
     FM_RSQ_STATUS_ARGS_NONE = 0x00,
@@ -107,7 +107,7 @@ typedef enum _CMD_FM_RSQ_STATUS_ARGS
     FM_RSQ_STATUS_ARGS_INTACK = 0x01,
 } CMD_FM_RSQ_STATUS_ARGS;
 
-typedef enum _CMD_GPIO_CTL_ARGS
+typedef enum _CMD_GPIO_CTL_ARGS : uint8_t
 {
     /* When set, GPO3 Output is enabled. When unset, the output is high impedance (floating) */
     GPIO_CTL_GPO3_OUTPUT_ENABLE = 0x80,
@@ -122,7 +122,7 @@ typedef enum _CMD_GPIO_CTL_ARGS
     GPIO_CTL_GPO_OUTPUT_DISABLE = 0x00,
 } CMD_GPIO_CTL_ARGS;
 
-typedef enum _CMD_GPIO_SET_ARGS
+typedef enum _CMD_GPIO_SET_ARGS : uint8_t
 {
     /* When set, GPO3 Output is driven high. When unset, it is driven low. */
     GPIO_SET_GPO3_OUTPUT_HIGH = 0x80,
@@ -242,7 +242,7 @@ typedef struct _RSQStatusResponse_t
     int8_t frequencyOffset;
 } RSQStatusResponse_t;
 
-typedef enum _PROP_FM_SEEK_FREQ_SPACING_ARGS
+typedef enum _PROP_FM_SEEK_FREQ_SPACING_ARGS : uint8_t
 {
     /* Seek is performed in 50 kHz increments */
     FM_SEEK_FREQ_SPACING_ARGS_50_KHZ = 5U,
@@ -254,7 +254,7 @@ typedef enum _PROP_FM_SEEK_FREQ_SPACING_ARGS
     FM_SEEK_FREQ_SPACING_ARGS_200_KHZ = 20U
 } PROP_FM_SEEK_FREQ_SPACING_ARGS;
 
-typedef enum _StatusFlags_t
+typedef enum _StatusFlags_t : uint8_t
 {
     /* No status bits are set */
     STATUS_NONE = 0x00,
@@ -275,7 +275,7 @@ typedef enum _StatusFlags_t
     STATUS_CLEAR_TO_SEND = 0x80,
 } StatusFlags_t;
 
-typedef enum _InterruptSources_t
+typedef enum _InterruptSources_t : uint16_t
 {
     /* Do not generate interrupts when status bits become set */
     INTERRUPT_SOURCES_NONE = 0x0000,
@@ -312,12 +312,9 @@ typedef enum _InterruptSources_t
 
     /* Helper value to enable all interrupts, repeating ones included */
     INTERRUPT_SOURCES_ALL = INTERRUPT_SOURCES_ALLIEN | INTERRUPT_SOURCES_ALLREP,
+} InterruptSources_t;
 
-    /* Sentinel value, to encourage uint16_t */
-    INTERRUPT_SOURCES_SENTINEL = 0xFFFF
-} __attribute__((__packed__)) InterruptSources_t;
-
-typedef enum _CommandIdentifiers_t
+typedef enum _CommandIdentifiers_t : uint8_t
 {
     CMD_ID_POWER_UP = 0x01,
     CMD_ID_GET_REV = 0x10,
@@ -336,12 +333,9 @@ typedef enum _CommandIdentifiers_t
     CMD_ID_FM_AGC_OVERRIDE = 0x28,
     CMD_ID_GPIO_CTL = 0x80,
     CMD_ID_GPIO_SET = 0x81,
+} CommandIdentifiers_t;
 
-    /* Sentinel value, to encourage uint8_t */
-    CMD_ID_SENTINEL = 0xFF
-} __attribute__((__packed__)) CommandIdentifiers_t;
-
-typedef enum _PropertyIdentifiers_t
+typedef enum _PropertyIdentifiers_t : uint16_t
 {
     PROP_ID_GPO_IEN = 0x0001,
     PROP_ID_DIGITAL_OUTPUT_FORMAT = 0x0102,
@@ -398,10 +392,7 @@ typedef enum _PropertyIdentifiers_t
     PROP_ID_FM_HICUT_CUTOFF_FREQUENCY = 0x1A06,
     PROP_ID_RX_VOLUME = 0x4000,
     PROP_ID_RX_HARD_MUTE = 0x4001,
-
-    /* Sentinel value, to encourage uint16_t */
-    PROP_ID_SENTINEL = 0xFFFF
-} __attribute__((__packed__)) PropertyIdentifiers_t;
+} PropertyIdentifiers_t;
 
 /* Exported functions prototypes ---------------------------------------------*/
 

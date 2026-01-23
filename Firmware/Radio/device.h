@@ -28,7 +28,7 @@ extern "C"
 #include <stdint.h>
 
 /* Exported types ------------------------------------------------------------*/
-typedef enum _RadioState_t
+typedef enum _RadioState_t : uint8_t
 {
     /* Radio is in power-down state; send PowerUp command to wake it */
     RADIOSTATE_POWERDOWN = 0x00,
@@ -43,7 +43,7 @@ typedef enum _RadioState_t
     RADIOSTATE_DIGITAL_OUTPUT_ENABLED = 0x03
 } RadioState_t;
 
-typedef enum _CommandState_t
+typedef enum _CommandState_t : uint8_t
 {
     /* Idle; the command is not being processed yet */
     COMMANDSTATE_IDLE = 0x00,
