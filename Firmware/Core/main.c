@@ -111,6 +111,12 @@ int main(void)
         Error_Handler();
     }
 
+    // Set FM de-emphasis to 50us
+    if (!SetProperty(&radioDevice, PROP_ID_FM_DEEMPHASIS, 0x0001))
+    {
+        Error_Handler();
+    }
+
     // Tune to Kasari
     if (!TuneFreq(&radioDevice, FM_TUNE_FREQ_ARGS_NONE, 9410))
     {
