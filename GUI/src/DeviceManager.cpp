@@ -6,7 +6,7 @@
 DeviceManager *DeviceManager::s_instance = nullptr;
 
 DeviceManager::DeviceManager(QObject *parent)
-    : QObject(parent), m_deviceWorker(nullptr), m_reportPollerTimer(this), m_currentDevice(nullptr),
+    : QObject(parent), m_deviceWorker(nullptr), m_reportWorker(nullptr), m_currentDevice(nullptr),
       m_selectedDeviceIndex(-1)
 {
     s_instance = this;
@@ -15,11 +15,15 @@ DeviceManager::DeviceManager(QObject *parent)
 
     connect(m_deviceWorker, &DeviceWorker::devicesChanged, this, &DeviceManager::onDevicesChanged);
 
+    qDebug() << "[DeviceManager] Starting the device worker";
+
     QThreadPool::globalInstance()->start(m_deviceWorker);
 
-    connect(
-        &m_reportPollerTimer, &QTimer::timeout, this, &DeviceManager::onReportPollerTimerTimeout, Qt::QueuedConnection);
-    connect(this, &DeviceManager::selectedDeviceIndexChanged, this, &DeviceManager::onSelectedDeviceIndexChanged);
+    connect(this,
+            &DeviceManager::selectedDeviceIndexChanged,
+            this,
+            &DeviceManager::onSelectedDeviceIndexChanged,
+            Qt::QueuedConnection);
 }
 
 DeviceManager::~DeviceManager()
@@ -32,7 +36,11 @@ DeviceManager::~DeviceManager()
         // The worker is auto-deleted by the thread pool
     }
 
-    m_reportPollerTimer.stop();
+    if (m_reportWorker)
+    {
+        m_reportWorker->stop();
+        // The worker is auto-deleted by the thread pool
+    }
 
     if (m_currentDevice)
     {
@@ -111,6 +119,8 @@ void DeviceManager::onDevicesChanged(QList<Device> newDevices)
 
         if (newPath != currentPath)
         {
+            qDebug() << "[DeviceManager] A new device has been selected";
+
             emit selectedDeviceIndexChanged(newIndex);
         }
     }
@@ -118,6 +128,8 @@ void DeviceManager::onDevicesChanged(QList<Device> newDevices)
     {
         // Previously selected device is now gone
         m_selectedDeviceIndex = -1;
+
+        qDebug() << "[DeviceManager] Currently selected device was no longer found, unselecting it";
 
         emit selectedDeviceIndexChanged(m_selectedDeviceIndex);
     }
@@ -127,7 +139,11 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
 {
     if (newIndex == -1)
     {
-        m_reportPollerTimer.stop();
+        if (m_reportWorker)
+        {
+            m_reportWorker->stop();
+            m_reportWorker = nullptr;
+        }
 
         if (m_currentDevice)
         {
@@ -145,68 +161,23 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
 
         if (m_currentDevice)
         {
-            m_reportPollerTimer.start(500);
+            m_reportWorker = new ReportWorker(m_currentDevice);
+
+            connect(
+                m_reportWorker, &ReportWorker::rsqStatusReportReceived, this, &DeviceManager::rsqStatusReportReceived);
+
+            qDebug() << "[DeviceManager] Starting the report worker";
+
+            QThreadPool::globalInstance()->start(m_reportWorker);
         }
         else
         {
             QString error = QString::fromWCharArray(hid_error(NULL));
 
-            qDebug() << "[DeviceManager] Failed to open a HID device" << error;
+            qDebug() << "[DeviceManager] Failed to open a HID device" << error << ". Retrying...";
 
             // Try to reopen the device after a short delay
             QTimer::singleShot(1000, this, [this, newIndex]() { this->onSelectedDeviceIndexChanged(newIndex); });
         }
-    }
-}
-
-void DeviceManager::onReportPollerTimerTimeout()
-{
-    unsigned char buf[32];
-
-    int res = hid_read_timeout(m_currentDevice, buf, sizeof(buf), 250);
-    if (res > 0)
-    {
-        // buf[0] contains the opCode of the report; see the CommandIdentifiers_t in firmware side
-        CommandIdentifiers_t opCode = static_cast<CommandIdentifiers_t>(buf[0]);
-
-        // buf[1] contains the report size; not used here
-        // buf[2] contains the status byte; not used here
-
-        switch (opCode)
-        {
-        case CommandIdentifiers_t::CMD_ID_FM_RSQ_STATUS: {
-            RSQStatusReport report;
-
-            report.blendInterrupt = buf[3] & 0x80;
-            report.multHiInterrupt = buf[3] & 0x20;
-            report.multLoInterrupt = buf[3] & 0x10;
-            report.snrHiInterrupt = buf[3] & 0x08;
-            report.snrLoInterrupt = buf[3] & 0x04;
-            report.rssiHiInterrupt = buf[3] & 0x02;
-            report.rssiLoInterrupt = buf[3] & 0x01;
-
-            report.softMute = buf[4] & 0x08;
-            report.afcRail = buf[4] & 0x02;
-            report.validChannel = buf[4] & 0x01;
-
-            report.pilot = buf[5] & 0x80;
-            report.stereoBlend = buf[5] & 0x7F;
-
-            report.receivedSignalStrength = buf[6];
-            report.signalToNoiseRatio = buf[7];
-            report.multipath = buf[8];
-            report.frequencyOffset = (int8_t)buf[9];
-
-            emit rsqStatusReportReceived(report);
-
-            break;
-        }
-        }
-    }
-    else if (res < 0)
-    {
-        QString error = QString::fromWCharArray(hid_error(m_currentDevice));
-
-        qDebug() << "[DeviceManager]: Error during HID read" << error;
     }
 }

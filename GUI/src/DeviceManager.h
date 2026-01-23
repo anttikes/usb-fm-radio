@@ -3,7 +3,7 @@
 
 #include "Device.h"
 #include "DeviceWorker.h"
-#include "Reports.h"
+#include "ReportWorker.h"
 #include <QList>
 #include <QObject>
 #include <QTimer>
@@ -41,13 +41,12 @@ class DeviceManager : public QObject
 
   private slots:
     void onSelectedDeviceIndexChanged(int newIndex);
-    void onReportPollerTimerTimeout();
 
   private:
     int m_selectedDeviceIndex;
     QList<Device> m_devices;
     DeviceWorker *m_deviceWorker;
-    QTimer m_reportPollerTimer;
+    ReportWorker *m_reportWorker;
     hid_device *m_currentDevice;
     static DeviceManager *s_instance;
 };

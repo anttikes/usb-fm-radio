@@ -1,4 +1,5 @@
 #include "DeviceWorker.h"
+#include <QDebug>
 
 DeviceWorker::DeviceWorker() : QRunnable(), m_eventLoop(nullptr), m_timer(nullptr)
 {
@@ -31,6 +32,8 @@ void DeviceWorker::stop()
 
 void DeviceWorker::run()
 {
+    qDebug() << "[DeviceWorker] Device worker is starting up...";
+
     m_timer = new QTimer();
     m_eventLoop = new QEventLoop();
 
@@ -41,6 +44,8 @@ void DeviceWorker::run()
     enumerateDevices();
 
     m_eventLoop->exec();
+
+    qDebug() << "[DeviceWorker] Device worker is shutting down...";
 }
 
 void DeviceWorker::onTimerTimeout()
