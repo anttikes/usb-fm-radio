@@ -96,3 +96,10 @@ Example: To add a SEEK_START command:
 - **STM32CubeMX** (`Generated/Firmware.ioc`): Regenerate HAL with MX tool; do NOT hand-edit generated files in `cmake/stm32cubemx/`
 - **TinyUSB** (`thirdparty/tinyusb/src`): Audio/HID class drivers; configs in `USB/*_config.h`
 - **Host Communication**: Binary HID reports defined by USB descriptor; GUI sends/receives via hidapi
+
+## Common Gotchas
+
+1. **I2S frequency mismatch**: REAL_AUDIO_FREQUENCY must match system clock config or audio quality degrades
+2. **DMA buffer alignment**: Must be 2-byte aligned for I2S transfers
+3. **USB string descriptors**: Must use Unicode format (uint16_t per character) in `usb_descriptors.c`
+4. **Radio CTS timeout**: If command never completes, check that interrupt GPIO is configured correctly
