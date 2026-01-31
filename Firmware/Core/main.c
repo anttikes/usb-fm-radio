@@ -58,14 +58,14 @@ int main(void)
     /* Configure the system clock */
     SystemClock_Config();
 
-    /* Initialize all configured peripherals */
+    /* Initialize peripherals */
     MX_GPIO_Init();
     MX_DMA_Init();
     MX_I2C1_Init();
     MX_I2S1_Init();
     MX_TIM14_Init();
 
-    /* USB peripheral clock enable and interrupt priority */
+    /* USB needs only peripheral clock and interrupt priority; TinyUSB takes care of the rest */
     __HAL_RCC_USB_CLK_ENABLE();
     HAL_NVIC_SetPriority(USB_IRQn, 0, 0);
 

@@ -246,6 +246,8 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
             if (currentCommand->args.opCode == CMD_ID_FM_TUNE_FREQ ||
                 currentCommand->args.opCode == CMD_ID_FM_SEEK_START)
             {
+                radioDevice.currentState = RADIOSTATE_TUNE_IN_PROGRESS;
+
                 currentCommand->state = COMMANDSTATE_WAITING_FOR_STC;
             }
             else
@@ -284,7 +286,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM14)
     {
-        // Timer used to periodically query RSQ status when tuned to a station
+        // Timer 14 is used to periodically query RSQ status when tuned to a station
         if (radioDevice.currentState == RADIOSTATE_TUNED_TO_STATION ||
             radioDevice.currentState == RADIOSTATE_DIGITAL_OUTPUT_ENABLED)
         {

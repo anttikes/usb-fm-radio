@@ -36,11 +36,14 @@ typedef enum _RadioState_t : uint8_t
     /* Radio is in power-up state; set properties, tune to station, begin seek or send power-down to power it down */
     RADIOSTATE_POWERUP = 0x01,
 
+    /* Radio is tuning to a station */
+    RADIOSTATE_TUNE_IN_PROGRESS = 0x02,
+
     /* Radio is tuned to a station, and is receiving a signal */
-    RADIOSTATE_TUNED_TO_STATION = 0x02,
+    RADIOSTATE_TUNED_TO_STATION = 0x03,
 
     /* Radio is sampling and sending digital output of the received audio signal */
-    RADIOSTATE_DIGITAL_OUTPUT_ENABLED = 0x03
+    RADIOSTATE_DIGITAL_OUTPUT_ENABLED = 0x04
 } RadioState_t;
 
 typedef enum _CommandState_t : uint8_t
