@@ -1,0 +1,9 @@
+# By default, ignore everything in this folder
+*
+
+# Track the .gitignore file itself
+!.gitignore
+
+# Track the STM32CubeMX project files
+!.mxproject
+!Firmware.ioc
