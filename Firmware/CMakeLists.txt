@@ -1,12 +1,5 @@
 cmake_minimum_required(VERSION 4.0)
 
-#
-# This file is generated only once,
-# and is not re-generated if converter is called multiple times.
-#
-# User is free to modify the file as much as necessary
-#
-
 # Setup compiler settings
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -69,7 +62,7 @@ target_sources(firmware PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/hid_callbacks.c
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/usb_descriptors.c    
     
-    # Use the provided FSDEV driver
+    # Use the FSDEV driver for STM32
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c    
 )
 
@@ -77,9 +70,6 @@ target_sources(firmware PRIVATE
 target_compile_definitions(firmware PRIVATE
     # Add user defined symbols
 )
-
-# Remove wrong libob.a library dependency when using cpp files
-list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 
 # Add linked libraries
 target_link_libraries(firmware
