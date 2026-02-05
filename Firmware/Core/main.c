@@ -63,7 +63,8 @@ int main(void)
     MX_DMA_Init();
     MX_I2C1_Init();
     MX_I2S1_Init();
-    MX_TIM14_Init();
+    MX_TIM16_Init();
+    MX_TIM17_Init();
 
     /* USB needs only peripheral clock and interrupt priority; TinyUSB takes care of the rest */
     __HAL_RCC_USB_CLK_ENABLE();

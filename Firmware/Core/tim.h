@@ -27,9 +27,11 @@ extern "C"
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-extern TIM_HandleTypeDef htim14;
+extern TIM_HandleTypeDef htim16;
+extern TIM_HandleTypeDef htim17;
 
-void MX_TIM14_Init(void);
+void MX_TIM16_Init(void);
+void MX_TIM17_Init(void);
 
 #ifdef __cplusplus
 }

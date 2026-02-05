@@ -33,7 +33,8 @@
 /* External variables --------------------------------------------------------*/
 extern I2C_HandleTypeDef hi2c1;
 extern DMA_HandleTypeDef hdma_spi1_rx;
-extern TIM_HandleTypeDef htim14;
+extern TIM_HandleTypeDef htim16;
+extern TIM_HandleTypeDef htim17;
 
 /******************************************************************************/
 /*           Cortex-M0 Processor Interruption and Exception Handlers          */
@@ -111,11 +112,19 @@ void DMA1_Channel2_3_IRQHandler(void)
 }
 
 /**
- * @brief This function handles TIM14 interrupt.
+ * @brief This function handles TIM16 interrupt.
  */
-void TIM14_IRQHandler(void)
+void TIM16_IRQHandler(void)
 {
-    HAL_TIM_IRQHandler(&htim14);
+    HAL_TIM_IRQHandler(&htim16);
+}
+
+/**
+ * @brief This function handles TIM17 interrupt.
+ */
+void TIM17_IRQHandler(void)
+{
+    HAL_TIM_IRQHandler(&htim17);
 }
 
 /**

@@ -84,14 +84,14 @@ bool ProcessCommand(RadioDevice_t *device)
         {
             device->currentState = RADIOSTATE_POWERDOWN;
 
-            HAL_TIM_Base_Stop(&htim14);
+            HAL_TIM_Base_Stop(&htim16);
         }
         else if (currentCommand->args.opCode == CMD_ID_FM_TUNE_FREQ ||
                  currentCommand->args.opCode == CMD_ID_FM_SEEK_START)
         {
             device->currentState = RADIOSTATE_TUNED_TO_STATION;
 
-            HAL_TIM_Base_Start_IT(&htim14);
+            HAL_TIM_Base_Start_IT(&htim16);
 
             TuneStatus(device, GET_TUNE_STATUS_ARGS_NONE);
         }
@@ -284,9 +284,9 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    if (htim->Instance == TIM14)
+    if (htim->Instance == TIM16)
     {
-        // Timer 14 is used to periodically query RSQ status when tuned to a station
+        // Timer 16 is used to periodically query RSQ status when tuned to a station
         if (radioDevice.currentState == RADIOSTATE_TUNED_TO_STATION ||
             radioDevice.currentState == RADIOSTATE_DIGITAL_OUTPUT_ENABLED)
         {
