@@ -22,6 +22,21 @@ enum class CommandIdentifiers_t : uint8_t
     CMD_ID_FM_AGC_OVERRIDE = 0x28,
     CMD_ID_GPIO_CTL = 0x80,
     CMD_ID_GPIO_SET = 0x81,
+
+    CMD_ID_QUEUE_WAS_RESET = 0xAA,     // TODO: This isn't a real command identifier
+    CMD_ID_RADIO_STATUS_REPORT = 0xBB, // TODO: This isn't a real command identifier
+};
+
+struct RadioStateReport
+{
+    Q_GADGET
+
+    Q_PROPERTY(uint8_t currentState MEMBER currentState)
+    Q_PROPERTY(qreal currentFrequency MEMBER currentFrequency)
+
+  public:
+    uint8_t currentState;
+    qreal currentFrequency;
 };
 
 struct RSQStatusReport

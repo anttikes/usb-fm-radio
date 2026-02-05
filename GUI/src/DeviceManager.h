@@ -34,6 +34,7 @@ class DeviceManager : public QObject
   signals:
     void devicesChanged(QList<Device> newDevices);
     void selectedDeviceIndexChanged(int newIndex);
+    void radioStateReportReceived(RadioStateReport report);
     void rsqStatusReportReceived(RSQStatusReport report);
 
   public slots:

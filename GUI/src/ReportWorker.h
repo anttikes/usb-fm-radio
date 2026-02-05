@@ -23,6 +23,7 @@ class ReportWorker : public QObject, public QRunnable
     void pollReports();
 
   signals:
+    void radioStateReportReceived(RadioStateReport report);
     void rsqStatusReportReceived(RSQStatusReport report);
 
   private slots:

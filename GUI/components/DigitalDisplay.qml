@@ -72,29 +72,28 @@ Item {
                 }
             }
 
-            RowLayout {
-                anchors.fill: parent
-                anchors.rightMargin: 10
+            GlowingText {
+                id: frequencyText
 
-                spacing: 3
+                anchors.left: parent.left
+                anchors.leftMargin: 30
 
-                GlowingText {
-                    id: frequencyText
+                anchors.verticalCenter: parent.verticalCenter
 
-                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                font.family: lcdFont.name
+                font.pointSize: 34
+            }
 
-                    font.family: lcdFont.name
-                    font.pointSize: 34
-                }
+            GlowingText {
+                id: mhzText
 
-                GlowingText {
-                    id: mhzText
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                    Layout.bottomMargin: -20
+                anchors.left: frequencyText.right
+                anchors.leftMargin: 3
 
-                    font.bold: true
-                    font.pointSize: 14
-                }
+                anchors.bottom: frequencyText.bottom
+
+                font.bold: true
+                font.pointSize: 14
             }
         }
     }

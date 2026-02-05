@@ -165,6 +165,10 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
 
             connect(
                 m_reportWorker, &ReportWorker::rsqStatusReportReceived, this, &DeviceManager::rsqStatusReportReceived);
+            connect(m_reportWorker,
+                    &ReportWorker::radioStateReportReceived,
+                    this,
+                    &DeviceManager::radioStateReportReceived);
 
             qDebug() << "[DeviceManager] Starting the report worker";
 

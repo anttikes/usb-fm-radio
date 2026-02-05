@@ -67,9 +67,17 @@ Window {
             spacing: 0
 
             TunerDial {
+                id: tunerDial
+
                 Layout.fillWidth: true
 
-                currentFrequency: 94.7
+                Connections {
+                    target: DeviceManager
+
+                    function onRadioStateReportReceived(report) {
+                        tunerDial.currentFrequency = report.currentFrequency;
+                    }
+                }
             }
 
             RowLayout {
@@ -88,6 +96,14 @@ Window {
 
                 DigitalDisplay {
                     id: digitalDisplay
+
+                    Connections {
+                        target: DeviceManager
+
+                        function onRadioStateReportReceived(report) {
+                            digitalDisplay.currentFrequency = report.currentFrequency;
+                        }
+                    }
                 }
 
                 ModernButton {

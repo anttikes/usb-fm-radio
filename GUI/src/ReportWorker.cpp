@@ -96,6 +96,19 @@ void ReportWorker::pollReports()
 
             break;
         }
+        case CommandIdentifiers_t::CMD_ID_RADIO_STATUS_REPORT: {
+            RadioStateReport report;
+
+            report.currentState = buf[2];
+
+            // The frequency is sent from the device as two bytes measured in units of 10 kHz
+            uint16_t combinedFrequency = (uint16_t)((buf[3] << 8) | (buf[4] << 0));
+            report.currentFrequency = combinedFrequency / 100.0;
+
+            emit radioStateReportReceived(report);
+
+            break;
+        }
         }
     }
     else if (res < 0)
