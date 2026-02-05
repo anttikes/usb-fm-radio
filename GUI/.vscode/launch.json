@@ -3,14 +3,12 @@
     "configurations": [
         {
             "name": "Debug GUI",
-            "type": "cppdbg",
+            "type": "cppvsdbg",
             "request": "launch",
-            "miDebuggerPath": "${command:qt-cpp.minGWgdb}",
-            "MIMode": "gdb",
             "cwd": "${workspaceFolder}",
             "program": "${command:cmake.launchTargetPath}",
             "args": [
-                "-qmljsdebugger=host:localhost,port:12150,block,services:DebugMessages,QmlDebugger,V8Debugger,QmlInspector,DebugTranslation"
+                "-qmljsdebugger=host:127.0.0.1,port:12150,block,services:DebugMessages,QmlDebugger,V8Debugger,QmlInspector,DebugTranslation"
             ],
             "environment": [
                 {
@@ -33,6 +31,7 @@
                 "c:/Users/qt/work/install": "${command:qt-cpp.sourceDirectory}",
                 "/Users/qt/work/qt": "${command:qt-cpp.sourceDirectory}"
             },
+            "console": "integratedTerminal",
             "presentation": {
                 "hidden": true
             }
@@ -50,7 +49,7 @@
     ],
     "compounds": [
         {
-            "name": "Debug with GDB & QML",
+            "name": "Debug the GUI",
             "configurations": [
                 "Debug GUI",
                 "Attach to QML"

@@ -6,20 +6,27 @@ This folder contains the graphical user interface application for controlling th
 
 ## Working on the project
 
-This project uses Qt 6.10.1 together with several development tools provided by the installer. Begin by visiting [this page](https://www.qt.io/development/download-qt-installer-oss) and choose the right Qt Maintenance Tool installer for your system.
+This project uses Qt 6.10.2 together with Microsoft Visual Studio Build Tools 2022. Begin by visiting [this page](https://www.qt.io/development/download-qt-installer-oss) and choose the right Qt installer for your system.
 
-From the installer, you should select the following individual components:
-- Qt -> Qt 6.10.1 -> MinGW 13.1.0 64-bit
-- Qt -> Qt 6.10.1 -> Qt Debug Information Files
-- Qt -> Build Tools -> MinGW 13.1.0 64-bit
-- Qt -> Build Tools -> CMake 3.30.5
+From the Qt installer, you should select the following individual components:
+- Qt -> Qt 6.10.2 -> MSVC 2022 64-bit
+- Qt -> Qt 6.10.2 -> Sources
+- Qt -> Qt 6.10.2 -> Additional Libraries -> Qt Multimedia
+- Qt -> Qt 6.10.2 -> Qt Debug Information Files
 - Qt -> Build Tools -> Ninja 1.12.1
 
-After installing, you must add the CMake and Ninja binary folders to your user-specific PATH variable, and restart VS Code. The Qt Core extension should configure the CMake kit when it is first started and once configure you should be able to select the "GUI" folder from the CMake pane in VS Code, and build it with "Build" from the VS Code's status bar.
+Next, you should download the Microsoft Visual Studio Build Tools 2022 installer. You can find it from [this page](https://aka.ms/vs/17/release/vs_buildtools.exe).
+
+From the MSVC Build Tools installer, select the following individual components:
+- MSVC v143 - VS 2022 C++ x64/x86 build tools (Latest)
+- Windows 11 SDK (10.0.26100.7175)
+- C++ CMake tools for Windows
+
+After installing, you should restart VS Code. The Qt Core extension should detect available CMake kits automatically, and once detected you should open the CMake pane in VS Code, select the "GUI" folder, and choose the kit that starts with `Qt-6.10.2-msvc2022`. After this you should be able to build the application by choosing "Build" from the VS Code's status bar.
 
 ## Debugging
 
-The `launch.json` file has the necessary wirings for debugging both the C++ and the QML portions. It uses the Qt C++ extension's commands to set the debugger and symbol file paths for Qt. Starting the debug session takes a long while since GDB likes to load symbol files of Windows' shared DLLs. Using `set auto-solib-add off` will not work, probably due to a bug in VS Code.
+The `launch.json` file has the necessary wirings for debugging both the C++ and the QML portions. It uses the Qt C++ extension's commands to set the debugger and symbol file paths for Qt.
 
 ## Acknowledgements
 
