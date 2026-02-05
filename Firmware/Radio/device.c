@@ -30,6 +30,7 @@
 RadioDevice_t radioDevice = {
     .deviceAddress = SI4705_I2C_ADDRESS,
     .currentState = RADIOSTATE_POWERDOWN,
+    .currentFrequency = 0,
     .commandQueue = {
         .commands = {{0}},
         .count = 0,
@@ -130,6 +131,22 @@ bool ProcessCommand(RadioDevice_t *device)
     }
     else if (currentCommand->state == COMMANDSTATE_RESPONSE_RECEIVED)
     {
+        // If we received a response to the tune status command and the channel is valid
+        // then update the current frequency reading of the device
+        if (currentCommand->args.opCode == CMD_ID_FM_TUNE_STATUS)
+        {
+            if (currentCommand->response[1] & 0x01)
+            {
+                device->currentFrequency =
+                    (uint16_t)((currentCommand->response[2] << 8) | (currentCommand->response[3] << 0));
+            }
+            else
+            {
+                // The channel is not valid, so reset the current frequency to 0
+                device->currentFrequency = 0;
+            }
+        }
+
         uint8_t report[CFG_TUD_HID_EP_BUFSIZE - 1] = {0};
 
         report[0] = currentCommand->responseLength;
@@ -307,11 +324,27 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
                 Command_t fault = {0};
 
                 fault.state = COMMANDSTATE_RESPONSE_RECEIVED;
-                fault.args.bytes[0] = 0xAA; // This isn't a real command identifier, so can't use 'opCode'
+                fault.args.bytes[0] = 0xAA; // TODO: This isn't a real command identifer
 
                 EnqueueCommand(&radioDevice, &fault);
             }
         }
+    }
+    else if (htim->Instance == TIM17)
+    {
+        // Timer 17 is used to periodically report device state
+        Command_t statusReport = {0};
+
+        statusReport.state = COMMANDSTATE_RESPONSE_RECEIVED;
+        statusReport.args.bytes[0] = 0xBB; // TODO: This isn't a real command identifier
+
+        statusReport.response[0] = (uint8_t)radioDevice.currentState;
+        statusReport.response[1] = (uint8_t)((radioDevice.currentFrequency & 0xFF00) >> 8);
+        statusReport.response[2] = (uint8_t)((radioDevice.currentFrequency & 0x00FF) >> 0);
+
+        statusReport.responseLength = 3;
+
+        EnqueueCommand(&radioDevice, &statusReport);
     }
 }
 

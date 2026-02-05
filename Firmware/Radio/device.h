@@ -114,8 +114,11 @@ typedef struct _RadioDevice_t
     /* I2C address of the device */
     uint16_t deviceAddress;
 
-    /* Holds the current state of the radio device */
+    /* Holds the current state of the device */
     RadioState_t currentState;
+
+    /* Holds the current frequency of the device, when tuned to a station */
+    uint16_t currentFrequency;
 
     /* Holds the command queue */
     CommandQueue_t commandQueue;
@@ -123,7 +126,7 @@ typedef struct _RadioDevice_t
 
 /* Exported constants --------------------------------------------------------*/
 
-// Hard-coded addresses for the Si4705 device, left-shifted for HAL-compatibility
+// Hard-coded addresses recognized by the Si4705 device, left-shifted for HAL-compatibility
 #define SI4705_I2C_ADDRESS (uint16_t)(0x11 << 1)
 #define SI4705_I2C_ALT_ADDRESS (uint16_t)(0x63 << 1)
 

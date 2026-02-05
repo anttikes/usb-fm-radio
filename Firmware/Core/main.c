@@ -78,6 +78,9 @@ int main(void)
     // crystal
     HAL_Delay(1250);
 
+    // Start the timer that's used to report device status
+    HAL_TIM_Base_Start_IT(&htim17);
+
     // Power up the radio
     if (!PowerUp(&radioDevice,
                  POWER_UP_ARGS_1_FUNCTION_FM | POWER_UP_ARGS_1_GPO2_OUTPUT_ENABLE |
