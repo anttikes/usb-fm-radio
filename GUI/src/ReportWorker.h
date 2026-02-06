@@ -17,7 +17,14 @@ class ReportWorker : public QObject, public QRunnable
     ~ReportWorker();
 
     void run() override;
+    void processRadioStateReport(unsigned char buf[32]);
+    void processRSQStatusReport(unsigned char buf[32]);
     void stop();
+
+    inline bool isStopped() const
+    {
+        return m_stopped;
+    }
 
   private:
     void pollReports();
@@ -26,13 +33,10 @@ class ReportWorker : public QObject, public QRunnable
     void radioStateReportReceived(RadioStateReport report);
     void rsqStatusReportReceived(RSQStatusReport report);
 
-  private slots:
-    void onTimerTimeout();
-
   private:
+    bool m_shouldStop;
+    bool m_stopped;
     hid_device *m_selectedDevice;
-    QEventLoop *m_eventLoop;
-    QTimer *m_timer;
 };
 
 #endif // __REPORTWORKER_H__

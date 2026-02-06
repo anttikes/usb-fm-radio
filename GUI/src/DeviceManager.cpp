@@ -30,16 +30,22 @@ DeviceManager::~DeviceManager()
 {
     m_devices.clear();
 
-    if (m_deviceWorker)
-    {
-        m_deviceWorker->stop();
-        // The worker is auto-deleted by the thread pool
-    }
-
     if (m_reportWorker)
     {
         m_reportWorker->stop();
-        // The worker is auto-deleted by the thread pool
+
+        while (!m_reportWorker->isStopped())
+        {
+            QThread::msleep(50);
+        }
+
+        m_reportWorker = nullptr;
+    }
+
+    if (m_deviceWorker)
+    {
+        m_deviceWorker->stop();
+        m_deviceWorker = nullptr;
     }
 
     if (m_currentDevice)
@@ -142,6 +148,12 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
         if (m_reportWorker)
         {
             m_reportWorker->stop();
+
+            while (!m_reportWorker->isStopped())
+            {
+                QThread::msleep(50);
+            }
+
             m_reportWorker = nullptr;
         }
 
