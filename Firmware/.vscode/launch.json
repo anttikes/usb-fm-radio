@@ -7,7 +7,7 @@
         {
             "type": "stlinkgdbtarget",
             "request": "launch",
-            "name": "Debug with STM32 GDB",
+            "name": "Debug the Firmware",
             "origin": "snippet",
             "cwd": "${workspaceFolder}",
             "preBuild": "${command:st-stm32-ide-debug-launch.build}",

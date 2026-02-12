@@ -3,7 +3,6 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Layouts
 import QtQuick.Effects
-import GUI 1.0
 
 import "./components"
 
