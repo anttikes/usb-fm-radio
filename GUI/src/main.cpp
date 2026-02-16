@@ -1,4 +1,6 @@
 #include "DeviceManager.h"
+#include <QDebug>
+#include <QDirIterator>
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQmlApplicationEngine>
@@ -10,14 +12,26 @@ void hidapi_deinitialize();
 
 int main(int argc, char *argv[])
 {
+    /* Not sure where an embedded resource (QML or otherwise) went? This will help you find it. */
+    /*
+    QDirIterator it(":", QDirIterator::Subdirectories);
+
+    qDebug() << "--- Listing Embedded Resources ---";
+    while (it.hasNext())
+    {
+        qDebug() << it.next();
+    }
+    qDebug() << "----------------------------------";
+    */
+
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine(&app);
 
     QQuickStyle::setStyle("Basic");
 
-    app.setWindowIcon(QIcon(":/resources/icon.png"));
+    app.setWindowIcon(QIcon(":/qt/qml/USBRadio/Components/applicationIcon.png"));
 
-    engine.loadFromModule("GUI", "Main");
+    engine.loadFromModule("USBRadio.Components", "Main");
 
     if (hidapi_initialize() == false)
     {

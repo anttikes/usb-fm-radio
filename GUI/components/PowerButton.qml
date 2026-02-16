@@ -13,7 +13,7 @@ Button {
 
     topPadding: pressed ? 1 : 0
 
-    icon.source: "qrc:/resources/PowerButton.png"
+    icon.source: "PowerButton.png"
 
     icon.width: 32
     icon.height: 32

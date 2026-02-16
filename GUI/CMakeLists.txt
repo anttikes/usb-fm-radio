@@ -24,7 +24,7 @@ enable_language(CXX)
 # Enable compile command to ease indexing with e.g. clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
-# Search for relevant packages
+# Search for packages
 find_package(Qt6 6.8 REQUIRED COMPONENTS Quick QuickControls2)
 
 # Setup a Qt project
@@ -46,44 +46,22 @@ target_include_directories(USBRadio
     "src"
 )
 
-# Configure the QML portions
+# Initialize the QML module target
 qt_add_qml_module(USBRadio
-    URI GUI
+    URI USBRadio.Components
     VERSION 1.0
-    QML_FILES
-        "Main.qml"
-        "components/TitleBar.qml"
-        "components/TunerDial.qml" 
-        "components/GlowingText.qml"
-        "components/DigitalDisplay.qml"
-        "components/RDSPanel.qml"
-        "components/ModernButton.qml"
-        "components/GradientBar.qml"        
-        "components/SignalIndicators.qml"
-        "components/StereoIndicator.qml"
-        "components/PowerButton.qml"
 )
 
-# Configure resources
-qt_add_resources(USBRadio
-    "resources"
-    PREFIX "/"
-    FILES 
-        "resources/icon.png"
-        "resources/backward-solid-full.svg"
-        "resources/forward-solid-full.svg"
-        "resources/DSEG7ClassicMini-Bold.ttf"
-        "resources/DSEG7ClassicMini-Regular.ttf"
-        "resources/StereoIndicator.png"
-        "resources/PowerButton.png"
-)
+# Load the QML files and resources from the subdirectories; this ensures the resource paths do not have subdirectories
+add_subdirectory("components")
+add_subdirectory("resources")
 
 # Configure hidapi build options
 set(HIDAPI_WITH_LIBUSB FALSE)
 set(HIDAPI_PRINT_VERSION TRUE)
 set(BUILD_SHARED_LIBS FALSE)
 
-# hidapi supports CMake via the "subdirectory" method; this makes 'hidapi::hidapi' target available for linking
+# Load the hidapi's own CMake from the subdirectory; this makes 'hidapi::hidapi' target available for linking
 add_subdirectory("./ThirdParty/hidapi")
 
 # The debug version attaches a console so console logging works as expected
@@ -99,7 +77,7 @@ else()
     )
 endif()
 
-# Link the necessary libraries
+# Link the binary and the libraries
 target_link_libraries(USBRadio
     PRIVATE Qt6::Quick Qt6::QuickControls2 hidapi::hidapi
 )

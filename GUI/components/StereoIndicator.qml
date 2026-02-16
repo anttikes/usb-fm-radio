@@ -85,7 +85,7 @@ ColumnLayout {
                 anchors.centerIn: parent
                 anchors.margins: 4
 
-                source: "qrc:/resources/StereoIndicator.png"
+                source: "StereoIndicator.png"
                 sourceSize.width: 42
                 fillMode: Image.PreserveAspectFit
                 visible: false

@@ -27,7 +27,7 @@ Item {
             spacing: 10
 
             Image {
-                source: "qrc:/resources/icon.png"
+                source: "applicationIcon.png"
                 width: 20
                 height: 20
             }

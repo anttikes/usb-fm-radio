@@ -3,8 +3,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Layouts
 import QtQuick.Effects
-
-import "./components"
+import USBRadio.Components
 
 Window {
     id: mainWindow
@@ -85,7 +84,7 @@ Window {
                 ModernButton {
                     enabled: DeviceManager.selectedDeviceIndex >= 0
 
-                    icon.source: "qrc:/resources/backward-solid-full.svg"
+                    icon.source: "backward-solid-full.svg"
 
                     icon.width: 40
                     icon.height: 30
@@ -108,7 +107,7 @@ Window {
                 ModernButton {
                     enabled: DeviceManager.selectedDeviceIndex >= 0
 
-                    icon.source: "qrc:/resources/forward-solid-full.svg"
+                    icon.source: "forward-solid-full.svg"
 
                     icon.width: 40
                     icon.height: 30
@@ -121,7 +120,7 @@ Window {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                stationName: DeviceManager.selectedDeviceIndex >= 0 ? "BBC R3" : qsTr("No radios detected; please connect a radio to the USB")
+                stationName: DeviceManager.selectedDeviceIndex >= 0 ? "BBC R3" : qsTr("No radios detected; please connect a radio device to your computer")
                 radioText: DeviceManager.selectedDeviceIndex >= 0 ? "Beethoven - Symphony No. 7" : ""
             }
 

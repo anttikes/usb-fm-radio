@@ -1,6 +1,5 @@
 import QtQml
 import QtQuick
-import QtQuick.Layouts
 
 Item {
     id: root
@@ -24,7 +23,7 @@ Item {
     FontLoader {
         id: lcdFont
 
-        source: "qrc:/resources/DSEG7ClassicMini-Bold.ttf"
+        source: "DSEG7ClassicMini-Bold.ttf"
     }
 
     // Border, LCD-style frequency display
