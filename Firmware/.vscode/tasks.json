@@ -2,6 +2,18 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "type": "cmake",
+            "label": "CMake: build",
+            "command": "build",
+            "targets": [
+                "all"
+            ],
+            "preset": "__defaultBuildPreset__",
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "CMake template build task"
+        },
+        {
             "type": "shell",
             "label": "Flash with STM32 Programmer",
             "command": "${command:stm32cube-ide-core.get-cube-path}/cube",
@@ -24,7 +36,8 @@
                 "showReuseMessage": false,
                 "clear": true
             },
+            "dependsOn": "CMake: build",
             "problemMatcher": []
-        },
+        }
     ]
 }
