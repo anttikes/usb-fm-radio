@@ -32,9 +32,6 @@
 #define DMA_BUFFER_START 0
 #define DMA_BUFFER_MIDPOINT DMA_BUFFER_LENGTH / 2
 
-// This comes from the IOC tool
-#define REAL_AUDIO_FREQUENCY 48000
-
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -51,23 +48,19 @@ void SystemClock_Config(void);
  */
 int main(void)
 {
-    /* Initialize HAL */
+    // Initialize HAL
     HAL_Init();
 
-    /* Configure the system clock */
+    // Configure the system clock
     SystemClock_Config();
 
-    /* Initialize peripherals */
+    // Initialize peripherals
     MX_GPIO_Init();
     MX_DMA_Init();
     MX_I2C1_Init();
     MX_I2S1_Init();
     MX_TIM16_Init();
     MX_TIM17_Init();
-
-    /* USB needs only peripheral clock and interrupt priority; TinyUSB takes care of the rest */
-    __HAL_RCC_USB_CLK_ENABLE();
-    HAL_NVIC_SetPriority(USB_IRQn, 0, 0);
 
     // Bring Si4705 out of reset, and enable the oscillator
     HAL_GPIO_WritePin(RADIO_NRST_GPIO_Port, RADIO_NRST_Pin, GPIO_PIN_SET);
@@ -97,8 +90,8 @@ int main(void)
         Error_Handler();
     }
 
-    // Set volume to half
-    if (!SetProperty(&radioDevice, PROP_ID_RX_VOLUME, 0x31U))
+    // Initialize volume from the radio state
+    if (!SetProperty(&radioDevice, PROP_ID_RX_VOLUME, radioDevice.currentVolume))
     {
         Error_Handler();
     }
@@ -126,18 +119,17 @@ int main(void)
         Error_Handler();
     }
 
-    // When using circular mode, the size parameter must equal the number of
-    // elements in the receiving array
+    // Start receiving I2S data through DMA; this provides DCLK and DFS
+    // for the radio chip. When using circular mode, the size parameter
+    // must equal the number of elements in the receiving array
     if (HAL_I2S_Receive_DMA(&hi2s1, &i2sBuffer[0], DMA_BUFFER_LENGTH) != HAL_OK)
     {
         Error_Handler();
     }
 
-    // Now that the DCLK and DFS are enabled we can instruct the radio chip to start providing audio samples
-    if (!SetProperty(&radioDevice, PROP_ID_DIGITAL_OUTPUT_SAMPLE_RATE, REAL_AUDIO_FREQUENCY))
-    {
-        Error_Handler();
-    }
+    // USB needs only peripheral clock and interrupt priority; TinyUSB takes care of the rest
+    __HAL_RCC_USB_CLK_ENABLE();
+    HAL_NVIC_SetPriority(USB_IRQn, 0, 0);
 
     // Initialize TinyUSB
     tusb_rhport_init_t dev_init = {.role = TUSB_ROLE_DEVICE, .speed = TUSB_SPEED_FULL};

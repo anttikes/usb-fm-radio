@@ -120,6 +120,12 @@ typedef struct _RadioDevice_t
     /* Holds the current frequency of the device, when tuned to a station */
     uint16_t currentFrequency;
 
+    /* Holds the current volume level of the device */
+    uint8_t currentVolume;
+
+    /* Holds the mute status of the device */
+    bool isMuted;
+
     /* Holds the command queue */
     CommandQueue_t commandQueue;
 } RadioDevice_t;
@@ -129,6 +135,10 @@ typedef struct _RadioDevice_t
 // Hard-coded addresses recognized by the Si4705 device, left-shifted for HAL-compatibility
 #define SI4705_I2C_ADDRESS (uint16_t)(0x11 << 1)
 #define SI4705_I2C_ALT_ADDRESS (uint16_t)(0x63 << 1)
+
+// Minimum and maximum volume
+#define SI4705_VOLUME_MAX_SETTING 63
+#define SI4705_VOLUME_MIN_SETTING 0
 
 /* Exported macro ------------------------------------------------------------*/
 

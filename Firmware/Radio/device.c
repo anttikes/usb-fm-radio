@@ -31,6 +31,8 @@ RadioDevice_t radioDevice = {
     .deviceAddress = SI4705_I2C_ADDRESS,
     .currentState = RADIOSTATE_POWERDOWN,
     .currentFrequency = 0,
+    .currentVolume = SI4705_VOLUME_MAX_SETTING / 2,
+    .isMuted = false,
     .commandQueue = {
         .commands = {{0}},
         .count = 0,
@@ -94,7 +96,24 @@ bool ProcessCommand(RadioDevice_t *device)
 
             HAL_TIM_Base_Start_IT(&htim16);
 
+            // After tuning or seek has completed, set the sample rate to start receiving audio samples through I2S
+            SetProperty(&radioDevice, PROP_ID_DIGITAL_OUTPUT_SAMPLE_RATE, CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE);
+
+            // Schedule a GetTuneStatus to update the current frequency reading; this works for both tuning and seek
             TuneStatus(device, GET_TUNE_STATUS_ARGS_NONE);
+        }
+        else if (currentCommand->args.opCode == CMD_ID_FM_TUNE_STATUS)
+        {
+            // If the channel is valid, update the frequency reading; otherwise reset it to zero
+            if (currentCommand->response[1] & 0x01)
+            {
+                device->currentFrequency =
+                    (uint16_t)((currentCommand->response[2] << 8) | (currentCommand->response[3] << 0));
+            }
+            else
+            {
+                device->currentFrequency = 0;
+            }
         }
         else if (currentCommand->args.opCode == CMD_ID_SET_PROPERTY)
         {
@@ -114,6 +133,22 @@ bool ProcessCommand(RadioDevice_t *device)
                     device->currentState = RADIOSTATE_TUNED_TO_STATION;
                 }
             }
+            else if (property == PROP_ID_RX_VOLUME)
+            {
+                device->currentVolume = value;
+            }
+            else if (property == PROP_ID_RX_HARD_MUTE)
+            {
+                if (value == 0)
+                {
+                    device->isMuted = false;
+                }
+                else
+                {
+                    // The property value is 0b11 since it shows the state of both channels separately
+                    device->isMuted = true;
+                }
+            }
 
             // Tuner programming guide outlines that a property
             // set operation always completes in 10 ms
@@ -131,22 +166,6 @@ bool ProcessCommand(RadioDevice_t *device)
     }
     else if (currentCommand->state == COMMANDSTATE_RESPONSE_RECEIVED)
     {
-        // If we received a response to the tune status command and the channel is valid
-        // then update the current frequency reading of the device
-        if (currentCommand->args.opCode == CMD_ID_FM_TUNE_STATUS)
-        {
-            if (currentCommand->response[1] & 0x01)
-            {
-                device->currentFrequency =
-                    (uint16_t)((currentCommand->response[2] << 8) | (currentCommand->response[3] << 0));
-            }
-            else
-            {
-                // The channel is not valid, so reset the current frequency to 0
-                device->currentFrequency = 0;
-            }
-        }
-
         uint8_t report[CFG_TUD_HID_EP_BUFSIZE - 1] = {0};
 
         report[0] = currentCommand->responseLength;
@@ -341,8 +360,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         statusReport.response[0] = (uint8_t)radioDevice.currentState;
         statusReport.response[1] = (uint8_t)((radioDevice.currentFrequency & 0xFF00) >> 8);
         statusReport.response[2] = (uint8_t)((radioDevice.currentFrequency & 0x00FF) >> 0);
+        statusReport.response[3] = (uint8_t)((radioDevice.currentVolume));
+        statusReport.response[4] = (uint8_t)((radioDevice.isMuted));
 
-        statusReport.responseLength = 3;
+        statusReport.responseLength = 5;
 
         EnqueueCommand(&radioDevice, &statusReport);
     }

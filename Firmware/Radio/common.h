@@ -399,8 +399,6 @@ typedef enum _PropertyIdentifiers_t : uint16_t
 /* Exported functions prototypes ---------------------------------------------*/
 
 /* Private defines -----------------------------------------------------------*/
-#define SI4705_VOLUME_MAX_SETTING 63
-#define SI4705_VOLUME_MIN_SETTING 0
 
 #ifdef __cplusplus
 }

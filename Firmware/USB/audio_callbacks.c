@@ -14,13 +14,11 @@
  ******************************************************************************
  */
 #include "audio_config.h"
+#include "commands.h"
+#include "device.h"
 #include "i2s.h"
 #include "tusb.h"
 #include <stdbool.h>
-
-// TODO: Move these to the radio struct
-bool mute = false;
-uint16_t volume = 31;
 
 /**
  * @brief  Invoked to handle the SET INTERFACE request
@@ -130,8 +128,9 @@ bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
             // Only first form is supported
             TU_VERIFY(p_request->wLength == 2);
 
-            volume = tu_unaligned_read16(pBuff);
-            return true;
+            uint16_t volume = tu_unaligned_read16(pBuff);
+
+            return SetProperty(&radioDevice, PROP_ID_RX_VOLUME, volume);
 
         case AUDIO10_FU_CTRL_MUTE:
             if (p_request->bRequest != AUDIO10_CS_REQ_SET_CUR)
@@ -143,8 +142,17 @@ bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
             // Only first form is supported
             TU_VERIFY(p_request->wLength == 1);
 
-            mute = pBuff[0];
-            return true;
+            uint8_t mute = pBuff[0];
+
+            if (mute)
+            {
+                // Channel-specific muting is not supported yet, so just mute both channels
+                return SetProperty(&radioDevice, PROP_ID_RX_HARD_MUTE, 0b11);
+            }
+            else
+            {
+                return SetProperty(&radioDevice, PROP_ID_RX_HARD_MUTE, 0x0);
+            }
 
         default:
             TU_BREAKPOINT();
@@ -210,15 +218,16 @@ bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
             switch (p_request->bRequest)
             {
             case AUDIO10_CS_REQ_GET_CUR:
-                return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &volume, sizeof(volume));
+                return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &radioDevice.currentVolume,
+                                                                  sizeof(radioDevice.currentVolume));
 
             case AUDIO10_CS_REQ_GET_MIN: {
-                uint16_t minVolume = 0;
+                uint16_t minVolume = SI4705_VOLUME_MIN_SETTING;
                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &minVolume, sizeof(minVolume));
             }
 
             case AUDIO10_CS_REQ_GET_MAX: {
-                uint16_t maxVolume = 64;
+                uint16_t maxVolume = SI4705_VOLUME_MAX_SETTING;
                 return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &maxVolume, sizeof(maxVolume));
             }
 
@@ -233,7 +242,8 @@ bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
             }
 
         case AUDIO20_FU_CTRL_MUTE:
-            return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &mute, 1);
+            return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &radioDevice.isMuted,
+                                                              sizeof(radioDevice.isMuted));
 
         default:
             TU_BREAKPOINT();
