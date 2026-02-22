@@ -28,7 +28,12 @@
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
-#define DMA_BUFFER_LENGTH CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 8
+
+// Using a smaller buffer is possible, but causes more load for the CPU
+// due to more frequent DMA interrupts. This may cause problems in detecting
+// GPIO-based interrupts from the radio device, which in turn manifests as
+// the command queue filling up
+#define DMA_BUFFER_LENGTH CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 2
 #define DMA_BUFFER_START 0
 #define DMA_BUFFER_MIDPOINT DMA_BUFFER_LENGTH / 2
 

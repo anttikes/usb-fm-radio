@@ -45,7 +45,8 @@
 // Enable endpoint flow control
 #define CFG_TUD_AUDIO_EP_IN_FLOW_CONTROL 1
 
-// FIFO buffer size (four one-millisecond frames)
+// FIFO buffer size for TinyUSB; the multiplier indicates the number of milliseconds
+// worth of audio data that fits into the buffer
 #define CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ 4U * CFG_TUD_AUDIO_FUNC_1_EP_IN_SZ_MAX
 
 // Interface numbers
