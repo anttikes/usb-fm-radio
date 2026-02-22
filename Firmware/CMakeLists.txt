@@ -49,6 +49,7 @@ target_sources(firmware PRIVATE
 # Add include paths
 target_include_directories(firmware PRIVATE
     # Add user defined include paths
+    ${CMAKE_CURRENT_SOURCE_DIR}/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/USB
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/

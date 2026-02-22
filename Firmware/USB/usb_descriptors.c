@@ -14,6 +14,7 @@
  ******************************************************************************
  */
 #include "audio_config.h"
+#include "constants.h"
 #include "hid_config.h"
 #include "stm32f042x6.h"
 #include "tusb.h"
@@ -183,8 +184,8 @@ tusb_desc_device_t const desc_device = {
 	.bDeviceProtocol = TUSB_CLASS_UNSPECIFIED,
 	.bMaxPacketSize0 = CFG_TUD_ENDPOINT0_SIZE,
 
-	.idVendor = 0x0483,
-	.idProduct = 0x5740,
+	.idVendor = USB_FM_RADIO_VENDOR_ID,
+	.idProduct = USB_FM_RADIO_PRODUCT_ID,
 	.bcdDevice = 0x0002,
 
 	.iManufacturer = STRID_MANUFACTURER,
