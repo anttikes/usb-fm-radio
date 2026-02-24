@@ -14,7 +14,7 @@
  ******************************************************************************
  */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
+/* Header guard --------------------------------------------------------------*/
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
@@ -28,117 +28,6 @@ extern "C"
 #include <stdint.h>
 
 /* Exported types ------------------------------------------------------------*/
-typedef enum _CMD_POWER_UP_ARGS_1 : uint8_t
-{
-    /* Execute the "FM Receive" operation */
-    POWER_UP_ARGS_1_FUNCTION_FM = 0x00,
-
-    /* Use the crystal oscillator via GPO3 and DCLK pins */
-    POWER_UP_ARGS_1_CRYSTAL_OSCILLATOR_ENABLE = 0x10,
-
-    /* Copy NVM to RAM, but do not boot */
-    POWER_UP_ARGS_1_PATCH_ENABLE = 0x20,
-
-    /* GPO2 Output Enable */
-    POWER_UP_ARGS_1_GPO2_OUTPUT_ENABLE = 0x40,
-
-    /* Trigger the GPO2 interrupt when Clear-to-Send is raised */
-    POWER_UP_ARGS_1_CTS_INTERRUPT_ENABLE = 0x80,
-} CMD_POWER_UP_ARGS_1;
-
-typedef enum _CMD_POWER_UP_ARGS_2 : uint8_t
-{
-    /* Analog audio output (LOUT and ROUT pins) */
-    POWER_UP_ARGS_2_ANALOG_OUTPUT = 0x05,
-
-    /* Digital audio output (DCLK, LOUT as DFS and ROUT as DOUT) */
-    POWER_UP_ARGS_2_DIGITAL_OUTPUT_1 = 0x0B,
-
-    /* Digital audio output (DCLK, DFS and DOUT through dedicated pins) */
-    POWER_UP_ARGS_2_DIGITAL_OUTPUT_2 = 0xB0,
-
-    /* Analog and digital audio output (LOUT/ROUT, DCLK, DFS and DOUT through dedicated pins) */
-    POWER_UP_ARGS_2_ANALOG_AND_DIGITAL_OUTPUT = 0xB5,
-} CMD_POWER_UP_ARGS_2;
-
-typedef enum _CMD_FM_TUNE_FREQ_ARGS : uint8_t
-{
-    /* No arguments */
-    FM_TUNE_FREQ_ARGS_NONE = 0x00,
-
-    /* When set, executes a fast and invalidated tune. The tune status will not be accurate */
-    FM_TUNE_FREQ_ARGS_FAST = 0x01,
-
-    /* When set, the blend, hicut and softmute transition as a function of the associated attack/release parameters
-     * rather than instantaneously when tuning to an alternate frequency */
-    FM_TUNE_FREQ_ARGS_FREEZE = 0x02,
-} CMD_FM_TUNE_FREQ_ARGS;
-
-typedef enum _CMD_FM_SEEK_START_ARGS : uint8_t
-{
-    /* No arguments */
-    SEEK_START_ARGS_NONE = 0x00,
-
-    /* When set, the seek will wrap around at the end of band */
-    SEEK_START_ARGS_WRAP = 0x04,
-
-    /* When set, the seek direction is up; otherwise it's down */
-    SEEK_START_ARGS_UP = 0x08
-} CMD_FM_SEEK_START_ARGS;
-
-typedef enum _CMD_GET_TUNE_STATUS_ARGS : uint8_t
-{
-    /* No arguments */
-    GET_TUNE_STATUS_ARGS_NONE = 0x00,
-
-    /* When set, clears the seek/tune complete interrupt status indicator bit */
-    GET_TUNE_STATUS_ARGS_INTACK = 0x01,
-
-    /* When set, aborts the seek that is currently in progress */
-    GET_TUNE_STATUS_ARGS_CANCEL = 0x02
-} CMD_GET_TUNE_STATUS_ARGS;
-
-typedef enum _CMD_FM_RSQ_STATUS_ARGS : uint8_t
-{
-    /* No arguments */
-    FM_RSQ_STATUS_ARGS_NONE = 0x00,
-
-    /* When set, clears the RSQINT, BLENDINT, SNRHINT, SNRLINT,
-     * RSSIHINT, RSSILINT, MULTHINT and MULTLINT interrupt bits
-     */
-    FM_RSQ_STATUS_ARGS_INTACK = 0x01,
-} CMD_FM_RSQ_STATUS_ARGS;
-
-typedef enum _CMD_GPIO_CTL_ARGS : uint8_t
-{
-    /* When set, GPO3 Output is enabled. When unset, the output is high impedance (floating) */
-    GPIO_CTL_GPO3_OUTPUT_ENABLE = 0x80,
-
-    /* When set, GPO2 Output is enabled. When unset, the output is high impedance (floating) */
-    GPIO_CTL_GPO2_OUTPUT_ENABLE = 0x40,
-
-    /* When set, GPO1 Output is enabled. When unset, the output is high impedance (floating) */
-    GPIO_CTL_GPO1_OUTPUT_ENABLE = 0x20,
-
-    /* All GPOs are set to high impedance (floating) */
-    GPIO_CTL_GPO_OUTPUT_DISABLE = 0x00,
-} CMD_GPIO_CTL_ARGS;
-
-typedef enum _CMD_GPIO_SET_ARGS : uint8_t
-{
-    /* When set, GPO3 Output is driven high. When unset, it is driven low. */
-    GPIO_SET_GPO3_OUTPUT_HIGH = 0x80,
-
-    /* When set, GPO2 Output is driven high. When unset, it is driven low. */
-    GPIO_SET_GPO2_OUTPUT_HIGH = 0x40,
-
-    /* When set, GPO1 Output is driven high. When unset, it is driven low. */
-    GPIO_SET_GPO1_OUTPUT_HIGH = 0x20,
-
-    /* All GPOs are driven low */
-    GPIO_SET_GPO_OUTPUT_NONE = 0x00,
-} CMD_GPIO_SET_ARGS;
-
 typedef struct _GetRevisionResponse_t
 {
     /* Final 2 digits of part number, in HEX */
@@ -244,18 +133,6 @@ typedef struct _RSQStatusResponse_t
     int8_t frequencyOffset;
 } RSQStatusResponse_t;
 
-typedef enum _PROP_FM_SEEK_FREQ_SPACING_ARGS : uint8_t
-{
-    /* Seek is performed in 50 kHz increments */
-    FM_SEEK_FREQ_SPACING_ARGS_50_KHZ = 5U,
-
-    /* Seek is performed in 100 kHz increments */
-    FM_SEEK_FREQ_SPACING_ARGS_100_KHZ = 10U,
-
-    /* Seek is performed in 200 kHz increments */
-    FM_SEEK_FREQ_SPACING_ARGS_200_KHZ = 20U
-} PROP_FM_SEEK_FREQ_SPACING_ARGS;
-
 typedef enum _StatusFlags_t : uint8_t
 {
     /* No status bits are set */
@@ -276,45 +153,6 @@ typedef enum _StatusFlags_t : uint8_t
     /* Clear to Send (CTS) is active */
     STATUS_CLEAR_TO_SEND = 0x80,
 } StatusFlags_t;
-
-typedef enum _InterruptSources_t : uint16_t
-{
-    /* Do not generate interrupts when status bits become set */
-    INTERRUPT_SOURCES_NONE = 0x0000,
-
-    /* Generate interrupt when Seek/Tune Completed status bit becomes set */
-    INTERRUPT_SOURCES_STCIEN = 0x0001,
-
-    /* Generate interrupt when Radio Data System status status bit becomes set */
-    INTERRUPT_SOURCES_RDSIEN = 0x0004,
-
-    /* Generate interrupt when Received Signal Quality status bit becomes set */
-    INTERRUPT_SOURCES_RSQIEN = 0x0008,
-
-    /* Generate interrupt when Error status bit bit becomes set */
-    INTERRUPT_SOURCES_ERRIEN = 0x0040,
-
-    /* Generate interrupt when Clear-to-Send status bit becomes set (see also PowerUp command) */
-    INTERRUPT_SOURCES_CTSIEN = 0x0080,
-
-    /* Helper value to enable all interrupts */
-    INTERRUPT_SOURCES_ALLIEN = 0x00CD,
-
-    /* Generate interrupt even if Seek/Tune Completed status bit was already set */
-    INTERRUPT_SOURCES_STCREP = 0x0100,
-
-    /* Generate interrupt even if Radio Data System status bit was already set  */
-    INTERRUPT_SOURCES_RDSREP = 0x0400,
-
-    /* Generate interrupt even if Received Signal Quality status bit was already set  */
-    INTERRUPT_SOURCES_RSQREP = 0x0800,
-
-    /* Helper value to enable all repeating interrupts */
-    INTERRUPT_SOURCES_ALLREP = 0x0D00,
-
-    /* Helper value to enable all interrupts, repeating ones included */
-    INTERRUPT_SOURCES_ALL = INTERRUPT_SOURCES_ALLIEN | INTERRUPT_SOURCES_ALLREP,
-} InterruptSources_t;
 
 typedef enum _CommandIdentifiers_t : uint8_t
 {
@@ -396,9 +234,13 @@ typedef enum _PropertyIdentifiers_t : uint16_t
     PROP_ID_RX_HARD_MUTE = 0x4001,
 } PropertyIdentifiers_t;
 
-/* Exported functions prototypes ---------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
 
-/* Private defines -----------------------------------------------------------*/
+/* Exported macros -----------------------------------------------------------*/
+
+/* Exported variables --------------------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
 
 #ifdef __cplusplus
 }

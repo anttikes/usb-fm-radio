@@ -44,6 +44,7 @@ target_sources(firmware PRIVATE
     # Add user sources here
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio/device.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio/commands.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/properties.c
 )
 
 # Add include paths

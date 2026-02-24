@@ -14,7 +14,7 @@
  ******************************************************************************
  */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
+/* Header guard --------------------------------------------------------------*/
 #ifndef __DEVICE_H__
 #define __DEVICE_H__
 
@@ -87,8 +87,8 @@ typedef struct _Command_t
     /* Number of arguments used */
     uint8_t argLength;
 
-    /* Response buffer; maximum of 15 */
-    uint8_t response[15];
+    /* Response buffer; maximum of 16 */
+    uint8_t response[16];
 
     /* Number of expected response bytes */
     uint8_t responseLength;
@@ -140,14 +140,14 @@ typedef struct _RadioDevice_t
 #define SI4705_VOLUME_MAX_SETTING 63
 #define SI4705_VOLUME_MIN_SETTING 0
 
-/* Exported macro ------------------------------------------------------------*/
+/* Exported macros -----------------------------------------------------------*/
 
 /* Exported variables --------------------------------------------------------*/
 extern RadioDevice_t radioDevice;
 
 /* Exported functions --------------------------------------------------------*/
-bool EnqueueCommand(RadioDevice_t *device, Command_t *command);
-bool ProcessCommand(RadioDevice_t *device);
+extern bool EnqueueCommand(RadioDevice_t *device, Command_t *command);
+extern bool ProcessCommand(RadioDevice_t *device);
 
 #ifdef __cplusplus
 }

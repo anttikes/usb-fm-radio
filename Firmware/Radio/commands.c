@@ -13,6 +13,7 @@
  *
  ******************************************************************************
  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "commands.h"
 #include "common.h"
@@ -22,17 +23,19 @@
 #include "stm32f0xx_hal_i2c.h"
 #include <stdint.h>
 
-/* Private typedef -----------------------------------------------------------*/
+/* Global variables ----------------------------------------------------------*/
 
-/* Private define ------------------------------------------------------------*/
+/* Private types -------------------------------------------------------------*/
 
-/* Private macro -------------------------------------------------------------*/
+/* Private constants ---------------------------------------------------------*/
+
+/* Private macros ------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
 
-/* Private user code ---------------------------------------------------------*/
+/* Exported functions --------------------------------------------------------*/
 
 /**
  * @brief  Enqueues the "Power up" command
@@ -51,22 +54,17 @@ bool PowerUp(RadioDevice_t *device, CMD_POWER_UP_ARGS_1 arg1, CMD_POWER_UP_ARGS_
     powerUp.args.bytes[1] = arg1;
     powerUp.args.bytes[2] = arg2;
     powerUp.argLength = 3;
-    powerUp.responseLength = 0;
+
+    if (arg2 & POWER_UP_ARGS_1_FUNCTION_QUERY_LIBRARY_ID)
+    {
+        powerUp.responseLength = 8;
+    }
+    else
+    {
+        powerUp.responseLength = 0;
+    }
 
     return EnqueueCommand(device, &powerUp);
-}
-
-/**
- * @brief  Enqueues the "SET PROPERTY" command with "GPO_IEN" property identifier to configure the interrupt sources for
- * status bits.
- * @param  device Pointer to the radio device structure
- * @param  sources Additional interrupt sources to enable
- *
- * @retval True if the command was enqueued; false otherwise
- */
-bool SetInterruptSources(RadioDevice_t *device, InterruptSources_t sources)
-{
-    return SetProperty(device, PROP_ID_GPO_IEN, sources);
 }
 
 /**
@@ -351,3 +349,7 @@ bool GPIOSet(RadioDevice_t *device, CMD_GPIO_SET_ARGS args)
 
     return EnqueueCommand(device, &gpioSet);
 }
+
+/* External callbacks --------------------------------------------------------*/
+
+/* Private functions ---------------------------------------------------------*/

@@ -25,7 +25,8 @@
 #include "tim.h"
 #include "tusb.h"
 
-/* Exported variables --------------------------------------------------------*/
+/* Global variables ----------------------------------------------------------*/
+
 // clang-format off
 RadioDevice_t radioDevice = {
     .deviceAddress = SI4705_I2C_ADDRESS,
@@ -42,11 +43,11 @@ RadioDevice_t radioDevice = {
 };
 // clang-format on
 
-/* Private typedef -----------------------------------------------------------*/
+/* Private types -------------------------------------------------------------*/
 
-/* Private define ------------------------------------------------------------*/
+/* Private constants ---------------------------------------------------------*/
 
-/* Private macro -------------------------------------------------------------*/
+/* Private macros ------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
 
@@ -79,7 +80,7 @@ bool ProcessCommand(RadioDevice_t *device)
 
     if (currentCommand->state == COMMANDSTATE_READY)
     {
-        if (currentCommand->args.opCode == CMD_ID_POWER_UP)
+        if (currentCommand->args.opCode == CMD_ID_POWER_UP && currentCommand->responseLength == 0)
         {
             device->currentState = RADIOSTATE_POWERUP;
         }

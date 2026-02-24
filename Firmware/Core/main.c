@@ -22,6 +22,7 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "i2s.h"
+#include "properties.h"
 #include "tim.h"
 #include "tusb.h"
 
@@ -89,14 +90,13 @@ int main(void)
     }
 
     // Enable the other interrupt sources
-    if (!SetInterruptSources(&radioDevice,
-                             INTERRUPT_SOURCES_CTSIEN | INTERRUPT_SOURCES_STCIEN | INTERRUPT_SOURCES_STCREP))
+    if (!SetInterruptSources(&radioDevice, GPO_IEN_ARGS_CTSIEN | GPO_IEN_ARGS_STCIEN | GPO_IEN_ARGS_STCREP))
     {
         Error_Handler();
     }
 
     // Initialize volume from the radio state
-    if (!SetProperty(&radioDevice, PROP_ID_RX_VOLUME, radioDevice.currentVolume))
+    if (!SetVolume(&radioDevice, radioDevice.currentVolume))
     {
         Error_Handler();
     }
@@ -112,8 +112,8 @@ int main(void)
         Error_Handler();
     }
 
-    // Set FM de-emphasis to 50us
-    if (!SetProperty(&radioDevice, PROP_ID_FM_DEEMPHASIS, 0x0001))
+    // Set FM de-emphasis to match Europe
+    if (!SetFMDeemphasis(&radioDevice, FM_DEEMPHASIS_ARGS_50_MICROSECONDS))
     {
         Error_Handler();
     }
