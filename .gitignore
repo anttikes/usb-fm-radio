@@ -1,0 +1,2 @@
+# Ignore the artifact directory for cross-project dependencies
+install/

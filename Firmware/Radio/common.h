@@ -82,57 +82,6 @@ typedef struct _GetTuneStatusResponse_t
     uint8_t antennaTuningCapacitor;
 } GetTuneStatusResponse_t;
 
-typedef struct _RSQStatusResponse_t
-{
-    /* When set, the blend goes above or below the blend threshold settings */
-    bool blendInt;
-
-    /* When set, the detected multipath value has exceeded above the high threshold setting */
-    bool multHInt;
-
-    /* When set, the detected multipath value has fallen below the low threshold setting */
-    bool multLInt;
-
-    /* When set, the Signal to Noise ratio has exceeded the high threshold setting */
-    bool snrHInt;
-
-    /* When set, the Signal to Noise ratio has fallen below the low threshold setting  */
-    bool snrLInt;
-
-    /* When set, the Received Signal Strength Indicator has exceeded the high threshold setting */
-    bool rssiHInt;
-
-    /* When set, the Received Signal Strength Indicator has fallen below the low threshold setting */
-    bool rssiLInt;
-
-    /* When set, soft mute is engaged */
-    bool softMute;
-
-    /* Set if the AFC rails */
-    bool AFCRail;
-
-    /* When set, the current channel is considered valid according to the seek/tune properties */
-    bool validChannel;
-
-    /* Indicates stereo pilot presence */
-    bool pilot;
-
-    /* Indicates the amount of stereo blend, in % (100 = full stereo, 0 = full mono) */
-    uint8_t stereoBlend;
-
-    /* Contains the current Received Signal Strength Indicator (0-127 dbµV */
-    uint8_t rssi;
-
-    /* Contains the current Signal to Noise Ratio (0-127 dB) */
-    uint8_t snr;
-
-    /* Contains the current multipath metric (0 = no multipath, 100 = full multipath) */
-    uint8_t multipath;
-
-    /* Contains the signed frequency offset, in kHz */
-    int8_t frequencyOffset;
-} RSQStatusResponse_t;
-
 typedef enum _StatusFlags_t : uint8_t
 {
     /* No status bits are set */

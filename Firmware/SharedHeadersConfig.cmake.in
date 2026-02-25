@@ -1,0 +1,8 @@
+# This is an input file from which a CMake configuration package is built
+
+@PACKAGE_INIT@
+
+# Invoke the auto-generated targets file that resides in the same directory
+include("${CMAKE_CURRENT_LIST_DIR}/SharedHeadersTarget.cmake")
+
+check_required_components(SharedHeaders)
