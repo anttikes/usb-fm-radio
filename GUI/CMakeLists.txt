@@ -5,7 +5,7 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Set the project name
-project(usb-fm-radio)
+project(GUI)
 
 # Enable CMake support for C++ language
 enable_language(CXX)
