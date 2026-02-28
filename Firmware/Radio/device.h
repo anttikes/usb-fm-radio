@@ -37,19 +37,19 @@ typedef enum _CommandState_t : uint8_t
     /* The command is currently being sent */
     COMMANDSTATE_SENDING = 0x01,
 
-    /* Command was sent, and we are waiting for CTS interrupt */
+    /* Command was sent, and is waiting for CTS interrupt */
     COMMANDSTATE_WAITING_FOR_CTS = 0x02,
 
-    /* Command was sent, and we are waiting for STC interrupt */
+    /* Command was sent, and is waiting for STC interrupt */
     COMMANDSTATE_WAITING_FOR_STC = 0x03,
 
-    /* Command is waiting for a response retrieval to be sent */
+    /* Command is waiting for a response retrieval to begin */
     COMMANDSTATE_WAITING_FOR_RESPONSE_RETRIEVAL = 0x04,
 
     /* Receiving a response to a command */
     COMMANDSTATE_RECEIVING_RESPONSE = 0x05,
 
-    /* Response received, waiting for response to be sent via USB */
+    /* Response received, waiting for response to be processed */
     COMMANDSTATE_RESPONSE_RECEIVED = 0x06,
 
     /* The command is complete */
@@ -70,7 +70,7 @@ typedef struct _Command_t
     /* Number of arguments used */
     uint8_t argLength;
 
-    /* Response buffer; maximum of 16 */
+    /* Response buffer; first one is the status byte, and up to 15 other bytes */
     uint8_t response[16];
 
     /* Number of expected response bytes */
@@ -92,6 +92,21 @@ typedef struct _CommandQueue_t
     uint8_t back;
 } CommandQueue_t;
 
+typedef struct _ReportQueue_t
+{
+    /* Array of reports in the queue */
+    Report_t reports[5];
+
+    /* Number of reports in the queue */
+    uint8_t count;
+
+    /* Index of the front of the queue */
+    uint8_t front;
+
+    /* Index of the back of the queue */
+    uint8_t back;
+} ReportQueue_t;
+
 typedef struct _RadioDevice_t
 {
     /* I2C address of the device */
@@ -111,6 +126,9 @@ typedef struct _RadioDevice_t
 
     /* Holds the command queue */
     CommandQueue_t commandQueue;
+
+    /* Holds the report queue */
+    ReportQueue_t reportQueue;
 } RadioDevice_t;
 
 /* Exported constants --------------------------------------------------------*/
@@ -131,6 +149,8 @@ extern RadioDevice_t radioDevice;
 /* Exported functions --------------------------------------------------------*/
 extern bool EnqueueCommand(RadioDevice_t *device, Command_t *command);
 extern bool ProcessCommand(RadioDevice_t *device);
+extern bool EnqueueReport(RadioDevice_t *device, Report_t *report);
+extern bool ProcessReport(RadioDevice_t *device);
 
 #ifdef __cplusplus
 }

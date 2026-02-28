@@ -18,23 +18,39 @@
 #ifndef __REPORTS_H__
 #define __REPORTS_H__
 
-#ifdef __cplusplus
-extern "C"
-{
+/* Includes ------------------------------------------------------------------*/
+#if defined __cplusplus
+#include <QtQml/qqmlregistration.h>
 #endif /* __cplusplus */
 
-/* Includes ------------------------------------------------------------------*/
 #include <stdbool.h>
 #include <stdint.h>
 
+/* The HID report size includes the identifier and the struct bytes */
+#define MAX_REPORT_SIZE 17
+#define MAX_STRUCT_SIZE MAX_REPORT_SIZE - 1
+
 /* Exported types */
-typedef enum _REPORT_IDENTIFIERS : uint8_t
+typedef enum _ReportIdentifier_t : uint8_t
 {
-    REPORT_IDENTIFIER_RADIO_STATUS = 0x01,
-    REPORT_IDENTIFIER_RSQ_STATUS = 0x02,
-    REPORT_IDENTIFIER_TUNE_FREQ = 0x03,
-    REPORT_IDENTIFIER_SEEK_START = 0x04,
-} REPORT_IDENTIFIERS;
+    /* Indicates that the command queue was reset due to overflow */
+    REPORT_IDENTIFIER_QUEUE_RESET = 0x01,
+
+    /* Indentifies a radio status report */
+    REPORT_IDENTIFIER_RADIO_STATUS = 0x02,
+
+    /* Identifies an interrupt status report */
+    REPORT_IDENTIFIER_INTERRUPT_STATUS = 0x03,
+
+    /* Identifies an RSQ status report */
+    REPORT_IDENTIFIER_RSQ_STATUS = 0x04,
+
+    /* Indicates a request to tune to a new frequency */
+    REPORT_IDENTIFIER_TUNE_FREQ = 0x20,
+
+    /* Indicates a request to begin seeking the next station */
+    REPORT_IDENTIFIER_SEEK_START = 0x21,
+} ReportIdentifier_t;
 
 typedef enum _RadioState_t : uint8_t
 {
@@ -54,12 +70,21 @@ typedef enum _RadioState_t : uint8_t
     RADIOSTATE_DIGITAL_OUTPUT_ENABLED = 0x04
 } RadioState_t;
 
-typedef struct _RadioStatus_t
+typedef struct _RadioStatusResponse_t
 {
+#if defined __cplusplus
+    Q_GADGET
+
+    Q_PROPERTY(RadioState_t currentState MEMBER currentState)
+    Q_PROPERTY(uint16_t currentFrequency MEMBER currentFrequency)
+    Q_PROPERTY(uint8_t currentVolume MEMBER currentVolume)
+    Q_PROPERTY(bool isMuted MEMBER isMuted)
+#endif /* __cplusplus */
+
     /* Holds the current state of the device */
     RadioState_t currentState;
 
-    /* Holds the current frequency of the device, when tuned to a station */
+    /* Holds the current frequency of the device when tuned to a station, in 10 kHz increments */
     uint16_t currentFrequency;
 
     /* Holds the current volume level of the device */
@@ -67,10 +92,63 @@ typedef struct _RadioStatus_t
 
     /* Holds the mute status of the device */
     bool isMuted;
-} RadioStatus_t;
+} RadioStatusResponse_t;
 
-typedef struct _RSQStatus_t
+static_assert(sizeof(RadioStatusResponse_t) <= MAX_STRUCT_SIZE);
+
+typedef struct _GetIntStatusResponse_t
 {
+#if defined __cplusplus
+    Q_GADGET
+
+    Q_PROPERTY(bool clearToSend MEMBER clearToSend)
+    Q_PROPERTY(bool error MEMBER error)
+    Q_PROPERTY(bool rsqInterrupt MEMBER rsqInterrupt)
+    Q_PROPERTY(bool rdsInterrupt MEMBER rdsInterrupt)
+    Q_PROPERTY(bool seekTuneCompletedInterrupt MEMBER seekTuneCompletedInterrupt)
+#endif /* __cplusplus */
+
+    /* When set, the device is ready to receive the next command */
+    bool clearToSend;
+
+    /* When set, the device has encountered an error */
+    bool error;
+
+    /* When set, a Received Signal Quality interrupt has been triggered */
+    bool rsqInterrupt;
+
+    /* When set, an Radio Data System interrupt has been triggered */
+    bool rdsInterrupt;
+
+    /* When set, the Seek/Tune Complete interrupt has been triggered */
+    bool seekTuneCompletedInterrupt;
+} GetIntStatusResponse_t;
+
+static_assert(sizeof(GetIntStatusResponse_t) <= MAX_STRUCT_SIZE);
+
+typedef struct _RSQStatusResponse_t
+{
+#if defined __cplusplus
+    Q_GADGET
+
+    Q_PROPERTY(bool blendInt MEMBER blendInt)
+    Q_PROPERTY(bool multHInt MEMBER multHInt)
+    Q_PROPERTY(bool multLInt MEMBER multLInt)
+    Q_PROPERTY(bool snrHInt MEMBER snrHInt)
+    Q_PROPERTY(bool snrLInt MEMBER snrLInt)
+    Q_PROPERTY(bool rssiHInt MEMBER rssiHInt)
+    Q_PROPERTY(bool rssiLInt MEMBER rssiLInt)
+    Q_PROPERTY(bool softMute MEMBER softMute)
+    Q_PROPERTY(bool AFCRail MEMBER AFCRail)
+    Q_PROPERTY(bool validChannel MEMBER validChannel)
+    Q_PROPERTY(bool pilot MEMBER pilot)
+    Q_PROPERTY(uint8_t stereoBlend MEMBER stereoBlend)
+    Q_PROPERTY(uint8_t rssi MEMBER rssi)
+    Q_PROPERTY(uint8_t snr MEMBER snr)
+    Q_PROPERTY(uint8_t multipath MEMBER multipath)
+    Q_PROPERTY(int8_t frequencyOffset MEMBER frequencyOffset)
+#endif /* __cplusplus */
+
     /* When set, the blend goes above or below the blend threshold settings */
     bool blendInt;
 
@@ -83,7 +161,7 @@ typedef struct _RSQStatus_t
     /* When set, the Signal to Noise ratio has exceeded the high threshold setting */
     bool snrHInt;
 
-    /* When set, the Signal to Noise ratio has fallen below the low threshold setting  */
+    /* When set, the Signal to Noise ratio has fallen below the low threshold setting */
     bool snrLInt;
 
     /* When set, the Received Signal Strength Indicator has exceeded the high threshold setting */
@@ -107,7 +185,7 @@ typedef struct _RSQStatus_t
     /* Indicates the amount of stereo blend, in % (100 = full stereo, 0 = full mono) */
     uint8_t stereoBlend;
 
-    /* Contains the current Received Signal Strength Indicator (0-127 dbµV */
+    /* Contains the current Received Signal Strength Indicator (0-127 dbµV) */
     uint8_t rssi;
 
     /* Contains the current Signal to Noise Ratio (0-127 dB) */
@@ -118,13 +196,17 @@ typedef struct _RSQStatus_t
 
     /* Contains the signed frequency offset, in kHz */
     int8_t frequencyOffset;
-} RSQStatus_t;
+} RSQStatusResponse_t;
+
+static_assert(sizeof(RSQStatusResponse_t) <= MAX_STRUCT_SIZE);
 
 typedef struct _TuneFreqRequest_t
 {
     /* Frequency to which the radio should tune itself, in 10 kHz increments */
     uint16_t frequency;
 } TuneFreqRequest_t;
+
+static_assert(sizeof(TuneFreqRequest_t) <= MAX_STRUCT_SIZE);
 
 typedef struct _SeekStartRequest_t
 {
@@ -135,6 +217,26 @@ typedef struct _SeekStartRequest_t
     bool seekUp;
 } SeekStartRequest_t;
 
+static_assert(sizeof(SeekStartRequest_t) <= MAX_STRUCT_SIZE);
+
+typedef struct _Report_t
+{
+    /* Identifier of the report */
+    ReportIdentifier_t identifier;
+
+    /* Report bytes */
+    union ReportBytes {
+        RadioStatusResponse_t radioStatus;
+        GetIntStatusResponse_t interruptStatus;
+        RSQStatusResponse_t rsqStatus;
+        TuneFreqRequest_t tuneFreqRequest;
+        SeekStartRequest_t seekStartRequest;
+
+        // This ensures any "sizeof(bytes)" will return the proper size
+        uint8_t raw[MAX_STRUCT_SIZE];
+    } bytes;
+} Report_t;
+
 /* Exported constants --------------------------------------------------------*/
 
 /* Exported macros -----------------------------------------------------------*/
@@ -142,9 +244,5 @@ typedef struct _SeekStartRequest_t
 /* Exported variables --------------------------------------------------------*/
 
 /* Exported functions --------------------------------------------------------*/
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* __REPORTS_H__ */

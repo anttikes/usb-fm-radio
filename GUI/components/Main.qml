@@ -73,7 +73,7 @@ Window {
                     target: DeviceManager
 
                     function onRadioStateReportReceived(report) {
-                        tunerDial.currentFrequency = report.currentFrequency;
+                        tunerDial.currentFrequency = report.currentFrequency / 100;
                     }
                 }
             }
@@ -99,7 +99,7 @@ Window {
                         target: DeviceManager
 
                         function onRadioStateReportReceived(report) {
-                            digitalDisplay.currentFrequency = report.currentFrequency;
+                            digitalDisplay.currentFrequency = report.currentFrequency / 100;
                         }
                     }
                 }
@@ -137,8 +137,8 @@ Window {
                         target: DeviceManager
 
                         function onRsqStatusReportReceived(report) {
-                            signalIndicators.receivedSignalStrength = report.receivedSignalStrength;
-                            signalIndicators.signalToNoiseRatio = report.signalToNoiseRatio;
+                            signalIndicators.receivedSignalStrength = report.rssi;
+                            signalIndicators.signalToNoiseRatio = report.snr;
                         }
                     }
                 }

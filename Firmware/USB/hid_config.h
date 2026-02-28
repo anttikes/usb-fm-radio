@@ -16,15 +16,14 @@
 #ifndef __HID_CONFIG_H__
 #define __HID_CONFIG_H__
 
+#include "reports.h"
+
 //--------------------------------------------------------------------
 // HID CLASS DRIVER CONFIGURATION
 //--------------------------------------------------------------------
 
-// HID buffer size
-//  - One byte for report ID
-//  - One byte for report size
-//  - 16 bytes for data
-#define CFG_TUD_HID_EP_BUFSIZE 18
+// HID buffer size; link to the report size defined in the shared header
+#define CFG_TUD_HID_EP_BUFSIZE MAX_REPORT_SIZE
 
 // Interface numbers
 #define ITF_NUM_HID 0x02

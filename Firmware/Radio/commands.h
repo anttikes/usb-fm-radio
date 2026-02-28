@@ -162,6 +162,9 @@ extern bool RSQStatus(RadioDevice_t *device, CMD_FM_RSQ_STATUS_ARGS args);
 extern bool GPIOCtl(RadioDevice_t *device, CMD_GPIO_CTL_ARGS args);
 extern bool GPIOSet(RadioDevice_t *device, CMD_GPIO_SET_ARGS args);
 
+extern bool ProcessIntStatus(RadioDevice_t *device, Command_t *command);
+extern bool ProcessRSQStatus(RadioDevice_t *device, Command_t *command);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

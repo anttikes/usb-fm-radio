@@ -52,26 +52,27 @@ RadioDevice_t radioDevice = {
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
-bool IsQueueEmpty(CommandQueue_t *queue);
-Command_t *PeekQueue(CommandQueue_t *queue);
-Command_t *PopQueue(CommandQueue_t *queue);
+bool IsCommandQueueEmpty(CommandQueue_t *queue);
+Command_t *PeekCommand(CommandQueue_t *queue);
+Command_t *PopCommand(CommandQueue_t *queue);
+Report_t *PopReport(ReportQueue_t *queue);
 
 /* Exported functions --------------------------------------------------------*/
 
 /**
- * @brief  Processes the next command from the queue, if there are any
+ * @brief  Processes the commands in the queue, if there are any
  * @param  device Pointer to the radio device structure
  *
- * @retval True if the queue is empty; false otherwise
+ * @retval True if a command was somehow processed; false otherwise
  */
 bool ProcessCommand(RadioDevice_t *device)
 {
-    if (IsQueueEmpty(&device->commandQueue))
+    if (IsCommandQueueEmpty(&device->commandQueue))
     {
-        return true;
+        return false;
     }
 
-    Command_t *currentCommand = PeekQueue(&device->commandQueue);
+    volatile Command_t *currentCommand = PeekCommand(&device->commandQueue);
 
     if (currentCommand == NULL)
     {
@@ -97,10 +98,10 @@ bool ProcessCommand(RadioDevice_t *device)
 
             HAL_TIM_Base_Start_IT(&htim16);
 
-            // After tuning or seek has completed, set the sample rate to start receiving audio samples through I2S
+            // After tuning or seek has completed, set the sample rate so the chip begins sending audio samples
             SetProperty(&radioDevice, PROP_ID_DIGITAL_OUTPUT_SAMPLE_RATE, CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE);
 
-            // Schedule a GetTuneStatus to update the current frequency reading; this works for both tuning and seek
+            // Schedule a GetTuneStatus to update the current frequency reading
             TuneStatus(device, GET_TUNE_STATUS_ARGS_NONE);
         }
         else if (currentCommand->args.opCode == CMD_ID_FM_TUNE_STATUS)
@@ -144,11 +145,12 @@ bool ProcessCommand(RadioDevice_t *device)
                 {
                     device->isMuted = false;
                 }
-                else
+                else if (value & 0b11)
                 {
-                    // The property value is 0b11 since it shows the state of both channels separately
                     device->isMuted = true;
                 }
+
+                // Per-channel mute status is not supported
             }
 
             // Tuner programming guide outlines that a property
@@ -156,29 +158,32 @@ bool ProcessCommand(RadioDevice_t *device)
             HAL_Delay(10);
         }
 
-        PopQueue(&device->commandQueue);
+        PopCommand(&device->commandQueue);
 
-        currentCommand = PeekQueue(&device->commandQueue);
+        currentCommand = PeekCommand(&device->commandQueue);
 
         if (currentCommand == NULL)
         {
-            return true;
+            return false;
         }
     }
     else if (currentCommand->state == COMMANDSTATE_RESPONSE_RECEIVED)
     {
-        uint8_t report[CFG_TUD_HID_EP_BUFSIZE - 1] = {0};
-
-        report[0] = currentCommand->responseLength;
-
-        for (uint8_t i = 0; i < currentCommand->responseLength; i++)
+        switch (currentCommand->args.opCode)
         {
-            report[i + 1] = currentCommand->response[i];
+        case CMD_ID_GET_INT_STATUS:
+            ProcessIntStatus(device, (Command_t *)currentCommand);
+            break;
+
+        case CMD_ID_FM_RSQ_STATUS:
+            ProcessRSQStatus(device, (Command_t *)currentCommand);
+            break;
+
+        default:
+            break;
         }
 
         currentCommand->state = COMMANDSTATE_READY;
-
-        return tud_hid_report(currentCommand->args.opCode, report, CFG_TUD_HID_EP_BUFSIZE - 1);
     }
     else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_RESPONSE_RETRIEVAL)
     {
@@ -197,6 +202,24 @@ bool ProcessCommand(RadioDevice_t *device)
 
     // Current command is executing; nothing to do at this time
     return true;
+}
+
+/**
+ * @brief  Processes the next report from the queue, if there are any
+ * @param  device Pointer to the radio device structure
+ *
+ * @retval True if a report was processed; false otherwise
+ */
+bool ProcessReport(RadioDevice_t *device)
+{
+    Report_t *currentReport = PopReport(&device->reportQueue);
+
+    if (currentReport == NULL)
+    {
+        return false;
+    }
+
+    return tud_hid_report(currentReport->identifier, currentReport->bytes.raw, MAX_STRUCT_SIZE);
 }
 
 /**
@@ -229,6 +252,36 @@ bool EnqueueCommand(RadioDevice_t *device, Command_t *command)
     return true;
 }
 
+/**
+ * @brief  Enqueues the given report into the queue
+ * @param  device Pointer to the radio device structure
+ * @param  command Pointer to the report
+ *
+ * @retval True if the report was enqueued; false otherwise
+ */
+bool EnqueueReport(RadioDevice_t *device, Report_t *report)
+{
+    if (device == NULL || report == NULL)
+    {
+        return false;
+    }
+
+    volatile ReportQueue_t *queue = &device->reportQueue;
+
+    const uint8_t capacity = (uint8_t)(sizeof(queue->reports) / sizeof(queue->reports[0]));
+    if (queue->count >= capacity)
+    {
+        /* Queue full */
+        return false;
+    }
+
+    queue->reports[queue->back] = *report;
+    queue->back = (uint8_t)((queue->back + 1) % capacity);
+    queue->count++;
+
+    return true;
+}
+
 /* External callbacks --------------------------------------------------------*/
 
 /**
@@ -240,7 +293,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if (GPIO_Pin == RADIO_NIRQ_Pin)
     {
-        Command_t *currentCommand = PeekQueue(&radioDevice.commandQueue);
+        Command_t *currentCommand = PeekCommand(&radioDevice.commandQueue);
 
         if (currentCommand == NULL)
         {
@@ -276,7 +329,7 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
     if (hi2c->Instance == hi2c1.Instance)
     {
-        Command_t *currentCommand = PeekQueue(&radioDevice.commandQueue);
+        Command_t *currentCommand = PeekCommand(&radioDevice.commandQueue);
 
         if (currentCommand->state == COMMANDSTATE_SENDING)
         {
@@ -305,7 +358,7 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
     if (hi2c->Instance == hi2c1.Instance)
     {
-        Command_t *currentCommand = PeekQueue(&radioDevice.commandQueue);
+        Command_t *currentCommand = PeekCommand(&radioDevice.commandQueue);
 
         if (currentCommand->state == COMMANDSTATE_RECEIVING_RESPONSE)
         {
@@ -341,32 +394,27 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
                 radioDevice.commandQueue.back = 0;
                 radioDevice.commandQueue.count = 0;
 
-                Command_t fault = {0};
+                Report_t fault = {0};
 
-                fault.state = COMMANDSTATE_RESPONSE_RECEIVED;
-                fault.args.bytes[0] = 0xAA; // TODO: This isn't a real command identifer
+                fault.identifier = REPORT_IDENTIFIER_QUEUE_RESET;
 
-                EnqueueCommand(&radioDevice, &fault);
+                EnqueueReport(&radioDevice, &fault);
             }
         }
     }
     else if (htim->Instance == TIM17)
     {
         // Timer 17 is used to periodically report device state
-        Command_t statusReport = {0};
+        Report_t report = {0};
 
-        statusReport.state = COMMANDSTATE_RESPONSE_RECEIVED;
-        statusReport.args.bytes[0] = 0xBB; // TODO: This isn't a real command identifier
+        report.identifier = REPORT_IDENTIFIER_RADIO_STATUS;
 
-        statusReport.response[0] = (uint8_t)radioDevice.currentState;
-        statusReport.response[1] = (uint8_t)((radioDevice.currentFrequency & 0xFF00) >> 8);
-        statusReport.response[2] = (uint8_t)((radioDevice.currentFrequency & 0x00FF) >> 0);
-        statusReport.response[3] = (uint8_t)((radioDevice.currentVolume));
-        statusReport.response[4] = (uint8_t)((radioDevice.isMuted));
+        report.bytes.radioStatus.currentState = radioDevice.currentState;
+        report.bytes.radioStatus.currentFrequency = radioDevice.currentFrequency;
+        report.bytes.radioStatus.currentVolume = radioDevice.currentVolume;
+        report.bytes.radioStatus.isMuted = radioDevice.isMuted;
 
-        statusReport.responseLength = 5;
-
-        EnqueueCommand(&radioDevice, &statusReport);
+        EnqueueReport(&radioDevice, &report);
     }
 }
 
@@ -378,7 +426,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
  *
  * @retval True if the queue is empty; false otherwise
  */
-bool IsQueueEmpty(CommandQueue_t *queue)
+bool IsCommandQueueEmpty(CommandQueue_t *queue)
+{
+    if (queue == NULL)
+    {
+        return true;
+    }
+
+    return (queue->count == 0);
+}
+
+/**
+ * @brief  Determines if the queue is empty
+ * @param  queue Pointer to the queue
+ *
+ * @retval True if the queue is empty; false otherwise
+ */
+bool IsReportQueueEmpty(ReportQueue_t *queue)
 {
     if (queue == NULL)
     {
@@ -394,7 +458,7 @@ bool IsQueueEmpty(CommandQueue_t *queue)
  *
  * @retval Pointer to the first command in the queue or NULL if the queue is empty
  */
-Command_t *PeekQueue(CommandQueue_t *queue)
+Command_t *PeekCommand(CommandQueue_t *queue)
 {
     if (queue == NULL || queue->count == 0)
     {
@@ -410,17 +474,38 @@ Command_t *PeekQueue(CommandQueue_t *queue)
  *
  * @retval Pointer to the first command in the queue or NULL if the queue is empty
  */
-Command_t *PopQueue(CommandQueue_t *queue)
+Command_t *PopCommand(CommandQueue_t *queue)
 {
     if (queue == NULL || queue->count == 0)
     {
         return NULL;
     }
 
-    Command_t *cmd = &queue->commands[queue->front];
+    Command_t *command = &queue->commands[queue->front];
     const uint8_t capacity = (uint8_t)(sizeof(queue->commands) / sizeof(queue->commands[0]));
     queue->front = (uint8_t)((queue->front + 1) % capacity);
     queue->count--;
 
-    return cmd;
+    return command;
+}
+
+/**
+ * @brief  Pops the first report from the queue, removing it
+ * @param  queue Pointer to the queue
+ *
+ * @retval Pointer to the first report in the queue or NULL if the queue is empty
+ */
+Report_t *PopReport(ReportQueue_t *queue)
+{
+    if (queue == NULL || queue->count == 0)
+    {
+        return NULL;
+    }
+
+    Report_t *report = &queue->reports[queue->front];
+    const uint8_t capacity = (uint8_t)(sizeof(queue->reports) / sizeof(queue->reports[0]));
+    queue->front = (uint8_t)((queue->front + 1) % capacity);
+    queue->count--;
+
+    return report;
 }

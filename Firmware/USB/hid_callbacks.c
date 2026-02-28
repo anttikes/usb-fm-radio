@@ -50,8 +50,9 @@ uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_t
 }
 
 /**
- * @brief  Invoked when received the SET REPORT request is received or when OUT data has been received on the
- endpoint
+ * @brief  Invoked when received the SET REPORT request is received or when
+ *         OUT data has been received on the endpoint
+ *
  * @remark For OUT data, report ID is zero and type equals OUTPUT
  */
 void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t const *buffer,

@@ -17,8 +17,6 @@ class ReportWorker : public QObject, public QRunnable
     ~ReportWorker();
 
     void run() override;
-    void processRadioStateReport(unsigned char buf[32]);
-    void processRSQStatusReport(unsigned char buf[32]);
     void stop();
 
     inline bool isStopped() const
@@ -30,8 +28,8 @@ class ReportWorker : public QObject, public QRunnable
     void pollReports();
 
   signals:
-    void radioStateReportReceived(RadioStateReport report);
-    void rsqStatusReportReceived(RSQStatusReport report);
+    void radioStateReportReceived(RadioStatusResponse_t report);
+    void rsqStatusReportReceived(RSQStatusResponse_t report);
 
   private:
     bool m_shouldStop;

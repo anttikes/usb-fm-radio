@@ -25,10 +25,38 @@ enable_language(CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
 # Search for packages
-find_package(Qt6 6.8 REQUIRED COMPONENTS Quick QuickControls2)
+find_package(Qt6 6.10 REQUIRED COMPONENTS Quick QuickControls2)
+
+# Search for the shared headers; we don't want to hard-code target names we
+# determine what gets added when the import is done
+get_directory_property(_targets_pre IMPORTED_TARGETS)
+
+set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../install)
+find_package(SharedHeaders QUIET)
+
+if(NOT SharedHeaders_FOUND)
+    message(FATAL_ERROR "Shared headers were not found; did you build the firmware project?")
+endif()
+
+get_directory_property(_targets_post IMPORTED_TARGETS)
+
+# An intersection of the two sets identifies the new targets
+set(SHARED_HEADERS_FILES "")
+foreach(_target_name IN LISTS _targets_post)
+    if(NOT _target_name IN_LIST _targets_pre)        
+        # For each target, obtain header set names
+        get_target_property(_all_set_names ${_target_name} INTERFACE_HEADER_SETS)
+
+        foreach(_set_name IN LISTS _all_set_names)
+            # For each file set, extract the files and append to list
+            get_target_property(_files_in_set ${_target_name} HEADER_SET_${_set_name})
+            list(APPEND SHARED_HEADERS_FILES ${_files_in_set})
+        endforeach()        
+    endif()
+endforeach()
 
 # Setup a Qt project
-qt_standard_project_setup(REQUIRES 6.8)
+qt_standard_project_setup(REQUIRES 6.10)
 
 # Configure the executable and its source files
 qt_add_executable(USBRadio
@@ -37,13 +65,14 @@ qt_add_executable(USBRadio
     "src/DeviceManager.cpp"
     "src/DeviceWorker.cpp"
     "src/ReportWorker.cpp"
-    "src/Reports.h" # This isn't really a source file, but uses the MOC system so needs to be listed
+    ${SHARED_HEADERS_FILES} # We need the Qt's meta-object compiler to process the shared header files since they contain Qt-specific macros
 )
 
 # Configure include paths so auto-generated code can find the headers
 target_include_directories(USBRadio
-    PUBLIC
+    PRIVATE
     "src"
+    $<TARGET_PROPERTY:shared-headers,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
 # Initialize the QML module target
@@ -79,5 +108,8 @@ endif()
 
 # Link the binary and the libraries
 target_link_libraries(USBRadio
-    PRIVATE Qt6::Quick Qt6::QuickControls2 hidapi::hidapi
+    PRIVATE 
+        Qt6::Quick 
+        Qt6::QuickControls2 
+        hidapi::hidapi
 )

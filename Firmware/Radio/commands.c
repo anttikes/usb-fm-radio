@@ -183,13 +183,30 @@ bool GetIntStatus(RadioDevice_t *device)
     getIntStatus.responseLength = 1;
 
     return EnqueueCommand(device, &getIntStatus);
+}
 
-    // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
-    // HAL_MAX_DELAY);
+/**
+ * @brief  Processes the result of "Get Int Status" command and generates a report
+ * @param  device Pointer to the radio device structure
+ * @param  command Pointer to the command
+ *
+ * @retval The corresponding report structure
+ */
+bool ProcessIntStatus(RadioDevice_t *device, Command_t *command)
+{
+    Report_t report = {0};
 
-    // (*pValue) = rx_buffer[0];
+    report.identifier = REPORT_IDENTIFIER_INTERRUPT_STATUS;
 
-    // return true;
+    report.bytes.interruptStatus.clearToSend = command->response[0] & 0x80;
+    report.bytes.interruptStatus.error = command->response[0] & 0x40;
+
+    report.bytes.interruptStatus.rsqInterrupt = command->response[0] & 0x08;
+    report.bytes.interruptStatus.rdsInterrupt = command->response[0] & 0x04;
+
+    report.bytes.interruptStatus.seekTuneCompletedInterrupt = command->response[0] & 0x01;
+
+    return EnqueueReport(device, &report);
 }
 
 /**
@@ -285,31 +302,42 @@ bool RSQStatus(RadioDevice_t *device, CMD_FM_RSQ_STATUS_ARGS args)
     rsqStatus.responseLength = 8;
 
     return EnqueueCommand(device, &rsqStatus);
+}
 
-    // status = HAL_I2C_Master_Receive(&hi2c1, pRadioDevice->deviceAddress, rx_buffer, sizeof(rx_buffer),
-    // HAL_MAX_DELAY);
+/**
+ * @brief  Enqueues the result of "FM RSQ Status" command as a new report
+ * @param  device Pointer to the radio device structure
+ * @param  command Pointer to the command
+ *
+ * @retval True if the report was enqueued; false otherwise
+ */
+bool ProcessRSQStatus(RadioDevice_t *device, Command_t *command)
+{
+    Report_t report = {0};
 
-    // pResponse->blendInt = rx_buffer[1] & 0x80;
-    // pResponse->multHInt = rx_buffer[1] & 0x20;
-    // pResponse->multLInt = rx_buffer[1] & 0x10;
-    // pResponse->snrHInt = rx_buffer[1] & 0x08;
-    // pResponse->snrLInt = rx_buffer[1] & 0x04;
-    // pResponse->rssiHInt = rx_buffer[1] & 0x02;
-    // pResponse->rssiLInt = rx_buffer[1] & 0x01;
+    report.identifier = REPORT_IDENTIFIER_RSQ_STATUS;
 
-    // pResponse->softMute = rx_buffer[2] & 0x08;
-    // pResponse->AFCRail = rx_buffer[2] & 0x02;
-    // pResponse->validChannel = rx_buffer[2] & 0x01;
+    report.bytes.rsqStatus.blendInt = command->response[1] & 0x80;
+    report.bytes.rsqStatus.multHInt = command->response[1] & 0x20;
+    report.bytes.rsqStatus.multLInt = command->response[1] & 0x10;
+    report.bytes.rsqStatus.snrHInt = command->response[1] & 0x08;
+    report.bytes.rsqStatus.snrLInt = command->response[1] & 0x04;
+    report.bytes.rsqStatus.rssiHInt = command->response[1] & 0x02;
+    report.bytes.rsqStatus.rssiLInt = command->response[1] & 0x01;
 
-    // pResponse->pilot = rx_buffer[3] & 0x80;
-    // pResponse->stereoBlend = (rx_buffer[3] & 0x7F);
+    report.bytes.rsqStatus.softMute = command->response[2] & 0x08;
+    report.bytes.rsqStatus.AFCRail = command->response[2] & 0x02;
+    report.bytes.rsqStatus.validChannel = command->response[2] & 0x01;
 
-    // pResponse->rssi = rx_buffer[4];
-    // pResponse->snr = rx_buffer[5];
-    // pResponse->multipath = rx_buffer[6];
-    // pResponse->frequencyOffset = (int8_t)rx_buffer[7];
+    report.bytes.rsqStatus.pilot = command->response[3] & 0x80;
+    report.bytes.rsqStatus.stereoBlend = command->response[3] & 0x7F;
 
-    // return true;
+    report.bytes.rsqStatus.rssi = command->response[4];
+    report.bytes.rsqStatus.snr = command->response[5];
+    report.bytes.rsqStatus.multipath = command->response[6];
+    report.bytes.rsqStatus.frequencyOffset = (int8_t)command->response[7];
+
+    return EnqueueReport(device, &report);
 }
 
 /**

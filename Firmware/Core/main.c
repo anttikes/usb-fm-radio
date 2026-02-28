@@ -147,6 +147,7 @@ int main(void)
         tud_task();
 
         ProcessCommand(&radioDevice);
+        ProcessReport(&radioDevice);
     }
 }
 
