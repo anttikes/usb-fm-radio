@@ -13,6 +13,8 @@
  *
  ******************************************************************************
  */
+#include "commands.h"
+#include "device.h"
 #include "hid_config.h"
 #include "tusb.h"
 
@@ -63,6 +65,45 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
     (void)report_type;
     (void)buffer;
     (void)bufsize;
+
+    ReportIdentifier_t reportId = (ReportIdentifier_t)buffer[0];
+    volatile bool success = false;
+
+    switch (reportId)
+    {
+    case REPORT_IDENTIFIER_TUNE_FREQ:
+        TuneFreqRequest_t tuneFreqRequest = {0};
+        memcpy(&tuneFreqRequest, &buffer[1], sizeof(TuneFreqRequest_t));
+
+        success = TuneFreq(&radioDevice, FM_TUNE_FREQ_ARGS_NONE, tuneFreqRequest.frequency);
+
+        break;
+
+    case REPORT_IDENTIFIER_SEEK_START:
+        SeekStartRequest_t seekStartRequest = {0};
+        memcpy(&seekStartRequest, &buffer[1], sizeof(SeekStartRequest_t));
+
+        CMD_FM_SEEK_START_ARGS seekStartArgs = SEEK_START_ARGS_NONE;
+
+        if (seekStartRequest.wrap)
+        {
+            seekStartArgs |= SEEK_START_ARGS_WRAP;
+        }
+
+        if (seekStartRequest.seekUp)
+        {
+            seekStartArgs |= SEEK_START_ARGS_UP;
+        }
+
+        success = SeekStart(&radioDevice, seekStartArgs);
+
+        break;
+
+    default:
+        // Unrecognized report ID; ignore
+        success = false;
+        break;
+    }
 
     return;
 }

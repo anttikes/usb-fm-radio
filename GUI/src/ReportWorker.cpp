@@ -22,7 +22,7 @@ void ReportWorker::run()
 
     while (!m_shouldStop)
     {
-        unsigned char buf[MAX_REPORT_SIZE];
+        uint8_t buf[MAX_REPORT_SIZE];
 
         int res = hid_read_timeout(m_selectedDevice, buf, sizeof(buf), 250);
         if (res > 0)

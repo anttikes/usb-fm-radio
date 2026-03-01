@@ -90,6 +90,12 @@ Window {
                     icon.height: 30
 
                     icon.color: hovered ? '#afd8f5' : '#ACD6EE'
+
+                    onClicked: {
+                        console.log("Seek down issued");
+
+                        DeviceManager.beginSeek(false);
+                    }
                 }
 
                 DigitalDisplay {
@@ -113,6 +119,12 @@ Window {
                     icon.height: 30
 
                     icon.color: hovered ? '#afd8f5' : '#ACD6EE'
+
+                    onClicked: {
+                        console.log("Seek up issued");
+
+                        DeviceManager.beginSeek(true);
+                    }
                 }
             }
 

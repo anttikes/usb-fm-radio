@@ -165,7 +165,7 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
     }
     else
     {
-        auto selectedDevice = m_devices[newIndex];
+        Device selectedDevice = m_devices[newIndex];
 
         m_currentDevice = hid_open(selectedDevice.vendorId(),
                                    selectedDevice.productId(),
@@ -195,5 +195,30 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
             // Try to reopen the device after a short delay
             QTimer::singleShot(1000, this, [this, newIndex]() { this->onSelectedDeviceIndexChanged(newIndex); });
         }
+    }
+}
+
+void DeviceManager::beginSeek(bool seekUp)
+{
+    if (m_currentDevice)
+    {
+        uint8_t buf[MAX_REPORT_SIZE] = {0};
+
+        buf[0] = 0x00; // Report ID; not used currently
+        buf[1] = REPORT_IDENTIFIER_SEEK_START;
+        buf[2] = 0x00; // Wrap; not supported yet
+        buf[3] = seekUp ? 0x01 : 0x00;
+
+        int res = hid_write(m_currentDevice, buf, sizeof(buf));
+        if (res < 0)
+        {
+            QString error = QString::fromWCharArray(hid_error(m_currentDevice));
+
+            qDebug() << "[DeviceManager]: Error during HID write" << error;
+        }
+    }
+    else
+    {
+        qDebug() << "[DeviceManager]: No device is currently selected; cannot send seek command.";
     }
 }
