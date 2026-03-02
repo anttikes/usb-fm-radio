@@ -375,8 +375,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if (htim->Instance == TIM16)
     {
         // Timer 16 is used to periodically query RSQ status when tuned to a station
-        if (radioDevice.currentState == RADIOSTATE_TUNED_TO_STATION ||
-            radioDevice.currentState == RADIOSTATE_DIGITAL_OUTPUT_ENABLED)
+        if (radioDevice.currentState != RADIOSTATE_POWERDOWN)
         {
             bool succeeded = RSQStatus(&radioDevice, FM_RSQ_STATUS_ARGS_NONE);
 
