@@ -30,6 +30,7 @@ class ReportWorker : public QObject, public QRunnable
   signals:
     void radioStateReportReceived(RadioStatusResponse_t report);
     void rsqStatusReportReceived(RSQStatusResponse_t report);
+    void disconnectCurrentDevice();
 
   private:
     bool m_shouldStop;

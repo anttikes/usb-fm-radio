@@ -1,5 +1,6 @@
 #include "ReportWorker.h"
 #include <QDebug>
+#include <QThread>
 
 ReportWorker::ReportWorker(hid_device *selectedDevice)
     : QRunnable(), m_selectedDevice(selectedDevice), m_shouldStop(false), m_stopped(false)
@@ -20,13 +21,24 @@ void ReportWorker::run()
 {
     qDebug() << "[ReportWorker] Report worker is starting up...";
 
+    uint8_t errorCount = 0;
+
     while (!m_shouldStop)
     {
+        if (errorCount >= 5)
+        {
+            // If we have errored out, just wait for the loop to end
+            QThread::msleep(250);
+            continue;
+        }
+
         uint8_t buf[MAX_REPORT_SIZE];
 
         int res = hid_read_timeout(m_selectedDevice, buf, sizeof(buf), 250);
         if (res > 0)
         {
+            errorCount = 0;
+
             // buf[0] contains the identifier of the report
             ReportIdentifier_t identifier = (ReportIdentifier_t)buf[0];
 
@@ -54,7 +66,16 @@ void ReportWorker::run()
         {
             QString error = QString::fromWCharArray(hid_error(m_selectedDevice));
 
-            qDebug() << "[DeviceManager]: Error during HID read" << error;
+            qDebug() << "[ReportWorker]: Error during HID read" << error;
+
+            errorCount++;
+        }
+
+        if (errorCount >= 5)
+        {
+            qDebug() << "[ReportWorker]: Too many errors during HID read; signalling DeviceManager to reset.";
+
+            emit disconnectCurrentDevice();
         }
     }
 

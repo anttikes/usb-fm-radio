@@ -39,6 +39,7 @@ class DeviceManager : public QObject
 
   public slots:
     void onDevicesChanged(QList<Device> newDevices);
+    void onDisconnectCurrentDevice();
     void beginSeek(bool seekUp);
 
   private slots:

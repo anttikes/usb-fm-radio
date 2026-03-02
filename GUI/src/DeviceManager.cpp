@@ -141,6 +141,13 @@ void DeviceManager::onDevicesChanged(QList<Device> newDevices)
     }
 }
 
+void DeviceManager::onDisconnectCurrentDevice()
+{
+    qDebug() << "[DeviceManager] Received signal to disconnect the current device due to errors in the report worker.";
+
+    onSelectedDeviceIndexChanged(-1);
+}
+
 void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
 {
     if (newIndex == -1)
@@ -181,6 +188,11 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
                     &ReportWorker::radioStateReportReceived,
                     this,
                     &DeviceManager::radioStateReportReceived);
+
+            connect(m_reportWorker,
+                    &ReportWorker::disconnectCurrentDevice,
+                    this,
+                    &DeviceManager::onDisconnectCurrentDevice);
 
             qDebug() << "[DeviceManager] Starting the report worker";
 
