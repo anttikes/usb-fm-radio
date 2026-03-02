@@ -77,10 +77,12 @@ typedef struct _Command_t
     uint8_t responseLength;
 } Command_t;
 
+#define MAX_COMMAND_QUEUE_CAPACITY 10
+
 typedef struct _CommandQueue_t
 {
     /* Array of commands in the queue */
-    Command_t commands[10];
+    Command_t commands[MAX_COMMAND_QUEUE_CAPACITY];
 
     /* Number of commands in the queue */
     uint8_t count;
@@ -92,10 +94,12 @@ typedef struct _CommandQueue_t
     uint8_t back;
 } CommandQueue_t;
 
+#define MAX_REPORT_QUEUE_CAPACITY 5
+
 typedef struct _ReportQueue_t
 {
     /* Array of reports in the queue */
-    Report_t reports[5];
+    Report_t reports[MAX_REPORT_QUEUE_CAPACITY];
 
     /* Number of reports in the queue */
     uint8_t count;

@@ -90,6 +90,12 @@ typedef struct _RadioStatusResponse_t
     /* Holds the current volume level of the device */
     uint8_t currentVolume;
 
+    /* Holds the current count of the command queue */
+    uint8_t commandQueueCount;
+
+    /* Holds the current size of the report queue */
+    uint8_t reportQueueCount;
+
     /* Holds the mute status of the device */
     bool isMuted;
 } RadioStatusResponse_t;

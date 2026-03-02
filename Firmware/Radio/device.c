@@ -238,15 +238,14 @@ bool EnqueueCommand(RadioDevice_t *device, Command_t *command)
 
     volatile CommandQueue_t *queue = &device->commandQueue;
 
-    const uint8_t capacity = (uint8_t)(sizeof(queue->commands) / sizeof(queue->commands[0]));
-    if (queue->count >= capacity)
+    if (queue->count >= MAX_COMMAND_QUEUE_CAPACITY)
     {
         /* Queue full */
         return false;
     }
 
     queue->commands[queue->back] = *command;
-    queue->back = (uint8_t)((queue->back + 1) % capacity);
+    queue->back = (uint8_t)((queue->back + 1) % MAX_COMMAND_QUEUE_CAPACITY);
     queue->count++;
 
     return true;
@@ -268,15 +267,14 @@ bool EnqueueReport(RadioDevice_t *device, Report_t *report)
 
     volatile ReportQueue_t *queue = &device->reportQueue;
 
-    const uint8_t capacity = (uint8_t)(sizeof(queue->reports) / sizeof(queue->reports[0]));
-    if (queue->count >= capacity)
+    if (queue->count >= MAX_REPORT_QUEUE_CAPACITY)
     {
         /* Queue full */
         return false;
     }
 
     queue->reports[queue->back] = *report;
-    queue->back = (uint8_t)((queue->back + 1) % capacity);
+    queue->back = (uint8_t)((queue->back + 1) % MAX_REPORT_QUEUE_CAPACITY);
     queue->count++;
 
     return true;
@@ -412,6 +410,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         report.bytes.radioStatus.currentState = radioDevice.currentState;
         report.bytes.radioStatus.currentFrequency = radioDevice.currentFrequency;
         report.bytes.radioStatus.currentVolume = radioDevice.currentVolume;
+        report.bytes.radioStatus.commandQueueCount = radioDevice.commandQueue.count;
+        report.bytes.radioStatus.reportQueueCount = radioDevice.reportQueue.count;
         report.bytes.radioStatus.isMuted = radioDevice.isMuted;
 
         EnqueueReport(&radioDevice, &report);
