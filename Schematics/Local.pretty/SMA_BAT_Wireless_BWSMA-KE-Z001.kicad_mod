@@ -278,7 +278,7 @@
 		(uuid "2b6e0f64-4a1c-435e-a8d7-c69ae7e888a3")
 	)
 	(embedded_fonts no)
-	(model "${KICAD9_3DMODEL_DIR}/Connector_Coaxial.3dshapes/SMA_BAT_Wireless_BWSMA-KE-Z001.step"
+	(model "${KIPRJMOD}/Local.pretty/SMA_BAT_Wireless_BWSMA-KE-Z001.step"
 		(offset
 			(xyz 0 0 0)
 		)
@@ -286,7 +286,7 @@
 			(xyz 1 1 1)
 		)
 		(rotate
-			(xyz -0 -0 -90)
+			(xyz 0 0 0)
 		)
 	)
 )

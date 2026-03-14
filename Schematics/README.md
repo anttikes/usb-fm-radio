@@ -33,3 +33,7 @@ Finally, choose "File" > "Fabrication Outputs" > "Component Placement", and clic
 ### Modifying the component placement file
 
 The file generated is not directly compatible with JLCPCB. You will have to edit the according to [these instructions](https://jlcpcb.com/help/article/How-to-generate-the-BOM-and-Centroid-file-from-KiCAD), from the "Generating Pick and Place files" onwards.
+
+## Acknowledgements
+
+This repository uses a 3D model for the Bat Wireless Coaxial connector, courtesy of [Flux AI](https://www.flux.ai/lcsc/bwsma-ke-z001)
