@@ -1,5 +1,8 @@
 # Ignore backup folder
 radio-circuit-backups
 
+# Ignore output folder for BOM & placement file
+output
+
 # Ignore temporary files
 fp-info-cache
