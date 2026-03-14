@@ -53,7 +53,7 @@
 				(thickness 0.15)
 			)
 		)
-	)	
+	)
 	(property "Sim.Device" "V"
 		(at 0 0 0)
 		(unlocked yes)

@@ -11560,7 +11560,7 @@
 				)
 			)
 		)
-		(property "Footprint" "BWSMA-KE-Z001:SMA_BAT_Wireless_BWSMA-KE-Z001"
+		(property "Footprint" "Local:SMA_BAT_Wireless_BWSMA-KE-Z001"
 			(at 262.89 58.42 0)
 			(effects
 				(font
