@@ -102,6 +102,15 @@ typedef enum _PROP_RX_HARD_MUTE_ARGS : uint8_t
     RX_HARD_MUTE_ARGS_BOTH = RX_HARD_MUTE_ARGS_LEFT | RX_HARD_MUTE_ARGS_RIGHT,
 } PROP_RX_HARD_MUTE_ARGS;
 
+typedef enum _PROP_REFCLK_PRESCALE_ARGS : uint16_t
+{
+    /* Reference clock source is the RCLK pin */
+    REFCLK_PRESCALE_ARGS_RCLK = 0x0000,
+
+    /* Reference clock source is the DCLK pin */
+    REFCLK_PRESCALE_ARGS_DCLK = 0x1000,
+} PROP_REFCLK_PRESCALE_ARGS;
+
 /* Exported constants --------------------------------------------------------*/
 
 /* Exported macros -----------------------------------------------------------*/
@@ -176,6 +185,25 @@ static inline bool SetVolume(RadioDevice_t *device, uint8_t volumeLevel)
 static inline bool SetMute(RadioDevice_t *device, PROP_RX_HARD_MUTE_ARGS args)
 {
     return SetProperty(device, PROP_ID_RX_HARD_MUTE, args);
+}
+
+/**
+ * @brief  Enqueues the "SET PROPERTY" command with "REFCLK_PRESCALE" to configure the
+ *         reference clock pin, and the prescaler value for the radio
+ * @param  device Pointer to the radio device structure
+ * @param  args1 Clock source Additional interrupt sources to enable
+ * @param  args2 Prescaler value, between 1 and 4095 inclusive
+ *
+ * @retval True if the command was enqueued; false otherwise
+ */
+static inline bool SetReferenceClockPrescaler(RadioDevice_t *device, PROP_REFCLK_PRESCALE_ARGS args1, uint16_t args2)
+{
+    if (args2 < SI4705_REFCLK_PRESCALE_MIN_SETTING || args2 > SI4705_REFCLK_PRESCALE_MAX_SETTING)
+    {
+        return false;
+    }
+
+    return SetProperty(device, PROP_ID_REFCLK_PRESCALE, args1 | args2);
 }
 
 #ifdef __cplusplus

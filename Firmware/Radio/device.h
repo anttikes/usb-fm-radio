@@ -145,6 +145,10 @@ typedef struct _RadioDevice_t
 #define SI4705_VOLUME_MAX_SETTING 63
 #define SI4705_VOLUME_MIN_SETTING 0
 
+// Minimum and maximum reference clock prescaler values
+#define SI4705_REFCLK_PRESCALE_MIN_SETTING 1
+#define SI4705_REFCLK_PRESCALE_MAX_SETTING 4095
+
 /* Exported macros -----------------------------------------------------------*/
 
 /* Exported variables --------------------------------------------------------*/
