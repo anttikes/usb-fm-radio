@@ -102,7 +102,7 @@ int main(void)
     }
 
     // Allow GPO output, and drive GPO1 and GPO3 low to reduce oscillation
-    if (!GPIOCtl(&radioDevice, GPIO_CTL_GPO1_OUTPUT_ENABLE | GPIO_CTL_GPO2_OUTPUT_ENABLE | GPIO_CTL_GPO3_OUTPUT_ENABLE))
+    if (!GPIOCtl(&radioDevice, GPIO_CTL_GPO1_OUTPUT_ENABLE | GPIO_CTL_GPO3_OUTPUT_ENABLE))
     {
         Error_Handler();
     }
