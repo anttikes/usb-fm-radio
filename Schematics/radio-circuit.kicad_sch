@@ -11648,7 +11648,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Si470x:Si4705-D60-GM")
+		(lib_id "Local:Si4705-D60-GM")
 		(at 195.58 66.04 0)
 		(unit 1)
 		(exclude_from_sim no)
