@@ -101,8 +101,8 @@ bool ProcessCommand(RadioDevice_t *device)
             // After tuning or seek has completed, set the sample rate so the chip begins sending audio samples
             SetProperty(&radioDevice, PROP_ID_DIGITAL_OUTPUT_SAMPLE_RATE, CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE);
 
-            // Schedule a GetTuneStatus to update the current frequency reading
-            TuneStatus(device, GET_TUNE_STATUS_ARGS_NONE);
+            // Schedule a GetTuneStatus to update the current frequency reading and clear the STCINT bit
+            TuneStatus(device, GET_TUNE_STATUS_ARGS_INTACK);
         }
         else if (currentCommand->args.opCode == CMD_ID_FM_TUNE_STATUS)
         {
