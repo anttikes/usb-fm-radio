@@ -45,6 +45,9 @@ typedef enum _ReportIdentifier_t : uint8_t
     /* Identifies an RSQ status report */
     REPORT_IDENTIFIER_RSQ_STATUS = 0x04,
 
+    /* Identifies a Get Property report */
+    REPORT_IDENTIFIER_GET_PROPERTY = 0x05,
+
     /* Indicates a request to tune to a new frequency */
     REPORT_IDENTIFIER_TUNE_FREQ = 0x20,
 
@@ -67,7 +70,7 @@ typedef enum _RadioState_t : uint8_t
     RADIOSTATE_TUNED_TO_STATION = 0x03,
 
     /* Radio is sampling and sending digital output of the received audio signal */
-    RADIOSTATE_DIGITAL_OUTPUT_ENABLED = 0x04
+    RADIOSTATE_DIGITAL_OUTPUT_ENABLED = 0x04,
 } RadioState_t;
 
 typedef struct _RadioStatusResponse_t
@@ -131,6 +134,20 @@ typedef struct _GetIntStatusResponse_t
 } GetIntStatusResponse_t;
 
 static_assert(sizeof(GetIntStatusResponse_t) <= MAX_STRUCT_SIZE);
+
+typedef struct _GetPropertyResponse_t
+{
+#if defined __cplusplus
+    Q_GADGET
+
+    Q_PROPERTY(uint16_t propertyValue MEMBER propertyValue)
+#endif /* __cplusplus */
+
+    /* Holds the current value of the property*/
+    uint16_t propertyValue;
+} GetPropertyResponse_t;
+
+static_assert(sizeof(GetPropertyResponse_t) <= MAX_STRUCT_SIZE);
 
 typedef struct _RSQStatusResponse_t
 {
@@ -234,6 +251,7 @@ typedef struct _Report_t
     union ReportBytes {
         RadioStatusResponse_t radioStatus;
         GetIntStatusResponse_t interruptStatus;
+        GetPropertyResponse_t propertyResponse;
         RSQStatusResponse_t rsqStatus;
         TuneFreqRequest_t tuneFreqRequest;
         SeekStartRequest_t seekStartRequest;

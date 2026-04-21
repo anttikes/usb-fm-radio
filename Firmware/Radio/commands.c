@@ -169,6 +169,24 @@ bool GetProperty(RadioDevice_t *device, PropertyIdentifiers_t property)
 }
 
 /**
+ * @brief  Enqueues the result of "Get Property" command as a new report
+ * @param  device Pointer to the radio device structure
+ * @param  command Pointer to the command
+ *
+ * @retval True if the report was enqueued; false otherwise
+ */
+bool ProcessGetProperty(RadioDevice_t *device, Command_t *command)
+{
+    Report_t report = {0};
+
+    report.identifier = REPORT_IDENTIFIER_GET_PROPERTY;
+
+    report.bytes.propertyResponse.propertyValue = (uint16_t)((command->response[2] << 8) | command->response[3]);
+
+    return EnqueueReport(device, &report);
+}
+
+/**
  * @brief  Enqueues the "Get Int Status" command
  * @param  device Pointer to the radio device structure
  *

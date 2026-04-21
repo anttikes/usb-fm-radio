@@ -175,6 +175,10 @@ bool ProcessCommand(RadioDevice_t *device)
             ProcessIntStatus(device, (Command_t *)currentCommand);
             break;
 
+        case CMD_ID_GET_PROPERTY:
+            ProcessGetProperty(device, (Command_t *)currentCommand);
+            break;
+
         case CMD_ID_FM_RSQ_STATUS:
             ProcessRSQStatus(device, (Command_t *)currentCommand);
             break;
