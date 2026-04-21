@@ -66,7 +66,7 @@ typedef enum _PROP_GPO_IEN_ARGS : uint16_t
     GPO_IEN_ARGS_ALL = GPO_IEN_ARGS_ALLIEN | GPO_IEN_ARGS_ALLREP,
 } PROP_GPO_IEN_ARGS;
 
-typedef enum _PROP_FM_SEEK_FREQ_SPACING_ARGS : uint8_t
+typedef enum _PROP_FM_SEEK_FREQ_SPACING_ARGS : uint16_t
 {
     /* Seek is performed in 50 kHz increments */
     FM_SEEK_FREQ_SPACING_ARGS_50_KHZ = 5U,
@@ -78,25 +78,25 @@ typedef enum _PROP_FM_SEEK_FREQ_SPACING_ARGS : uint8_t
     FM_SEEK_FREQ_SPACING_ARGS_200_KHZ = 20U
 } PROP_FM_SEEK_FREQ_SPACING_ARGS;
 
-typedef enum _PROP_FM_DEEMPHASIS_ARGS : uint8_t
+typedef enum _PROP_FM_DEEMPHASIS_ARGS : uint16_t
 {
     /* 75 µs; used in USA */
-    FM_DEEMPHASIS_ARGS_75_MICROSECONDS = 0x10,
+    FM_DEEMPHASIS_ARGS_75_MICROSECONDS = 0x0002,
 
     /* 50 µs; used in Europe, Australia and Japan */
-    FM_DEEMPHASIS_ARGS_50_MICROSECONDS = 0x01,
+    FM_DEEMPHASIS_ARGS_50_MICROSECONDS = 0x0001,
 } PROP_FM_DEEMPHASIS_ARGS;
 
-typedef enum _PROP_RX_HARD_MUTE_ARGS : uint8_t
+typedef enum _PROP_RX_HARD_MUTE_ARGS : uint16_t
 {
     /* Unmute both channels*/
-    RX_HARD_MUTE_ARGS_NONE = 0b00,
+    RX_HARD_MUTE_ARGS_NONE = 0x0000,
 
     /* Mute left channel */
-    RX_HARD_MUTE_ARGS_LEFT = 0b10,
+    RX_HARD_MUTE_ARGS_LEFT = 0x0002,
 
     /* Mute right channel */
-    RX_HARD_MUTE_ARGS_RIGHT = 0b01,
+    RX_HARD_MUTE_ARGS_RIGHT = 0x0001,
 
     /* Helper value to mute both */
     RX_HARD_MUTE_ARGS_BOTH = RX_HARD_MUTE_ARGS_LEFT | RX_HARD_MUTE_ARGS_RIGHT,
@@ -110,6 +110,66 @@ typedef enum _PROP_REFCLK_PRESCALE_ARGS : uint16_t
     /* Reference clock source is the DCLK pin */
     REFCLK_PRESCALE_ARGS_DCLK = 0x1000,
 } PROP_REFCLK_PRESCALE_ARGS;
+
+typedef enum _PROP_FM_RDS_INT_SOURCE_ARGS : uint16_t
+{
+    /* If set, generate an RDS interrupt when Block B data is found or subsequently changed */
+    FM_RDS_INT_SOURCE_ARGS_RDSNEWBLOCKB = 0x0020,
+
+    /* If set, generate an RDS interrupt when Block A data is found or subsequently changed */
+    FM_RDS_INT_SOURCE_ARGS_RDSNEWBLOCKA = 0x0010,
+
+    /* If set, generate an RDS interrupt when RDS gains synchronization */
+    FM_RDS_INT_SOURCE_ARGS_RDSSYNCFOUND = 0x0004,
+
+    /* If set, generate an RDS interrupt when RDS loses synchronization */
+    FM_RDS_INT_SOURCE_ARGS_RDSSYNCLOST = 0x0002,
+
+    /* If set, generate an RDS interrupt when RDS FIFO has at least FM_RDS_INT_FIFO_COUNT entries are available */
+    FM_RDS_INT_SOURCE_ARGS_RDSRECV = 0x0001,
+} PROP_FM_RDS_INT_SOURCE_ARGS;
+
+typedef enum _PROP_FM_RDS_CONFIG_ARGS : uint16_t
+{
+    /* Block Error Threshold BLOCKA: Accept even when the block cannot be error-corrected */
+    FM_RDS_CONFIG_ARGS_BLETHA_ERROR_MAX_UNCORRECTABLE = 0xC000,
+
+    /* Block Error Threshold BLOCKA: 3-5 bit errors detected and corrected */
+    FM_RDS_CONFIG_ARGS_BLETHA_ERROR_MAX_5_BITS = 0x8000,
+
+    /* Block Error Threshold BLOCKA: 1-2 bit errors detected and corrected */
+    FM_RDS_CONFIG_ARGS_BLETHA_ERROR_MAX_2_BITS = 0x4000,
+
+    /* Block Error Threshold BLOCKB: Accept even when the block cannot be error-corrected */
+    FM_RDS_CONFIG_ARGS_BLETHB_ERROR_MAX_UNCORRECTABLE = 0x3000,
+
+    /* Block Error Threshold BLOCKB: 3-5 bit errors detected and corrected */
+    FM_RDS_CONFIG_ARGS_BLETHB_ERROR_MAX_5_BITS = 0x2000,
+
+    /* Block Error Threshold BLOCKB: 1-2 bit errors detected and corrected */
+    FM_RDS_CONFIG_ARGS_BLETHB_ERROR_MAX_2_BITS = 0x1000,
+
+    /* Block Error Threshold BLOCKC: Accept even when the block cannot be error-corrected */
+    FM_RDS_CONFIG_ARGS_BLETHC_ERROR_MAX_UNCORRECTABLE = 0x0C00,
+
+    /* Block Error Threshold BLOCKC: 3-5 bit errors detected and corrected */
+    FM_RDS_CONFIG_ARGS_BLETHC_ERROR_MAX_5_BITS = 0x0800,
+
+    /* Block Error Threshold BLOCKC: 1-2 bit errors detected and corrected */
+    FM_RDS_CONFIG_ARGS_BLETHC_ERROR_MAX_2_BITS = 0x0400,
+
+    /* Block Error Threshold BLOCKD: Accept even when the block cannot be error-corrected */
+    FM_RDS_CONFIG_ARGS_BLETHD_ERROR_MAX_UNCORRECTABLE = 0x0300,
+
+    /* Block Error Threshold BLOCKD: 3-5 bit errors detected and corrected */
+    FM_RDS_CONFIG_ARGS_BLETHD_ERROR_MAX_5_BITS = 0x0200,
+
+    /* Block Error Threshold BLOCKD: 1-2 bit errors detected and corrected */
+    FM_RDS_CONFIG_ARGS_BLETHD_ERROR_MAX_2_BITS = 0x0100,
+
+    /* If set, RDS processing is enabled */
+    FM_RDS_CONFIG_ARGS_RDS_ENABLE = 0x0001,
+} PROP_FM_RDS_CONFIG_ARGS;
 
 /* Exported constants --------------------------------------------------------*/
 
@@ -161,18 +221,18 @@ static inline bool SetFMDeemphasis(RadioDevice_t *device, PROP_FM_DEEMPHASIS_ARG
 /**
  * @brief  Enqueues the "SET PROPERTY" command with "RX_VOLUME" to configure the volume level.
  * @param  device Pointer to the radio device structure
- * @param  volumeLevel Desired volume level, between 0 and 63 inclusive
+ * @param  args Desired volume level, between 0 and 63 inclusive
  *
  * @retval True if the command was enqueued; false otherwise
  */
-static inline bool SetVolume(RadioDevice_t *device, uint8_t volumeLevel)
+static inline bool SetVolume(RadioDevice_t *device, uint8_t args)
 {
-    if (volumeLevel < SI4705_VOLUME_MIN_SETTING || volumeLevel > SI4705_VOLUME_MAX_SETTING)
+    if (args < SI4705_VOLUME_MIN_SETTING || args > SI4705_VOLUME_MAX_SETTING)
     {
         return false;
     }
 
-    return SetProperty(device, PROP_ID_RX_VOLUME, volumeLevel);
+    return SetProperty(device, PROP_ID_RX_VOLUME, args);
 }
 
 /**
@@ -204,6 +264,50 @@ static inline bool SetReferenceClockPrescaler(RadioDevice_t *device, PROP_REFCLK
     }
 
     return SetProperty(device, PROP_ID_REFCLK_PRESCALE, args1 | args2);
+}
+
+/**
+ * @brief  Enqueues the "SET PROPERTY" command with "FM_RDS_INT_SOURCE" to configure
+ *         which events cause the RDSRECV bit (and interrupt) to get set.
+ * @param  device Pointer to the radio device structure
+ * @param  args RDS interrupt sources to enable
+ *
+ * @retval True if the command was enqueued; false otherwise
+ */
+static inline bool SetRDSInterruptSources(RadioDevice_t *device, PROP_FM_RDS_INT_SOURCE_ARGS args)
+{
+    return SetProperty(device, PROP_ID_FM_RDS_INT_SOURCE, args);
+}
+
+/**
+ * @brief  Enqueues the "SET PROPERTY" command with "FM_RDS_INT_FIFO_COUNT" to configure the
+ *         minimum number of RDS group stored in the RDS FIFO before RDSRECV bit (and interrupt) is set.
+ * @param  device Pointer to the radio device structure
+ * @param  args Minimum number of RDS groups, between 0 and 25 inclusive
+ *
+ * @retval True if the command was enqueued; false otherwise
+ */
+static inline bool SetRDSFIFOCount(RadioDevice_t *device, uint8_t args)
+{
+    if (args > 25)
+    {
+        return false;
+    }
+
+    return SetProperty(device, PROP_ID_FM_RDS_INT_FIFO_COUNT, args);
+}
+
+/**
+ * @brief  Enqueues the "SET PROPERTY" command with "FM_RDS_CONFIG" to configure the
+ *         RDS error thresholds and to enable the RDS processing.
+ * @param  device Pointer to the radio device structure
+ * @param  args RDS error thresholds and enable or disable bit
+ *
+ * @retval True if the command was enqueued; false otherwise
+ */
+static inline bool SetRDSConfig(RadioDevice_t *device, PROP_FM_RDS_CONFIG_ARGS args)
+{
+    return SetProperty(device, PROP_ID_FM_RDS_CONFIG, args);
 }
 
 #ifdef __cplusplus
