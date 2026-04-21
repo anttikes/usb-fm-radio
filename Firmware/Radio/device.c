@@ -159,13 +159,6 @@ bool ProcessCommand(RadioDevice_t *device)
         }
 
         PopCommand(&device->commandQueue);
-
-        currentCommand = PeekCommand(&device->commandQueue);
-
-        if (currentCommand == NULL)
-        {
-            return false;
-        }
     }
     else if (currentCommand->state == COMMANDSTATE_RESPONSE_RECEIVED)
     {
