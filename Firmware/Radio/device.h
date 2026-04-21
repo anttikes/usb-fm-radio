@@ -77,7 +77,7 @@ typedef struct _Command_t
     uint8_t responseLength;
 } Command_t;
 
-#define MAX_COMMAND_QUEUE_CAPACITY 10
+#define MAX_COMMAND_QUEUE_CAPACITY 20
 
 typedef struct _CommandQueue_t
 {
