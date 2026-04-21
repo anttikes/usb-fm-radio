@@ -89,8 +89,9 @@ int main(void)
         Error_Handler();
     }
 
-    // Enable the other interrupt sources
-    if (!SetInterruptSources(&radioDevice, GPO_IEN_ARGS_CTSIEN | GPO_IEN_ARGS_STCIEN | GPO_IEN_ARGS_STCREP))
+    // Enable other interrupt sources
+    if (!SetInterruptSources(&radioDevice,
+                             GPO_IEN_ARGS_CTSIEN | GPO_IEN_ARGS_STCIEN | GPO_IEN_ARGS_RDSIEN | GPO_IEN_ARGS_ERRIEN))
     {
         Error_Handler();
     }
@@ -114,6 +115,24 @@ int main(void)
 
     // Set FM de-emphasis to match Europe
     if (!SetFMDeemphasis(&radioDevice, FM_DEEMPHASIS_ARGS_50_MICROSECONDS))
+    {
+        Error_Handler();
+    }
+
+    // Configure RDS to raise interrupt when buffers are full
+    if (!SetRDSInterruptSources(&radioDevice, FM_RDS_INT_SOURCE_ARGS_RDSRECV))
+    {
+        Error_Handler();
+    }
+
+    // Configure RDS to use maximum FIFO buffers
+    if (!SetRDSFIFOCount(&radioDevice, 25))
+    {
+        Error_Handler();
+    }
+
+    // Enable RDS processing
+    if (!SetRDSConfig(&radioDevice, FM_RDS_CONFIG_ARGS_RDS_ENABLE))
     {
         Error_Handler();
     }
