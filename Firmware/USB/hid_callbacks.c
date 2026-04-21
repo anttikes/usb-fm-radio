@@ -67,7 +67,6 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
     (void)bufsize;
 
     ReportIdentifier_t reportId = (ReportIdentifier_t)buffer[0];
-    volatile bool success = false;
 
     switch (reportId)
     {
@@ -75,7 +74,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         TuneFreqRequest_t tuneFreqRequest = {0};
         memcpy(&tuneFreqRequest, &buffer[1], sizeof(TuneFreqRequest_t));
 
-        success = TuneFreq(&radioDevice, FM_TUNE_FREQ_ARGS_NONE, tuneFreqRequest.frequency);
+        TuneFreq(&radioDevice, FM_TUNE_FREQ_ARGS_NONE, tuneFreqRequest.frequency);
 
         break;
 
@@ -95,13 +94,12 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             seekStartArgs |= SEEK_START_ARGS_UP;
         }
 
-        success = SeekStart(&radioDevice, seekStartArgs);
+        SeekStart(&radioDevice, seekStartArgs);
 
         break;
 
     default:
         // Unrecognized report ID; ignore
-        success = false;
         break;
     }
 
