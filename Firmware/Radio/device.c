@@ -395,7 +395,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
                 // and thus the current command never completes
 
                 // To recover, we clear the queue, and send a fault report
-                memset(radioDevice.commandQueue.commands, 0, 10 * sizeof(Command_t));
+                memset(radioDevice.commandQueue.commands, 0, MAX_COMMAND_QUEUE_CAPACITY * sizeof(Command_t));
                 radioDevice.commandQueue.front = 0;
                 radioDevice.commandQueue.back = 0;
                 radioDevice.commandQueue.count = 0;
