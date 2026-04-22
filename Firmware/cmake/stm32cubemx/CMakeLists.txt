@@ -75,11 +75,11 @@ add_library(stm32cubemx INTERFACE)
 target_include_directories(stm32cubemx INTERFACE ${MX_Include_Dirs})
 target_compile_definitions(stm32cubemx INTERFACE ${MX_Defines_Syms})
 
-# Create STM32_Drivers static library
+# Create STM32_Drivers static library, and always compile it in release mode
 add_library(STM32_Drivers OBJECT)
 target_sources(STM32_Drivers PRIVATE ${STM32_Drivers_Src})
 target_link_libraries(STM32_Drivers PUBLIC stm32cubemx)
-
+target_compile_options(STM32_Drivers PRIVATE -Os -g0)
 
 # Add STM32CubeMX generated application sources to the project
 target_sources(firmware PRIVATE ${MX_Application_Src})
