@@ -7,3 +7,6 @@
 [submodule "GUI/ThirdParty/hidapi"]
 	path = GUI/ThirdParty/hidapi
 	url = https://github.com/libusb/hidapi.git
+[submodule "Firmware/ThirdParty/librdsparser"]
+	path = Firmware/ThirdParty/librdsparser
+	url = https://github.com/kkonradpl/librdsparser/
