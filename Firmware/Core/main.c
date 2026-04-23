@@ -23,6 +23,7 @@
 #include "i2c.h"
 #include "i2s.h"
 #include "properties.h"
+#include "rds.h"
 #include "tim.h"
 #include "tusb.h"
 
@@ -67,6 +68,9 @@ int main(void)
     MX_I2S1_Init();
     MX_TIM16_Init();
     MX_TIM17_Init();
+
+    // Initialize the RDS parser library
+    RDSInit();
 
     // Bring Si4705 out of reset, and enable the oscillator
     HAL_GPIO_WritePin(RADIO_NRST_GPIO_Port, RADIO_NRST_Pin, GPIO_PIN_SET);
