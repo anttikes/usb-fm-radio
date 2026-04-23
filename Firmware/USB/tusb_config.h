@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
- * @file           : tusb_config.h
- * @brief          : Provides the configuration options for TinyUSB
+ * @file    tusb_config.h
+ * @brief   Provides the configuration options for TinyUSB
  ******************************************************************************
  * @attention
  *

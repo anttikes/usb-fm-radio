@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
- * @file           : hid_callbacks.c
- * @brief          : Implements the HID callback functions
+ * @file    hid_callbacks.c
+ * @brief   Implements the HID callback functions
  ******************************************************************************
  * @attention
  *

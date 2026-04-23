@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
- * @file           : usb_descriptors.c
- * @brief          : Implements the standard USB callback functions
+ * @file    usb_descriptors.c
+ * @brief   Implements the standard USB callback functions
  ******************************************************************************
  * @attention
  *

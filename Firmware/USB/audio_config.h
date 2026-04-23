@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
- * @file           : audio_config.h
- * @brief          : Header file for settings related to USB Audio
+ * @file    audio_config.h
+ * @brief   Header file for settings related to USB Audio
  ******************************************************************************
  * @attention
  *

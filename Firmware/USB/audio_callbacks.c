@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
- * @file           : audio_callbacks.c
- * @brief          : Implements the Audio callback functions
+ * @file    audio_callbacks.c
+ * @brief   Implements the Audio callback functions
  ******************************************************************************
  * @attention
  *

@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
- * @file           : hid_config.h
- * @brief          : Header file for settings related to USB HID
+ * @file    hid_config.h
+ * @brief   Header file for settings related to USB HID
  ******************************************************************************
  * @attention
  *
