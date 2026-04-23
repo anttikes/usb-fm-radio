@@ -37,16 +37,15 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/cmake/stm32cubemx)
 # Add TinyUSB functions
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/tinyusb/src)
 
+# Add librdsparser to the project
+set(RDSPARSER_DISABLE_HEAP ON)
+set(RDSPARSER_DISABLE_TESTS ON)
+set(RDSPARSER_DISABLE_EXAMPLES ON)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/librdsparser)
+
 # Linker search path setup
 target_link_directories(firmware PRIVATE
     # Add user defined library search paths
-)
-
-# Add sources to executable
-target_sources(firmware PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/device.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/commands.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/properties.c
 )
 
 # Add include paths
@@ -54,6 +53,17 @@ target_include_directories(firmware PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/USB
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/librdsparser/include
+)
+
+# Add sources to executable
+target_sources(firmware PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/device.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/commands.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/properties.c
+
+    # librdsparser requires callbacks defined by the user
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/rds.c
 )
 
 # Add TinyUSB sources to the project
@@ -71,5 +81,6 @@ target_sources(firmware PRIVATE
 # Add linked libraries
 target_link_libraries(firmware
     shared-headers
-    stm32cubemx    
+    stm32cubemx
+    rdsparser_static
 )
