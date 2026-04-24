@@ -38,9 +38,9 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/cmake/stm32cubemx)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/tinyusb/src)
 
 # Add librdsparser to the project
-set(RDSPARSER_DISABLE_HEAP ON)
-set(RDSPARSER_DISABLE_TESTS ON)
-set(RDSPARSER_DISABLE_EXAMPLES ON)
+set(RDSPARSER_DISABLE_HEAP ON CACHE BOOL "Disable heap allocator (rdsparser_new/free)")
+set(RDSPARSER_DISABLE_TESTS ON CACHE BOOL "Disable tests")
+set(RDSPARSER_DISABLE_EXAMPLES ON CACHE BOOL "Disable examples")
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/librdsparser)
 
 # Linker search path setup
