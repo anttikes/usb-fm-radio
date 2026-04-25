@@ -82,6 +82,8 @@ typedef struct _RadioStatusResponse_t
     Q_PROPERTY(uint16_t currentFrequency MEMBER currentFrequency)
     Q_PROPERTY(uint8_t currentVolume MEMBER currentVolume)
     Q_PROPERTY(bool isMuted MEMBER isMuted)
+
+  public:
 #endif /* __cplusplus */
 
     /* Holds the current state of the device */
@@ -115,6 +117,8 @@ typedef struct _GetIntStatusResponse_t
     Q_PROPERTY(bool rsqInterrupt MEMBER rsqInterrupt)
     Q_PROPERTY(bool rdsInterrupt MEMBER rdsInterrupt)
     Q_PROPERTY(bool seekTuneCompletedInterrupt MEMBER seekTuneCompletedInterrupt)
+
+  public:
 #endif /* __cplusplus */
 
     /* When set, the device is ready to receive the next command */
@@ -141,6 +145,8 @@ typedef struct _GetPropertyResponse_t
     Q_GADGET
 
     Q_PROPERTY(uint16_t propertyValue MEMBER propertyValue)
+
+  public:
 #endif /* __cplusplus */
 
     /* Holds the current value of the property*/
@@ -170,6 +176,8 @@ typedef struct _RSQStatusResponse_t
     Q_PROPERTY(uint8_t snr MEMBER snr)
     Q_PROPERTY(uint8_t multipath MEMBER multipath)
     Q_PROPERTY(int8_t frequencyOffset MEMBER frequencyOffset)
+
+  public:
 #endif /* __cplusplus */
 
     /* When set, the blend goes above or below the blend threshold settings */
