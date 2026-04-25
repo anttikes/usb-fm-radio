@@ -80,13 +80,13 @@ typedef enum _CMD_FM_TUNE_FREQ_ARGS : uint8_t
 typedef enum _CMD_FM_SEEK_START_ARGS : uint8_t
 {
     /* No arguments */
-    SEEK_START_ARGS_NONE = 0x00,
+    FM_SEEK_START_ARGS_NONE = 0x00,
 
     /* When set, the seek will wrap around at the end of band */
-    SEEK_START_ARGS_WRAP = 0x04,
+    FM_SEEK_START_ARGS_WRAP = 0x04,
 
     /* When set, the seek direction is up; otherwise it's down */
-    SEEK_START_ARGS_UP = 0x08
+    FM_SEEK_START_ARGS_UP = 0x08
 } CMD_FM_SEEK_START_ARGS;
 
 typedef enum _CMD_GET_TUNE_STATUS_ARGS : uint8_t

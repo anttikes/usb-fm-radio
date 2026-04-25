@@ -82,16 +82,16 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         SeekStartRequest_t seekStartRequest = {0};
         memcpy(&seekStartRequest, &buffer[1], sizeof(SeekStartRequest_t));
 
-        CMD_FM_SEEK_START_ARGS seekStartArgs = SEEK_START_ARGS_NONE;
+        CMD_FM_SEEK_START_ARGS seekStartArgs = FM_SEEK_START_ARGS_NONE;
 
         if (seekStartRequest.wrap)
         {
-            seekStartArgs |= SEEK_START_ARGS_WRAP;
+            seekStartArgs |= FM_SEEK_START_ARGS_WRAP;
         }
 
         if (seekStartRequest.seekUp)
         {
-            seekStartArgs |= SEEK_START_ARGS_UP;
+            seekStartArgs |= FM_SEEK_START_ARGS_UP;
         }
 
         SeekStart(&radioDevice, seekStartArgs);
