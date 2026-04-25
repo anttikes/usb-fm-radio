@@ -3,8 +3,10 @@
 #include <QThread>
 
 ReportWorker::ReportWorker(hid_device *selectedDevice)
-    : QRunnable(), m_selectedDevice(selectedDevice), m_shouldStop(false), m_stopped(false)
+    : QRunnable(), m_signalQualityLog("signal_quality_log.csv"), m_selectedDevice(selectedDevice), m_shouldStop(false),
+      m_stopped(false)
 {
+    m_signalQualityLog.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
 }
 
 ReportWorker::~ReportWorker()
@@ -14,6 +16,7 @@ ReportWorker::~ReportWorker()
 
 void ReportWorker::stop()
 {
+    m_signalQualityLog.close();
     m_shouldStop = true;
 }
 
@@ -22,6 +25,7 @@ void ReportWorker::run()
     qDebug() << "[ReportWorker] Report worker is starting up...";
 
     uint8_t errorCount = 0;
+    double frequency = 0.0;
 
     while (!m_shouldStop)
     {
@@ -48,6 +52,17 @@ void ReportWorker::run()
                 RadioStatusResponse_t report;
                 std::memcpy(&report, &buf[1], sizeof(RadioStatusResponse_t));
 
+                double newFrequency = (double)(report.currentFrequency / 100.0);
+                if (newFrequency != frequency)
+                {
+                    if (m_signalQualityLog.isOpen() && frequency > 0.0)
+                    {
+                        m_signalQualityLog.write("\n");
+                    }
+
+                    frequency = newFrequency;
+                }
+
                 emit radioStateReportReceived(report);
 
                 break;
@@ -55,6 +70,20 @@ void ReportWorker::run()
             case REPORT_IDENTIFIER_RSQ_STATUS: {
                 RSQStatusResponse_t report;
                 std::memcpy(&report, &buf[1], sizeof(RSQStatusResponse_t));
+
+                if (m_signalQualityLog.isOpen() && frequency > 0.0)
+                {
+                    QString logEntry = QString("%1 MHz\tRSSI: %2 dBuV\tNoise ratio: %3 dB\tStereo pilot detected: "
+                                               "%4\tStereo blend: %5 %\tMultipath: %6\n")
+                                           .arg(frequency, 0, 'f', 1)
+                                           .arg(report.rssi)
+                                           .arg(report.snr)
+                                           .arg(report.pilot ? "Yes" : "No")
+                                           .arg(report.stereoBlend)
+                                           .arg(report.multipath);
+
+                    m_signalQualityLog.write(logEntry.toUtf8());
+                }
 
                 emit rsqStatusReportReceived(report);
 

@@ -2,11 +2,12 @@
 #define __REPORTWORKER_H__
 
 #include "Device.h"
-#include "Reports.h"
 #include <QEventLoop>
+#include <QFile>
 #include <QObject>
 #include <QRunnable>
 #include <QTimer>
+#include <Reports.h>
 
 class ReportWorker : public QObject, public QRunnable
 {
@@ -36,6 +37,7 @@ class ReportWorker : public QObject, public QRunnable
     bool m_shouldStop;
     bool m_stopped;
     hid_device *m_selectedDevice;
+    QFile m_signalQualityLog;
 };
 
 #endif // __REPORTWORKER_H__
