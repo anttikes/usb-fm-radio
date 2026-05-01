@@ -8,7 +8,7 @@ This folder contains the KiCad schematic and PCB layout file for the board.
 
 ## Working on the project
 
-To open this project download and install KiCad for your operating system from [this page](https://www.kicad.org/download/).
+To open this project download and install KiCad v10 for your operating system from [this page](https://www.kicad.org/download/).
 
 After installation you need to find and provide the following 3D models, and install them to the model directory of your KiCad installation:
  - Skyworks Si4705-D60
