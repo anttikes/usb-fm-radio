@@ -907,7 +907,7 @@
 							)
 						)
 					)
-					(number "6"
+					(number "SH"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -11998,7 +11998,7 @@
 		(pin "2"
 			(uuid "ebe0c122-0a08-4302-ae50-0c54f6ebd566")
 		)
-		(pin "6"
+		(pin "SH"
 			(uuid "7147bad1-f74e-473a-9bc5-6cf993154fc2")
 		)
 		(pin "4"
