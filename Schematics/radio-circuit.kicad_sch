@@ -12678,7 +12678,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_DFN_QFN:SiliconLabs_QFN-20-1EP_3x3mm_P0.5mm_EP1.8x1.8mm"
+		(property "Footprint" "Local:Skyworks_QFN-20-1EP_3x3mm_P0.5mm_EP1.8x1.8mm"
 			(at 195.58 66.04 0)
 			(hide yes)
 			(show_name no)
