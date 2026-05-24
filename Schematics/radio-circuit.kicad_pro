@@ -40,8 +40,8 @@
         "other_text_upright": false,
         "pads": {
           "drill": 0.0,
-          "height": 0.34,
-          "width": 0.34
+          "height": 0.28,
+          "width": 0.61
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -117,12 +117,12 @@
         "too_many_vias": "error",
         "track_angle": "error",
         "track_dangling": "warning",
-        "track_not_centered_on_via": "ignore",
+        "track_not_centered_on_via": "warning",
         "track_on_post_machined_layer": "error",
         "track_segment_length": "error",
         "track_width": "error",
         "tracks_crossing": "error",
-        "tuning_profile_track_geometries": "ignore",
+        "tuning_profile_track_geometries": "warning",
         "unconnected_items": "error",
         "unresolved_variable": "error",
         "via_dangling": "warning",
@@ -592,6 +592,10 @@
         "pattern": "/PWR_LED_K"
       },
       {
+        "netclass": "Power",
+        "pattern": "V_{A}"
+      },
+      {
         "netclass": "Default",
         "pattern": "*"
       }
@@ -925,7 +929,7 @@
         "uuid": "6b4c382d-c3a6-4721-98dc-a03527f31640"
       }
     ],
-    "used_designators": "C17,R13-14",
+    "used_designators": "",
     "variants": []
   },
   "sheets": [
