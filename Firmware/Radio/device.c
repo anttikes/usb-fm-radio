@@ -33,6 +33,7 @@ RadioDevice_t radioDevice = {
     .currentState = RADIOSTATE_POWERDOWN,
     .currentFrequency = 0,
     .currentVolume = SI4705_VOLUME_MAX_SETTING / 2,
+    .interruptCounter = 0,
     .isMuted = false,
     .commandQueue = {
         .commands = {{0}},
@@ -50,6 +51,8 @@ RadioDevice_t radioDevice = {
 /* Private macros ------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
+volatile bool i2cTransferInterruptRaised = false;
+volatile bool i2cReceiveInterruptRaised = false;
 
 /* Private function prototypes -----------------------------------------------*/
 bool IsCommandQueueEmpty(CommandQueue_t *queue);
@@ -67,11 +70,6 @@ Report_t *PopReport(ReportQueue_t *queue);
  */
 bool ProcessCommand(RadioDevice_t *device)
 {
-    if (IsCommandQueueEmpty(&device->commandQueue))
-    {
-        return false;
-    }
-
     volatile Command_t *currentCommand = PeekCommand(&device->commandQueue);
 
     if (currentCommand == NULL)
@@ -79,7 +77,105 @@ bool ProcessCommand(RadioDevice_t *device)
         return false;
     }
 
-    if (currentCommand->state == COMMANDSTATE_READY)
+    if (currentCommand->state == COMMANDSTATE_IDLE)
+    {
+        currentCommand->state = COMMANDSTATE_SENDING;
+
+        HAL_StatusTypeDef status = HAL_I2C_Master_Transmit_IT(
+            &hi2c1, device->deviceAddress, (uint8_t *)&currentCommand->args, currentCommand->argLength);
+
+        if (status != HAL_OK)
+        {
+            Error_Handler();
+        }
+
+        return true;
+    }
+    else if (currentCommand->state == COMMANDSTATE_SENDING && i2cTransferInterruptRaised)
+    {
+        i2cTransferInterruptRaised = false;
+
+        if (currentCommand->args.opCode == CMD_ID_FM_TUNE_FREQ || currentCommand->args.opCode == CMD_ID_FM_SEEK_START)
+        {
+            radioDevice.currentState = RADIOSTATE_TUNE_IN_PROGRESS;
+
+            currentCommand->state = COMMANDSTATE_WAITING_FOR_STC;
+        }
+        else
+        {
+            currentCommand->state = COMMANDSTATE_WAITING_FOR_CTS;
+        }
+
+        return true;
+    }
+    else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_STC && radioDevice.interruptCounter > 0)
+    {
+        radioDevice.interruptCounter--;
+
+        currentCommand->state = COMMANDSTATE_WAITING_FOR_CTS;
+
+        return true;
+    }
+    else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_CTS && radioDevice.interruptCounter > 0)
+    {
+        radioDevice.interruptCounter--;
+
+        if (currentCommand->responseLength > 0)
+        {
+            currentCommand->state = COMMANDSTATE_WAITING_FOR_RESPONSE_RETRIEVAL;
+        }
+        else
+        {
+            currentCommand->state = COMMANDSTATE_READY;
+        }
+
+        return true;
+    }
+    else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_RESPONSE_RETRIEVAL)
+    {
+        currentCommand->state = COMMANDSTATE_RECEIVING_RESPONSE;
+
+        HAL_StatusTypeDef status = HAL_I2C_Master_Receive_IT(
+            &hi2c1, device->deviceAddress, (uint8_t *)&currentCommand->response, currentCommand->responseLength);
+
+        if (status != HAL_OK)
+        {
+            Error_Handler();
+        }
+
+        return true;
+    }
+    else if (currentCommand->state == COMMANDSTATE_RECEIVING_RESPONSE && i2cReceiveInterruptRaised)
+    {
+        i2cReceiveInterruptRaised = false;
+
+        currentCommand->state = COMMANDSTATE_RESPONSE_RECEIVED;
+
+        return true;
+    }
+    else if (currentCommand->state == COMMANDSTATE_RESPONSE_RECEIVED)
+    {
+        switch (currentCommand->args.opCode)
+        {
+        case CMD_ID_GET_INT_STATUS:
+            ProcessIntStatus(device, (Command_t *)currentCommand);
+            break;
+
+        case CMD_ID_GET_PROPERTY:
+            ProcessGetProperty(device, (Command_t *)currentCommand);
+            break;
+
+        case CMD_ID_FM_RSQ_STATUS:
+            ProcessRSQStatus(device, (Command_t *)currentCommand);
+            break;
+
+        default:
+            break;
+        }
+
+        currentCommand->state = COMMANDSTATE_READY;
+    }
+    else if (currentCommand->state == COMMANDSTATE_READY)
     {
         if (currentCommand->args.opCode == CMD_ID_POWER_UP && currentCommand->responseLength == 0)
         {
@@ -159,42 +255,6 @@ bool ProcessCommand(RadioDevice_t *device)
         }
 
         PopCommand(&device->commandQueue);
-    }
-    else if (currentCommand->state == COMMANDSTATE_RESPONSE_RECEIVED)
-    {
-        switch (currentCommand->args.opCode)
-        {
-        case CMD_ID_GET_INT_STATUS:
-            ProcessIntStatus(device, (Command_t *)currentCommand);
-            break;
-
-        case CMD_ID_GET_PROPERTY:
-            ProcessGetProperty(device, (Command_t *)currentCommand);
-            break;
-
-        case CMD_ID_FM_RSQ_STATUS:
-            ProcessRSQStatus(device, (Command_t *)currentCommand);
-            break;
-
-        default:
-            break;
-        }
-
-        currentCommand->state = COMMANDSTATE_READY;
-    }
-    else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_RESPONSE_RETRIEVAL)
-    {
-        currentCommand->state = COMMANDSTATE_RECEIVING_RESPONSE;
-
-        return HAL_I2C_Master_Receive_IT(&hi2c1, device->deviceAddress, (uint8_t *)&currentCommand->response,
-                                         currentCommand->responseLength) == HAL_OK;
-    }
-    else if (currentCommand->state == COMMANDSTATE_IDLE)
-    {
-        currentCommand->state = COMMANDSTATE_SENDING;
-
-        return HAL_I2C_Master_Transmit_IT(&hi2c1, device->deviceAddress, (uint8_t *)&currentCommand->args,
-                                          currentCommand->argLength) == HAL_OK;
     }
 
     // Current command is executing; nothing to do at this time
@@ -288,29 +348,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if (GPIO_Pin == RADIO_NIRQ_Pin)
     {
-        Command_t *currentCommand = PeekCommand(&radioDevice.commandQueue);
-
-        if (currentCommand == NULL)
-        {
-            // No command to process; this usually indicates e.g. RDS or RSQ interrupt
-            // so schedule the GetIntStatus command
-            GetIntStatus(&radioDevice);
-        }
-        else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_STC)
-        {
-            currentCommand->state = COMMANDSTATE_WAITING_FOR_CTS;
-        }
-        else if (currentCommand->state == COMMANDSTATE_WAITING_FOR_CTS)
-        {
-            if (currentCommand->responseLength > 0)
-            {
-                currentCommand->state = COMMANDSTATE_WAITING_FOR_RESPONSE_RETRIEVAL;
-            }
-            else
-            {
-                currentCommand->state = COMMANDSTATE_READY;
-            }
-        }
+        radioDevice.interruptCounter++;
     }
 }
 
@@ -324,22 +362,7 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
     if (hi2c->Instance == hi2c1.Instance)
     {
-        Command_t *currentCommand = PeekCommand(&radioDevice.commandQueue);
-
-        if (currentCommand->state == COMMANDSTATE_SENDING)
-        {
-            if (currentCommand->args.opCode == CMD_ID_FM_TUNE_FREQ ||
-                currentCommand->args.opCode == CMD_ID_FM_SEEK_START)
-            {
-                radioDevice.currentState = RADIOSTATE_TUNE_IN_PROGRESS;
-
-                currentCommand->state = COMMANDSTATE_WAITING_FOR_STC;
-            }
-            else
-            {
-                currentCommand->state = COMMANDSTATE_WAITING_FOR_CTS;
-            }
-        }
+        i2cTransferInterruptRaised = true;
     }
 }
 
@@ -353,12 +376,7 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
     if (hi2c->Instance == hi2c1.Instance)
     {
-        Command_t *currentCommand = PeekCommand(&radioDevice.commandQueue);
-
-        if (currentCommand->state == COMMANDSTATE_RECEIVING_RESPONSE)
-        {
-            currentCommand->state = COMMANDSTATE_RESPONSE_RECEIVED;
-        }
+        i2cReceiveInterruptRaised = true;
     }
 }
 
@@ -386,26 +404,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         // Timer 16 is used to periodically query RSQ status when tuned to a station
         if (radioDevice.currentState != RADIOSTATE_POWERDOWN)
         {
-            bool succeeded = RSQStatus(&radioDevice, FM_RSQ_STATUS_ARGS_NONE);
-
-            if (!succeeded)
-            {
-                // Queue is full; when the device is streaming data there's a noise
-                // problem which sometimes causes the CTS signal to be missed,
-                // and thus the current command never completes
-
-                // To recover, we clear the queue, and send a fault report
-                memset(radioDevice.commandQueue.commands, 0, MAX_COMMAND_QUEUE_CAPACITY * sizeof(Command_t));
-                radioDevice.commandQueue.front = 0;
-                radioDevice.commandQueue.back = 0;
-                radioDevice.commandQueue.count = 0;
-
-                Report_t fault = {0};
-
-                fault.identifier = REPORT_IDENTIFIER_QUEUE_RESET;
-
-                EnqueueReport(&radioDevice, &fault);
-            }
+            RSQStatus(&radioDevice, FM_RSQ_STATUS_ARGS_NONE);
         }
     }
     else if (htim->Instance == TIM17)

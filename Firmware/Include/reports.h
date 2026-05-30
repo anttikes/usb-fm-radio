@@ -33,20 +33,17 @@
 /* Exported types */
 typedef enum _ReportIdentifier_t : uint8_t
 {
-    /* Indicates that the command queue was reset due to overflow */
-    REPORT_IDENTIFIER_QUEUE_RESET = 0x01,
-
     /* Indentifies a radio status report */
-    REPORT_IDENTIFIER_RADIO_STATUS = 0x02,
+    REPORT_IDENTIFIER_RADIO_STATUS = 0x01,
 
     /* Identifies an interrupt status report */
-    REPORT_IDENTIFIER_INTERRUPT_STATUS = 0x03,
+    REPORT_IDENTIFIER_INTERRUPT_STATUS = 0x02,
 
     /* Identifies an RSQ status report */
-    REPORT_IDENTIFIER_RSQ_STATUS = 0x04,
+    REPORT_IDENTIFIER_RSQ_STATUS = 0x03,
 
     /* Identifies a Get Property report */
-    REPORT_IDENTIFIER_GET_PROPERTY = 0x05,
+    REPORT_IDENTIFIER_GET_PROPERTY = 0x04,
 
     /* Indicates a request to tune to a new frequency */
     REPORT_IDENTIFIER_TUNE_FREQ = 0x20,

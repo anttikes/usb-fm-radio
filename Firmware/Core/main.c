@@ -165,7 +165,19 @@ int main(void)
     {
         tud_task();
 
-        ProcessCommand(&radioDevice);
+        if (!ProcessCommand(&radioDevice))
+        {
+            if (radioDevice.interruptCounter > 0)
+            {
+                radioDevice.interruptCounter--;
+
+                // There was no command to process but an interrupt is pending
+                // This usually indicates e.g. RDS or RSQ interrupt
+                // so schedule the GetIntStatus command
+                GetIntStatus(&radioDevice);
+            }
+        }
+
         ProcessReport(&radioDevice);
     }
 }

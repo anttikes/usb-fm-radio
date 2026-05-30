@@ -125,6 +125,9 @@ typedef struct _RadioDevice_t
     /* Holds the current volume level of the device */
     uint8_t currentVolume;
 
+    /* Holds the number of times the interrupt line has triggered */
+    uint8_t interruptCounter;
+
     /* Holds the mute status of the device */
     bool isMuted;
 
