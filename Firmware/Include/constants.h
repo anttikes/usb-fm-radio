@@ -1,7 +1,8 @@
 /**
  ******************************************************************************
- * @file    common.h
- * @brief   Header for common definitions
+ * @file    constants.h
+ * @brief   Header for constant definitions shared between firmware and host
+ *          software
  ******************************************************************************
  * @attention
  *
