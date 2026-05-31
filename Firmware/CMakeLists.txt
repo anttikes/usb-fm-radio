@@ -77,14 +77,10 @@ target_sources(firmware PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio/device.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio/commands.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio/properties.c
-
-    # librdsparser requires callbacks defined by the user
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio/rds.c
-)
 
-# Add TinyUSB sources to the project
-tinyusb_target_add(firmware)
-target_sources(firmware PRIVATE
+    # TODO: Should the librdsparser callbacks be in a separate file?
+
     # TinyUSB requires callbacks and descriptors defined by the user
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/audio_callbacks.c
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/hid_callbacks.c
