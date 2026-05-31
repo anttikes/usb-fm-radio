@@ -112,6 +112,30 @@ typedef enum _CMD_FM_RSQ_STATUS_ARGS : uint8_t
     FM_RSQ_STATUS_ARGS_INTACK = 0x01,
 } CMD_FM_RSQ_STATUS_ARGS;
 
+typedef enum _CMD_FM_RDS_STATUS_ARGS : uint8_t
+{
+    /* No arguments */
+    FM_RDS_STATUS_ARGS_NONE = 0x00,
+
+    /* When set, clears the RDSINT interrupt bit */
+    FM_RDS_STATUS_ARGS_INTACK = 0x01,
+
+    /*
+       When set, flushes the RDS FIFO without reading it
+       When not set, and the FIFO is not empty, reads and removes the oldest FIFO entry
+    */
+    FM_RDS_STATUS_ARGS_MTFIFO = 0x02,
+
+    /*
+       When set, data in BLOCKA will contain the last valid block A data received for the current frequency. Data in
+       BLOCKB will contain the last valid block B data received for the current frequency. Data in BLE will describe the
+       bit errors for the data in BLOCKA and BLOCKB.
+
+       When not set, data in BLOCKA, BLOCKB, BLOCKC, BLOCKD, and BLE contain the oldest data from the RDS FIFO
+    */
+    FM_RDS_STATUS_ARGS_STATUSONLY = 0x04,
+} CMD_FM_RDS_STATUS_ARGS;
+
 typedef enum _CMD_GPIO_CTL_ARGS : uint8_t
 {
     /* All GPOs are set to high impedance (floating) */
@@ -159,6 +183,7 @@ extern bool TuneFreq(RadioDevice_t *device, CMD_FM_TUNE_FREQ_ARGS args, uint16_t
 extern bool SeekStart(RadioDevice_t *device, CMD_FM_SEEK_START_ARGS args);
 extern bool TuneStatus(RadioDevice_t *device, CMD_GET_TUNE_STATUS_ARGS args);
 extern bool RSQStatus(RadioDevice_t *device, CMD_FM_RSQ_STATUS_ARGS args);
+extern bool RDSStatus(RadioDevice_t *device, CMD_FM_RDS_STATUS_ARGS args);
 extern bool GPIOCtl(RadioDevice_t *device, CMD_GPIO_CTL_ARGS args);
 extern bool GPIOSet(RadioDevice_t *device, CMD_GPIO_SET_ARGS args);
 

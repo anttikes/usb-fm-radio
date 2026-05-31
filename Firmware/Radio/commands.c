@@ -359,6 +359,25 @@ bool ProcessRSQStatus(RadioDevice_t *device, Command_t *command)
 }
 
 /**
+ * @brief  Enqueues the "FM RDS Status" command
+ * @param  device Pointer to the radio device structure
+ * @param  args Arguments to the command
+ *
+ * @retval True if the command was enqueued; false otherwise
+ */
+bool RDSStatus(RadioDevice_t *device, CMD_FM_RDS_STATUS_ARGS args)
+{
+    Command_t rdsStatus = {0};
+
+    rdsStatus.args.opCode = CMD_ID_FM_RDS_STATUS;
+    rdsStatus.args.bytes[1] = args;
+    rdsStatus.argLength = 2;
+    rdsStatus.responseLength = 13;
+
+    return EnqueueCommand(device, &rdsStatus);
+}
+
+/**
  * @brief  Enqueues the "GPIO_CTL" command
  * @param  device Pointer to the radio device structure
  * @param  args Arguments to the command
