@@ -53,15 +53,26 @@ target_link_libraries(tinyusb
 
 # Add librdsparser to the project
 set(RDSPARSER_DISABLE_HEAP ON CACHE BOOL "Disable heap allocator (rdsparser_new/free)")
+set(RDSPARSER_DISABLE_UNICODE ON CACHE BOOL "Disable Unicode support")
 set(RDSPARSER_DISABLE_TESTS ON CACHE BOOL "Disable tests")
 set(RDSPARSER_DISABLE_EXAMPLES ON CACHE BOOL "Disable examples")
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/librdsparser)
+
+# Optimize the librdsparser code so it can fit into the flash memory
+target_compile_options(rdsparser_static PRIVATE -Os -g0)
 
 # Create an executable object for the firmware
 add_executable(firmware)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/cmake/stm32cubemx)
+
+# Compile definitions
+target_compile_definitions(firmware PRIVATE
+    # TODO: This could be optimized by having librdsparser provide the compilation flags it used
+    RDSPARSER_DISABLE_HEAP
+    RDSPARSER_DISABLE_UNICODE
+)
 
 # Add include paths
 target_include_directories(firmware PRIVATE
