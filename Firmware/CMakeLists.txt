@@ -25,22 +25,37 @@ enable_language(C ASM)
 # Enable compile command to ease indexing with e.g. clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
-# Create an executable object type
-add_executable(firmware)
-
 # Add the shared header library
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+# Add TinyUSB functions, and get the sources
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/tinyusb/src)
+tinyusb_sources_get(TINYUSB_SOURCES)
+
+# Build TinyUSB as a static library
+add_library(tinyusb STATIC ${TINYUSB_SOURCES})
+
+target_include_directories(tinyusb PRIVATE
+    # Ensure TinyUSB can find our tusb_config.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/USB
+
+    # Ensure TinyUSB can find its own tusb_option.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/    
+)
+
+# Optimize TinyUSB code so it can fit into the flash memory
+target_compile_options(tinyusb PRIVATE -Os -g0)
+
+target_link_libraries(tinyusb
+    # Ensure TinyUSB is aware of the shared headers ("reports.h" contains the HID report size definition)
+    shared-headers
+)
+
+# Create an executable object for the firmware
+add_executable(firmware)
+
 # Add STM32CubeMX generated sources
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/cmake/stm32cubemx)
-
-# Add TinyUSB functions
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/tinyusb/src)
-
-# Linker search path setup
-target_link_directories(firmware PRIVATE
-    # Add user defined library search paths
-)
 
 # Add sources to executable
 target_sources(firmware PRIVATE
@@ -53,6 +68,7 @@ target_sources(firmware PRIVATE
 target_include_directories(firmware PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/USB
     ${CMAKE_CURRENT_SOURCE_DIR}/Radio
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/
 )
 
@@ -64,12 +80,13 @@ target_sources(firmware PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/hid_callbacks.c
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/usb_descriptors.c    
     
-    # Use the FSDEV driver for STM32
+    # Use the FSDEV driver for STM32 from TinyUSB
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c    
 )
 
 # Add linked libraries
 target_link_libraries(firmware
     shared-headers
+    tinyusb
     stm32cubemx    
 )
