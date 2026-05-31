@@ -214,6 +214,19 @@ bool ProcessCommand(RadioDevice_t *device)
                 device->currentFrequency = 0;
             }
         }
+        else if (currentCommand->args.opCode == CMD_ID_GET_INT_STATUS)
+        {
+            // bool clearToSend = currentCommand->response[0] & 0x80;
+            // bool error = currentCommand->response[0] & 0x40;
+            // bool rsqInterrupt = currentCommand->response[0] & 0x08;
+            bool rdsInterrupt = currentCommand->response[0] & 0x04;
+            // bool seekTuneCompleted = currentCommand->response[0] & 0x01;
+
+            if (rdsInterrupt)
+            {
+                RDSStatus(device, FM_RDS_STATUS_ARGS_INTACK);
+            }
+        }
         else if (currentCommand->args.opCode == CMD_ID_SET_PROPERTY)
         {
             PropertyIdentifiers_t property =
