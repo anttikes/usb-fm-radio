@@ -37,6 +37,8 @@ extern rdsparser_t rdsParser;
 
 /* Exported functions --------------------------------------------------------*/
 extern bool RDSInit();
+extern void ProcessRDSData(uint16_t blockA, uint16_t blockB, uint16_t blockC, uint16_t blockD, uint8_t blockAErrors,
+                           uint8_t blockBErrors, uint8_t blockCErrors, uint8_t blockDErrors);
 
 #ifdef __cplusplus
 }
