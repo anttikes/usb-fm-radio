@@ -89,7 +89,6 @@ void ProcessRDSData(uint16_t blockA, uint16_t blockB, uint16_t blockC, uint16_t 
 void RDSReset()
 {
     rdsparser_clear(&rdsParser);
-    rdsDataStable = false;
 }
 
 /* External callbacks --------------------------------------------------------*/
