@@ -200,6 +200,9 @@ bool ProcessCommand(RadioDevice_t *device)
 
             // Schedule a GetTuneStatus to update the current frequency reading and clear the STCINT bit
             TuneStatus(device, GET_TUNE_STATUS_ARGS_INTACK);
+
+            // Reset the RDS parser state
+            RDSReset();
         }
         else if (currentCommand->args.opCode == CMD_ID_FM_TUNE_STATUS)
         {

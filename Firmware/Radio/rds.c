@@ -83,6 +83,15 @@ void ProcessRDSData(uint16_t blockA, uint16_t blockB, uint16_t blockC, uint16_t 
                     (rdsparser_error_t){blockAErrors, blockBErrors, blockCErrors, blockDErrors});
 }
 
+/**
+ * @brief  Resets the RDS parser's state
+ */
+void RDSReset()
+{
+    rdsparser_clear(&rdsParser);
+    rdsDataStable = false;
+}
+
 /* External callbacks --------------------------------------------------------*/
 
 /* Private functions ---------------------------------------------------------*/
