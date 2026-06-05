@@ -27,14 +27,18 @@ rdsparser_t rdsParser;
 /* Private types -------------------------------------------------------------*/
 
 /* Private constants ---------------------------------------------------------*/
+#define RDS_PROGRAMME_SERVICE_STABILITY 3
+#define RDS_RADIO_TEXT_STABILITY 3
 
 /* Private macros ------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
+static uint8_t psStability = 0;
+static uint8_t rtStability = 0;
 
 /* Private function prototypes -----------------------------------------------*/
-void callback_ps(rdsparser_t *rds, void *user_data);
-void callback_rt(rdsparser_t *rds, rdsparser_rt_flag_t flag, void *user_data);
+void callback_ps(rdsparser_t *rds, bool, void *user_data);
+void callback_rt(rdsparser_t *rds, rdsparser_rt_flag_t flag, bool, void *user_data);
 
 /* Exported functions --------------------------------------------------------*/
 
@@ -89,6 +93,9 @@ void ProcessRDSData(uint16_t blockA, uint16_t blockB, uint16_t blockC, uint16_t 
 void RDSReset()
 {
     rdsparser_clear(&rdsParser);
+
+    psStability = 0;
+    rtStability = 0;
 }
 
 /* External callbacks --------------------------------------------------------*/
@@ -97,40 +104,64 @@ void RDSReset()
 /**
  * @brief  Invoked by librdsparser when Programme Service (PS) has been processed
  * @param  rds Pointer to the parser instance
+ * @param  changed True if the PS has changed; false otherwise
  * @param  user_data Pointer to user data; NULL if no data was provided
  */
-void callback_ps(rdsparser_t *rds, void *user_data)
+void callback_ps(rdsparser_t *rds, bool changed, void *user_data)
 {
-    // const rdsparser_string_t *ps = rdsparser_get_ps(rds);
-    // const rdsparser_string_char_t *ps_content = rdsparser_string_get_content(ps);
-    // uint8_t length = rdsparser_string_get_length(ps);
+    if (changed)
+    {
+        psStability = 0;
+        return;
+    }
 
-    // Report_t report = {0};
+    if (psStability < RDS_PROGRAMME_SERVICE_STABILITY) {
+        psStability++;
+        return;
+    }
+    
+    const rdsparser_string_t *ps = rdsparser_get_ps(rds);
+    const rdsparser_string_char_t *ps_content = rdsparser_string_get_content(ps);
+    uint8_t length = rdsparser_string_get_length(ps);
 
-    // report.identifier = REPORT_IDENTIFIER_RDS_PROGRAMME_SERVICE;
+    Report_t report = {0};
 
-    // memcpy(report.bytes.programmeService.programmeService, ps_content, length);
+    report.identifier = REPORT_IDENTIFIER_RDS_PROGRAMME_SERVICE;
 
-    // EnqueueReport(&radioDevice, &report);
+    memcpy(report.bytes.programmeService.programmeService, ps_content, length);
+
+    EnqueueReport(&radioDevice, &report);
 }
 
 /**
  * @brief  Invoked by librdsparser when Radio Text (RT) has been processed
  * @param  rds Pointer to the parser instance
  * @param  flag RT flag
+ * @param  changed True if the RT has changed; false otherwise
  * @param  user_data Pointer to user data; NULL if no data was provided
  */
-void callback_rt(rdsparser_t *rds, rdsparser_rt_flag_t flag, void *user_data)
+void callback_rt(rdsparser_t *rds, rdsparser_rt_flag_t flag, bool changed, void *user_data)
 {
-    // const rdsparser_string_t *rt = rdsparser_get_rt(rds, flag);
-    // const rdsparser_string_char_t *rt_content = rdsparser_string_get_content(rt);
-    // const uint8_t length = rdsparser_string_get_length(rt);
+    if (changed)
+    {
+        rtStability = 0;
+        return;
+    }
 
-    // Report_t report = {0};
+    if (rtStability < RDS_RADIO_TEXT_STABILITY) {
+        rtStability++;
+        return;
+    }
 
-    // report.identifier = REPORT_IDENTIFIER_RDS_RADIO_TEXT;
+    const rdsparser_string_t *rt = rdsparser_get_rt(rds, flag);
+    const rdsparser_string_char_t *rt_content = rdsparser_string_get_content(rt);
+    const uint8_t length = rdsparser_string_get_length(rt);
 
-    // memcpy(report.bytes.radioText.radioText, rt_content, length);
+    Report_t report = {0};
 
-    // EnqueueReport(&radioDevice, &report);
+    report.identifier = REPORT_IDENTIFIER_RDS_RADIO_TEXT;
+
+    memcpy(report.bytes.radioText.radioText, rt_content, length);
+
+    EnqueueReport(&radioDevice, &report);
 }
