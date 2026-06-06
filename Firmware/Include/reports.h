@@ -27,7 +27,7 @@
 #include <stdint.h>
 
 /* The HID report size includes the identifier and the struct bytes */
-#define MAX_REPORT_SIZE 17
+#define MAX_REPORT_SIZE 128
 #define MAX_STRUCT_SIZE MAX_REPORT_SIZE - 1
 
 /* Exported types */
@@ -47,7 +47,7 @@ typedef enum _ReportIdentifier_t : uint8_t
 
     /* Identifies a report that provides stable Programme Service information */
     REPORT_IDENTIFIER_RDS_PROGRAMME_SERVICE = 0x05,
-    
+
     /* Identifies a report that provides stable Radio Text information */
     REPORT_IDENTIFIER_RDS_RADIO_TEXT = 0x06,
 
@@ -239,9 +239,9 @@ typedef struct _RDSProgrammeServiceReport_t
 #if defined __cplusplus
     Q_GADGET
 
-    Q_PROPERTY(QString programmeService READ GetProgrammeService)    
+    Q_PROPERTY(QString programmeService READ GetProgrammeService)
 
-public:
+  public:
     QString GetProgrammeService() const
     {
         return QString::fromLatin1(programmeService, 8).trimmed();
@@ -259,9 +259,9 @@ typedef struct _RDSRadioTextReport_t
 #if defined __cplusplus
     Q_GADGET
 
-    Q_PROPERTY(QString radioText READ GetRadioText)    
+    Q_PROPERTY(QString radioText READ GetRadioText)
 
-public:
+  public:
     QString GetRadioText() const
     {
         return QString::fromLatin1(radioText, 64).trimmed();
@@ -272,7 +272,7 @@ public:
     char radioText[64];
 } RDSRadioTextReport_t;
 
-//static_assert(sizeof(_RDSRadioTextReport_t) <= MAX_STRUCT_SIZE);
+static_assert(sizeof(RDSRadioTextReport_t) <= MAX_STRUCT_SIZE);
 
 typedef struct _TuneFreqRequest_t
 {

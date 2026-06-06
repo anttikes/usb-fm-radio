@@ -129,8 +129,8 @@ int main(void)
         Error_Handler();
     }
 
-    // Configure RDS to use maximum FIFO buffers
-    if (!SetRDSFIFOCount(&radioDevice, 25))
+    // Configure the number of FIFO buffers in the RDS
+    if (!SetRDSFIFOCount(&radioDevice, 10))
     {
         Error_Handler();
     }
