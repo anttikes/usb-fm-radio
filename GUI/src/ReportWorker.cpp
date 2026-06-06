@@ -89,6 +89,22 @@ void ReportWorker::run()
 
                 break;
             }
+            case REPORT_IDENTIFIER_RDS_PROGRAMME_SERVICE: {
+                RDSProgrammeServiceReport_t report;
+                std::memcpy(&report, &buf[1], sizeof(RDSProgrammeServiceReport_t));
+
+                emit rdsProgrammeServiceReportReceived(report);
+
+                break;
+            }
+            case REPORT_IDENTIFIER_RDS_RADIO_TEXT: {
+                RDSRadioTextReport_t report;
+                std::memcpy(&report, &buf[1], sizeof(RDSRadioTextReport_t));
+
+                emit rdsRadioTextReportReceived(report);
+
+                break;
+            }
             }
         }
         else if (res < 0)

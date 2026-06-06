@@ -31,6 +31,8 @@ class ReportWorker : public QObject, public QRunnable
   signals:
     void radioStateReportReceived(RadioStatusResponse_t report);
     void rsqStatusReportReceived(RSQStatusResponse_t report);
+    void rdsProgrammeServiceReportReceived(RDSProgrammeServiceReport_t report);
+    void rdsRadioTextReportReceived(RDSRadioTextReport_t report);
     void disconnectCurrentDevice();
 
   private:
