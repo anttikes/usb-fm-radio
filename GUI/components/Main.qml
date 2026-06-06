@@ -94,6 +94,8 @@ Window {
                     onClicked: {
                         console.log("Seek down issued");
 
+                        rdsPanel.resetDisplay();
+
                         DeviceManager.beginSeek(false);
                     }
                 }
@@ -122,6 +124,8 @@ Window {
 
                     onClicked: {
                         console.log("Seek up issued");
+
+                        rdsPanel.resetDisplay();
 
                         DeviceManager.beginSeek(true);
                     }
