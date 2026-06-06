@@ -27,14 +27,10 @@ rdsparser_t rdsParser;
 /* Private types -------------------------------------------------------------*/
 
 /* Private constants ---------------------------------------------------------*/
-#define RDS_PROGRAMME_SERVICE_STABILITY 3
-#define RDS_RADIO_TEXT_STABILITY 3
 
 /* Private macros ------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
-static uint8_t psStability = 0;
-static uint8_t rtStability = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 void callback_ps(rdsparser_t *rds, bool, void *user_data);
@@ -93,9 +89,6 @@ void ProcessRDSData(uint16_t blockA, uint16_t blockB, uint16_t blockC, uint16_t 
 void RDSReset()
 {
     rdsparser_clear(&rdsParser);
-
-    psStability = 0;
-    rtStability = 0;
 }
 
 /* External callbacks --------------------------------------------------------*/
@@ -111,15 +104,9 @@ void callback_ps(rdsparser_t *rds, bool changed, void *user_data)
 {
     if (changed)
     {
-        psStability = 0;
         return;
     }
 
-    if (psStability < RDS_PROGRAMME_SERVICE_STABILITY) {
-        psStability++;
-        return;
-    }
-    
     const rdsparser_string_t *ps = rdsparser_get_ps(rds);
     const rdsparser_string_char_t *ps_content = rdsparser_string_get_content(ps);
     uint8_t length = rdsparser_string_get_length(ps);
@@ -144,12 +131,6 @@ void callback_rt(rdsparser_t *rds, rdsparser_rt_flag_t flag, bool changed, void 
 {
     if (changed)
     {
-        rtStability = 0;
-        return;
-    }
-
-    if (rtStability < RDS_RADIO_TEXT_STABILITY) {
-        rtStability++;
         return;
     }
 
