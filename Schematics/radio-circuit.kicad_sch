@@ -546,7 +546,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Connector:USB_B_Micro"
+		(symbol "Connector:USB_A"
 			(pin_names
 				(offset 1.016)
 			)
@@ -566,7 +566,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "USB_B_Micro"
+			(property "Value" "USB_A"
 				(at -5.08 8.89 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -599,7 +599,7 @@
 					)
 				)
 			)
-			(property "Description" "USB Micro Type B connector"
+			(property "Description" "USB Type A connector"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -610,7 +610,7 @@
 					)
 				)
 			)
-			(property "ki_keywords" "connector USB micro"
+			(property "ki_keywords" "connector USB"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -621,7 +621,7 @@
 					)
 				)
 			)
-			(property "ki_fp_filters" "USB*Micro*B*"
+			(property "ki_fp_filters" "USB*"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -632,7 +632,7 @@
 					)
 				)
 			)
-			(symbol "USB_B_Micro_0_1"
+			(symbol "USB_A_0_1"
 				(rectangle
 					(start -5.08 -7.62)
 					(end 5.08 7.62)
@@ -642,31 +642,6 @@
 					)
 					(fill
 						(type background)
-					)
-				)
-				(polyline
-					(pts
-						(xy -4.699 5.842) (xy -4.699 5.588) (xy -4.445 4.826) (xy -4.445 4.572) (xy -1.651 4.572) (xy -1.651 4.826)
-						(xy -1.397 5.588) (xy -1.397 5.842) (xy -4.699 5.842)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -4.318 5.588) (xy -1.778 5.588) (xy -2.032 4.826) (xy -4.064 4.826) (xy -4.318 5.588)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
 					)
 				)
 				(circle
@@ -704,12 +679,22 @@
 						(type none)
 					)
 				)
-				(polyline
-					(pts
-						(xy -1.905 2.159) (xy 0.635 2.159)
-					)
+				(rectangle
+					(start -1.524 4.826)
+					(end -4.318 5.334)
 					(stroke
-						(width 0.254)
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(rectangle
+					(start -1.27 4.572)
+					(end -4.572 5.842)
+					(stroke
+						(width 0)
 						(type default)
 					)
 					(fill
@@ -794,20 +779,21 @@
 						(type none)
 					)
 				)
-				(rectangle
-					(start 5.08 -5.207)
-					(end 4.318 -4.953)
+			)
+			(symbol "USB_A_1_1"
+				(polyline
+					(pts
+						(xy -1.905 2.159) (xy 0.635 2.159)
+					)
 					(stroke
-						(width 0)
+						(width 0.254)
 						(type default)
 					)
 					(fill
 						(type none)
 					)
 				)
-			)
-			(symbol "USB_B_Micro_1_1"
-				(pin power_out line
+				(pin power_in line
 					(at 7.62 5.08 180)
 					(length 2.54)
 					(name "VBUS"
@@ -861,25 +847,7 @@
 						)
 					)
 				)
-				(pin passive line
-					(at 7.62 -5.08 180)
-					(length 2.54)
-					(name "ID"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
+				(pin power_in line
 					(at 0 -10.16 90)
 					(length 2.54)
 					(name "GND"
@@ -889,7 +857,7 @@
 							)
 						)
 					)
-					(number "5"
+					(number "4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4728,7 +4696,7 @@
 		)
 		(uuid "c20fe972-1cee-4ea7-9686-d0208abf66e7")
 	)
-	(text "C1 and C2 are VDD\nby-pass capacitors"
+	(text "C1 and C3 are VDD\nby-pass capacitors"
 		(exclude_from_sim no)
 		(at 53.848 17.78 0)
 		(effects
@@ -4932,10 +4900,6 @@
 		(uuid "fcab720f-9bf1-4832-a446-defeeb715958")
 	)
 	(no_connect
-		(at 27.94 182.88)
-		(uuid "0219ada0-d71a-4431-b241-7150887b5e4f")
-	)
-	(no_connect
 		(at 123.19 171.45)
 		(uuid "09dc94fb-3b9a-4c5d-be0c-b3cf48ef2467")
 	)
@@ -4956,16 +4920,16 @@
 		(uuid "329aa1e4-83f2-4f47-8cb6-f630ec4f778e")
 	)
 	(no_connect
+		(at 17.78 187.96)
+		(uuid "371c0d9c-1877-412b-a483-d0b6d950728b")
+	)
+	(no_connect
 		(at 110.49 40.64)
 		(uuid "6f103158-a7a8-4844-ab0e-03412e0b6dcb")
 	)
 	(no_connect
 		(at 214.63 82.55)
 		(uuid "911ed576-e1d8-44e6-b0c4-e409dc200239")
-	)
-	(no_connect
-		(at 17.78 187.96)
-		(uuid "a5fc498d-9b8a-4478-bab0-9ec639f06e44")
 	)
 	(no_connect
 		(at 123.19 186.69)
@@ -5081,13 +5045,13 @@
 	)
 	(wire
 		(pts
-			(xy 20.32 187.96) (xy 20.32 190.5)
+			(xy 30.48 172.72) (xy 30.48 170.18)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "12e748fb-5a7b-415b-8a53-ef4ea3e0bf4a")
+		(uuid "15c5561c-dc9d-4bc9-9caf-76783c7b9508")
 	)
 	(wire
 		(pts
@@ -5231,16 +5195,6 @@
 	)
 	(wire
 		(pts
-			(xy 50.8 170.18) (xy 50.8 172.72)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2452efb6-ad1d-4fa5-bee7-32080e052890")
-	)
-	(wire
-		(pts
 			(xy 110.49 153.67) (xy 110.49 156.21)
 		)
 		(stroke
@@ -5248,16 +5202,6 @@
 			(type default)
 		)
 		(uuid "24614d52-99d1-4fe3-b960-e656bbc4bf26")
-	)
-	(wire
-		(pts
-			(xy 50.8 185.42) (xy 50.8 187.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "257bd67b-1274-4906-8313-b8503e5b37a1")
 	)
 	(wire
 		(pts
@@ -5301,13 +5245,13 @@
 	)
 	(wire
 		(pts
-			(xy 55.88 177.8) (xy 59.69 177.8)
+			(xy 55.88 180.34) (xy 59.69 180.34)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "2d894313-1c76-4ad9-9207-a5b3c975bf00")
+		(uuid "2b3f6b9a-02ed-48b4-aa47-e3402c3cae75")
 	)
 	(wire
 		(pts
@@ -5318,6 +5262,16 @@
 			(type default)
 		)
 		(uuid "2db182f8-25ef-4d03-9eed-de333f0eb1e2")
+	)
+	(wire
+		(pts
+			(xy 20.32 187.96) (xy 20.32 190.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3033d05f-d2ba-42b8-b5db-5121b380c944")
 	)
 	(wire
 		(pts
@@ -5541,16 +5495,6 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 172.72) (xy 27.94 172.72)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "59d19913-1af1-4f66-91a4-8d2d593f41fb")
-	)
-	(wire
-		(pts
 			(xy 68.58 142.24) (xy 68.58 144.78)
 		)
 		(stroke
@@ -5631,6 +5575,16 @@
 	)
 	(wire
 		(pts
+			(xy 50.8 170.18) (xy 50.8 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "772addec-e3cf-42d8-9aee-99ef2a4ee437")
+	)
+	(wire
+		(pts
 			(xy 91.44 128.27) (xy 97.79 128.27)
 		)
 		(stroke
@@ -5658,16 +5612,6 @@
 			(type default)
 		)
 		(uuid "78cc80da-4ad2-4349-bad5-da845c209a41")
-	)
-	(wire
-		(pts
-			(xy 27.94 177.8) (xy 45.72 177.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "79d8c64e-dd89-47ba-9066-6707e629720a")
 	)
 	(wire
 		(pts
@@ -5718,6 +5662,16 @@
 			(type default)
 		)
 		(uuid "81f48195-3429-469a-86b4-69020818d471")
+	)
+	(wire
+		(pts
+			(xy 50.8 185.42) (xy 50.8 187.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "833d38a6-ecdc-44cc-b3be-d4a463afbe9d")
 	)
 	(wire
 		(pts
@@ -5951,6 +5905,16 @@
 	)
 	(wire
 		(pts
+			(xy 55.88 177.8) (xy 59.69 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9fb4397c-d5c9-4cc2-8929-bca6ccbe9d4f")
+	)
+	(wire
+		(pts
 			(xy 52.07 128.27) (xy 57.15 128.27)
 		)
 		(stroke
@@ -6071,6 +6035,16 @@
 	)
 	(wire
 		(pts
+			(xy 27.94 172.72) (xy 30.48 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ba3d36ab-0f07-4209-ba37-505e5abe96dc")
+	)
+	(wire
+		(pts
 			(xy 172.72 54.61) (xy 176.53 54.61)
 		)
 		(stroke
@@ -6097,7 +6071,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "bd020408-8687-4772-990a-e561f1a6780b")
+		(uuid "bd657957-2b20-47f7-85e3-1f0d151d977a")
 	)
 	(wire
 		(pts
@@ -6188,16 +6162,6 @@
 			(type default)
 		)
 		(uuid "c7aa6b62-0780-4f68-b6e9-6099711cb524")
-	)
-	(wire
-		(pts
-			(xy 55.88 180.34) (xy 59.69 180.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c85155de-15f6-420f-8db2-13d9e6adf33b")
 	)
 	(wire
 		(pts
@@ -6381,16 +6345,6 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 170.18) (xy 30.48 172.72)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e3bff631-230d-4f31-83ca-0f17e2b507ce")
-	)
-	(wire
-		(pts
 			(xy 46.99 48.26) (xy 46.99 53.34)
 		)
 		(stroke
@@ -6458,6 +6412,16 @@
 			(type default)
 		)
 		(uuid "e8ff87ff-eb75-46ad-9feb-e5f79127c51e")
+	)
+	(wire
+		(pts
+			(xy 27.94 177.8) (xy 45.72 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e9962835-8c34-4d95-a1c2-4164e4610007")
 	)
 	(wire
 		(pts
@@ -8705,6 +8669,105 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:USB_A")
+		(at 20.32 177.8 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2f073814-1fef-4186-9bb5-743c94c0061c")
+		(property "Reference" "J4"
+			(at 20.32 168.148 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "USB_A"
+			(at 25.654 187.706 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Local:USB_A_Molex_48037-2200_Horizontal"
+			(at 24.13 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 24.13 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "USB Type A connector"
+			(at 20.32 177.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "JLCPCB Part Number" "C2765195"
+			(at 20.32 177.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "4"
+			(uuid "0d100fa9-ec8c-414b-a88e-8e6127ed107f")
+		)
+		(pin "SH"
+			(uuid "5141db33-8154-45af-be71-4b0e0ebfa77f")
+		)
+		(pin "2"
+			(uuid "67de86a7-69bb-41e2-9f04-a817a23c8192")
+		)
+		(pin "1"
+			(uuid "1d6cc18a-6a46-4497-93fe-c33928023aab")
+		)
+		(pin "3"
+			(uuid "396c18e3-e9a0-4db4-b098-e8269c67c933")
+		)
+		(instances
+			(project "radio-circuit"
+				(path "/6b4c382d-c3a6-4721-98dc-a03527f31640"
+					(reference "J4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:VBUS")
 		(at 193.04 19.05 0)
 		(unit 1)
@@ -8726,7 +8789,7 @@
 				)
 			)
 		)
-		(property "Value" "V_{A}"
+		(property "Value" "V_{RADIO}"
 			(at 193.04 14.986 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9921,7 +9984,7 @@
 	)
 	(symbol
 		(lib_id "power:VBUS")
-		(at 50.8 170.18 0)
+		(at 50.8 187.96 180)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -9931,7 +9994,7 @@
 		(dnp no)
 		(uuid "65563b07-b8c3-4ecc-90dd-0733fd59f06c")
 		(property "Reference" "#PWR05"
-			(at 50.8 173.99 0)
+			(at 50.8 184.15 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9942,7 +10005,7 @@
 			)
 		)
 		(property "Value" "V_{BUS}"
-			(at 48.768 165.862 0)
+			(at 52.832 192.278 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -9953,7 +10016,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 50.8 170.18 0)
+			(at 50.8 187.96 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9964,7 +10027,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 50.8 170.18 0)
+			(at 50.8 187.96 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9975,7 +10038,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"VBUS\""
-			(at 50.8 170.18 0)
+			(at 50.8 187.96 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10188,8 +10251,8 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 50.8 187.96 0)
-		(mirror y)
+		(at 50.8 170.18 0)
+		(mirror x)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -10199,7 +10262,7 @@
 		(dnp no)
 		(uuid "6b1fe5d1-27a3-44f4-8ce0-caf521e1a446")
 		(property "Reference" "#PWR06"
-			(at 50.8 194.31 0)
+			(at 50.8 163.83 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10210,7 +10273,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 50.8 192.024 0)
+			(at 50.8 166.116 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10221,7 +10284,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 50.8 187.96 0)
+			(at 50.8 170.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10232,7 +10295,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 50.8 187.96 0)
+			(at 50.8 170.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10243,7 +10306,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 50.8 187.96 0)
+			(at 50.8 170.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10731,8 +10794,7 @@
 	)
 	(symbol
 		(lib_id "Power_Protection:USBLC6-2SC6")
-		(at 50.8 177.8 0)
-		(mirror y)
+		(at 50.8 180.34 180)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -10742,7 +10804,7 @@
 		(dnp no)
 		(uuid "73474254-2195-41a6-85e2-0b5c081a0184")
 		(property "Reference" "U1"
-			(at 55.118 172.72 0)
+			(at 54.356 173.736 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -10753,7 +10815,7 @@
 			)
 		)
 		(property "Value" "USBLC6-2SC6"
-			(at 67.818 186.69 0)
+			(at 65.532 184.658 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -10764,7 +10826,7 @@
 			)
 		)
 		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
-			(at 49.53 184.15 0)
+			(at 49.53 173.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10777,7 +10839,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.st.com/resource/en/datasheet/usblc6-2.pdf"
-			(at 49.53 186.055 0)
+			(at 49.53 172.085 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10789,7 +10851,7 @@
 			)
 		)
 		(property "Description" "Very low capacitance ESD protection diode, 2 data-line, SOT-23-6"
-			(at 50.8 177.8 0)
+			(at 50.8 180.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10800,7 +10862,7 @@
 			)
 		)
 		(property "JLCPCB Part Number" "C7519"
-			(at 50.8 177.8 0)
+			(at 50.8 180.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10811,7 +10873,7 @@
 			)
 		)
 		(property "Sim.Library" ""
-			(at 50.8 177.8 0)
+			(at 50.8 180.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10822,7 +10884,7 @@
 			)
 		)
 		(property "Sim.Name" ""
-			(at 50.8 177.8 0)
+			(at 50.8 180.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11091,132 +11153,6 @@
 			(project "radio-circuit"
 				(path "/6b4c382d-c3a6-4721-98dc-a03527f31640"
 					(reference "U2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:USB_B_Micro")
-		(at 20.32 177.8 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "7d57b41d-8255-41a6-ad9f-0a13cc152d3f")
-		(property "Reference" "J1"
-			(at 21.59 168.402 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "USB_B_Micro"
-			(at 34.036 187.706 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Connector_USB:USB_Micro-B_Molex_47346-0001"
-			(at 24.13 179.07 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 24.13 179.07 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "USB Micro Type B connector"
-			(at 20.32 177.8 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part Number" "C132560"
-			(at 20.32 177.8 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Sim.Library" ""
-			(at 20.32 177.8 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Sim.Name" ""
-			(at 20.32 177.8 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "3"
-			(uuid "ce024d36-1f28-434b-918b-d98c065875d4")
-		)
-		(pin "5"
-			(uuid "5ca17218-1591-40fd-9bb5-0b0fbf20bdd8")
-		)
-		(pin "2"
-			(uuid "ebe0c122-0a08-4302-ae50-0c54f6ebd566")
-		)
-		(pin "SH"
-			(uuid "7147bad1-f74e-473a-9bc5-6cf993154fc2")
-		)
-		(pin "4"
-			(uuid "e86179b6-5f40-479c-a57b-599f771aac7a")
-		)
-		(pin "1"
-			(uuid "a48d7710-7c00-466a-a78f-928d67e8f79b")
-		)
-		(instances
-			(project "radio-circuit"
-				(path "/6b4c382d-c3a6-4721-98dc-a03527f31640"
-					(reference "J1")
 					(unit 1)
 				)
 			)
