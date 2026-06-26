@@ -7,6 +7,13 @@ Item {
     property alias stationName: stationNameControl.text
     property alias radioText: radioTextControl.text
 
+    function resetDisplay() {
+        console.log("RDS panel content was reset")
+        
+        stationNameControl.text = ""
+        radioTextControl.text = ""
+    }
+
     Text {
         id: titleText
 

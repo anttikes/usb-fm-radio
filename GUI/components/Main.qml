@@ -94,6 +94,8 @@ Window {
                     onClicked: {
                         console.log("Seek down issued");
 
+                        rdsPanel.resetDisplay();
+
                         DeviceManager.beginSeek(false);
                     }
                 }
@@ -123,17 +125,37 @@ Window {
                     onClicked: {
                         console.log("Seek up issued");
 
+                        rdsPanel.resetDisplay();
+
                         DeviceManager.beginSeek(true);
                     }
                 }
             }
 
             RDSPanel {
+                id: rdsPanel
+
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                stationName: DeviceManager.selectedDeviceIndex >= 0 ? "BBC R3" : qsTr("No radios detected; please connect a radio device to your computer")
-                radioText: DeviceManager.selectedDeviceIndex >= 0 ? "Beethoven - Symphony No. 7" : ""
+                Connections {
+                    target: DeviceManager
+
+                    function onRdsProgrammeServiceReportReceived(report) {
+                        console.log("PS data received: " + report.programmeService);
+
+                        rdsPanel.stationName = report.programmeService;
+                    }
+
+                    function onRdsRadioTextReportReceived(report) {
+                        console.log("RT data received: " + report.radioText);
+                        
+                        rdsPanel.radioText = report.radioText;
+                    }
+                }
+
+                stationName: qsTr("No radios detected; please connect a radio device to your computer")
+                radioText: ""
             }
 
             RowLayout {

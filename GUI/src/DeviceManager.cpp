@@ -194,6 +194,16 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
                     this,
                     &DeviceManager::onDisconnectCurrentDevice);
 
+            connect(m_reportWorker,
+                    &ReportWorker::rdsProgrammeServiceReportReceived,
+                    this,
+                    &DeviceManager::rdsProgrammeServiceReportReceived);
+
+            connect(m_reportWorker,
+                    &ReportWorker::rdsRadioTextReportReceived,
+                    this,
+                    &DeviceManager::rdsRadioTextReportReceived);
+
             qDebug() << "[DeviceManager] Starting the report worker";
 
             QThreadPool::globalInstance()->start(m_reportWorker);

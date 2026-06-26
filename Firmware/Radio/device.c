@@ -21,6 +21,7 @@
 #include "common.h"
 #include "i2c.h"
 #include "main.h"
+#include "rds.h"
 #include "stm32f0xx_hal.h"
 #include "tim.h"
 #include "tusb.h"
@@ -199,6 +200,9 @@ bool ProcessCommand(RadioDevice_t *device)
 
             // Schedule a GetTuneStatus to update the current frequency reading and clear the STCINT bit
             TuneStatus(device, GET_TUNE_STATUS_ARGS_INTACK);
+
+            // Reset the RDS parser state
+            RDSReset();
         }
         else if (currentCommand->args.opCode == CMD_ID_FM_TUNE_STATUS)
         {
@@ -211,6 +215,19 @@ bool ProcessCommand(RadioDevice_t *device)
             else
             {
                 device->currentFrequency = 0;
+            }
+        }
+        else if (currentCommand->args.opCode == CMD_ID_GET_INT_STATUS)
+        {
+            // bool clearToSend = currentCommand->response[0] & 0x80;
+            // bool error = currentCommand->response[0] & 0x40;
+            // bool rsqInterrupt = currentCommand->response[0] & 0x08;
+            bool rdsInterrupt = currentCommand->response[0] & 0x04;
+            // bool seekTuneCompleted = currentCommand->response[0] & 0x01;
+
+            if (rdsInterrupt)
+            {
+                RDSStatus(device, FM_RDS_STATUS_ARGS_INTACK);
             }
         }
         else if (currentCommand->args.opCode == CMD_ID_SET_PROPERTY)
@@ -252,6 +269,28 @@ bool ProcessCommand(RadioDevice_t *device)
             // Tuner programming guide outlines that a property
             // set operation always completes in 10 ms
             HAL_Delay(10);
+        }
+        else if (currentCommand->args.opCode == CMD_ID_FM_RDS_STATUS)
+        {
+            uint8_t fifoCount = currentCommand->response[3];
+
+            uint16_t blockA = (uint16_t)((currentCommand->response[4] << 8) | (currentCommand->response[5] << 0));
+            uint16_t blockB = (uint16_t)((currentCommand->response[6] << 8) | (currentCommand->response[7] << 0));
+            uint16_t blockC = (uint16_t)((currentCommand->response[8] << 8) | (currentCommand->response[9] << 0));
+            uint16_t blockD = (uint16_t)((currentCommand->response[10] << 8) | (currentCommand->response[11] << 0));
+
+            uint8_t blockAErrors = currentCommand->response[12] & 0xC0;
+            uint8_t blockBErrors = currentCommand->response[12] & 0x30;
+            uint8_t blockCErrors = currentCommand->response[12] & 0x0C;
+            uint8_t blockDErrors = currentCommand->response[12] & 0x03;
+
+            ProcessRDSData(blockA, blockB, blockC, blockD, blockAErrors, blockBErrors, blockCErrors, blockDErrors);
+
+            if (fifoCount > 0)
+            {
+                // Schedule a new retrieval until the FIFO is empty
+                RDSStatus(device, FM_RDS_STATUS_ARGS_NONE);
+            }
         }
 
         PopCommand(&device->commandQueue);

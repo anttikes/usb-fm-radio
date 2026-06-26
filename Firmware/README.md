@@ -19,3 +19,7 @@ During the installation of the extensions and the bundles you may need to restar
 ## Deployment and debugging
 
 To deploy and debug the project you will need a fabricated board and the ST Microelectronics' ST-Link v3 debug probe. The current schematic has a header for plugging in the probe.
+
+## Acknowledgements
+
+This repository uses a forked version of librdsparser.Copyright, license terms and other information related to the library can be found from [kkonradpl/librdsparser](https://github.com/kkonradpl/librdsparser/).

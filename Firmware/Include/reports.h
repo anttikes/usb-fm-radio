@@ -27,7 +27,7 @@
 #include <stdint.h>
 
 /* The HID report size includes the identifier and the struct bytes */
-#define MAX_REPORT_SIZE 17
+#define MAX_REPORT_SIZE 128
 #define MAX_STRUCT_SIZE MAX_REPORT_SIZE - 1
 
 /* Exported types */
@@ -44,6 +44,12 @@ typedef enum _ReportIdentifier_t : uint8_t
 
     /* Identifies a Get Property report */
     REPORT_IDENTIFIER_GET_PROPERTY = 0x04,
+
+    /* Identifies a report that provides stable Programme Service information */
+    REPORT_IDENTIFIER_RDS_PROGRAMME_SERVICE = 0x05,
+
+    /* Identifies a report that provides stable Radio Text information */
+    REPORT_IDENTIFIER_RDS_RADIO_TEXT = 0x06,
 
     /* Indicates a request to tune to a new frequency */
     REPORT_IDENTIFIER_TUNE_FREQ = 0x20,
@@ -228,6 +234,46 @@ typedef struct _RSQStatusResponse_t
 
 static_assert(sizeof(RSQStatusResponse_t) <= MAX_STRUCT_SIZE);
 
+typedef struct _RDSProgrammeServiceReport_t
+{
+#if defined __cplusplus
+    Q_GADGET
+
+    Q_PROPERTY(QString programmeService READ GetProgrammeService)
+
+  public:
+    QString GetProgrammeService() const
+    {
+        return QString::fromLatin1(programmeService, 8).trimmed();
+    }
+#endif /* __cplusplus */
+
+    /* Contains the current Programme Service information */
+    char programmeService[8];
+} RDSProgrammeServiceReport_t;
+
+static_assert(sizeof(RDSProgrammeServiceReport_t) <= MAX_STRUCT_SIZE);
+
+typedef struct _RDSRadioTextReport_t
+{
+#if defined __cplusplus
+    Q_GADGET
+
+    Q_PROPERTY(QString radioText READ GetRadioText)
+
+  public:
+    QString GetRadioText() const
+    {
+        return QString::fromLatin1(radioText, 64).trimmed();
+    }
+#endif /* __cplusplus */
+
+    /* Contains the current Radio Text information */
+    char radioText[64];
+} RDSRadioTextReport_t;
+
+static_assert(sizeof(RDSRadioTextReport_t) <= MAX_STRUCT_SIZE);
+
 typedef struct _TuneFreqRequest_t
 {
     /* Frequency to which the radio should tune itself, in 10 kHz increments */
@@ -258,6 +304,8 @@ typedef struct _Report_t
         GetIntStatusResponse_t interruptStatus;
         GetPropertyResponse_t propertyResponse;
         RSQStatusResponse_t rsqStatus;
+        RDSProgrammeServiceReport_t programmeService;
+        RDSRadioTextReport_t radioText;
         TuneFreqRequest_t tuneFreqRequest;
         SeekStartRequest_t seekStartRequest;
 

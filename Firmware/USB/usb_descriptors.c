@@ -341,7 +341,7 @@ uint8_t const desc_configuration[] =
 		sizeof(desc_hid_report),                                 /* wDescriptorLength */
 		EPNUM_HID,                                               /* bEndpointAddress (OUT) */
 		0x80 | EPNUM_HID,                                        /* bEndpointAddress (IN) */
-		CFG_TUD_HID_EP_BUFSIZE,                                  /* wMaxPacketSize */
+		0x20,				                                     /* wMaxPacketSize */
 		0x0A                                                     /* bInterval */
 	),
 };

@@ -51,18 +51,22 @@ target_link_libraries(tinyusb
     shared-headers
 )
 
+# Add librdsparser to the project
+set(RDSPARSER_BUILD_STATIC ON CACHE BOOL "Build static version of the library")
+set(RDSPARSER_DISABLE_HEAP ON CACHE BOOL "Disable heap allocator (rdsparser_new/free)")
+set(RDSPARSER_DISABLE_UNICODE ON CACHE BOOL "Disable Unicode support")
+set(RDSPARSER_DISABLE_TESTS ON CACHE BOOL "Disable tests")
+set(RDSPARSER_DISABLE_EXAMPLES ON CACHE BOOL "Disable examples")
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/librdsparser)
+
+# Optimize the librdsparser code so it can fit into the flash memory
+target_compile_options(rdsparser PRIVATE -Os -g0)
+
 # Create an executable object for the firmware
 add_executable(firmware)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/cmake/stm32cubemx)
-
-# Add sources to executable
-target_sources(firmware PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/device.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/commands.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/properties.c
-)
 
 # Add include paths
 target_include_directories(firmware PRIVATE
@@ -72,9 +76,15 @@ target_include_directories(firmware PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/
 )
 
-# Add TinyUSB sources to the project
-tinyusb_target_add(firmware)
+# Add sources to executable
 target_sources(firmware PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/device.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/commands.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/properties.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Radio/rds.c
+
+    # TODO: Should the librdsparser callbacks be in a separate file?
+
     # TinyUSB requires callbacks and descriptors defined by the user
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/audio_callbacks.c
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/hid_callbacks.c
@@ -87,6 +97,7 @@ target_sources(firmware PRIVATE
 # Add linked libraries
 target_link_libraries(firmware
     shared-headers
-    tinyusb
-    stm32cubemx    
+    tinyusb    
+    stm32cubemx
+    rdsparser
 )
