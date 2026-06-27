@@ -4575,9 +4575,9 @@
 		)
 		(uuid "01227d1f-ad99-473a-acf1-01e119a80ad3")
 	)
-	(text "C6 and C7 are VDD_{A}\nby-pass capacitors"
+	(text "Place C6 close\nto VDD_{A} pin 5"
 		(exclude_from_sim no)
-		(at 108.458 17.78 0)
+		(at 108.712 17.526 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4696,9 +4696,9 @@
 		)
 		(uuid "c20fe972-1cee-4ea7-9686-d0208abf66e7")
 	)
-	(text "C1 and C3 are VDD\nby-pass capacitors"
+	(text "Place C3 close\nto VDD pin 16"
 		(exclude_from_sim no)
-		(at 53.848 17.78 0)
+		(at 54.356 17.78 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4912,16 +4912,16 @@
 		(uuid "245761cd-b38a-483a-9507-097d02ab9a99")
 	)
 	(no_connect
-		(at 110.49 43.18)
-		(uuid "2a6c23cb-b21a-429b-8e17-a6b4d7c8658e")
-	)
-	(no_connect
 		(at 107.95 191.77)
 		(uuid "329aa1e4-83f2-4f47-8cb6-f630ec4f778e")
 	)
 	(no_connect
 		(at 17.78 187.96)
 		(uuid "371c0d9c-1877-412b-a483-d0b6d950728b")
+	)
+	(no_connect
+		(at 74.93 53.34)
+		(uuid "3d1685a7-df36-4831-ae26-50e4c921d8b0")
 	)
 	(no_connect
 		(at 110.49 40.64)
@@ -5105,16 +5105,6 @@
 	)
 	(wire
 		(pts
-			(xy 74.93 53.34) (xy 69.85 53.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1bae97fa-312e-4826-8130-4e3de8c30628")
-	)
-	(wire
-		(pts
 			(xy 196.85 93.98) (xy 194.31 93.98)
 		)
 		(stroke
@@ -5212,6 +5202,16 @@
 			(type default)
 		)
 		(uuid "263dbd74-d761-4433-bea1-d487270f8615")
+	)
+	(wire
+		(pts
+			(xy 110.49 43.18) (xy 116.84 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "26a2bfc3-72d4-49f9-9a8a-833118d33a1e")
 	)
 	(wire
 		(pts
@@ -6155,16 +6155,6 @@
 	)
 	(wire
 		(pts
-			(xy 69.85 53.34) (xy 69.85 52.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c7aa6b62-0780-4f68-b6e9-6099711cb524")
-	)
-	(wire
-		(pts
 			(xy 226.06 68.58) (xy 243.84 68.58)
 		)
 		(stroke
@@ -6512,16 +6502,6 @@
 			(type default)
 		)
 		(uuid "f40d624e-4444-47c6-bc5d-5d6f164fb8d7")
-	)
-	(wire
-		(pts
-			(xy 69.85 52.07) (xy 64.77 52.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f49d2bdc-476a-4c79-94cd-5c99ae795eda")
 	)
 	(wire
 		(pts
@@ -6917,17 +6897,17 @@
 	)
 	(global_label "~{RD_RST}"
 		(shape input)
-		(at 64.77 52.07 180)
+		(at 116.84 43.18 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "4318a3cd-4209-4c21-bef9-0d71cda5e462")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 54.8301 52.07 0)
+			(at 126.7799 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6935,7 +6915,7 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 	)
