@@ -195,7 +195,8 @@
       ],
       "track_widths": [
         0.0,
-        0.28
+        0.28,
+        0.3
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -593,11 +594,19 @@
       },
       {
         "netclass": "Power",
-        "pattern": "V_{A}"
+        "pattern": "V_{LDO}"
       },
       {
         "netclass": "Power",
-        "pattern": "V_{FILT}"
+        "pattern": "V_{RADIO}"
+      },
+      {
+        "netclass": "Power",
+        "pattern": "V_{OSC}"
+      },
+      {
+        "netclass": "Radio",
+        "pattern": "/TUNE"
       },
       {
         "netclass": "Default",
@@ -933,7 +942,7 @@
         "uuid": "6b4c382d-c3a6-4721-98dc-a03527f31640"
       }
     ],
-    "used_designators": "J4",
+    "used_designators": "",
     "variants": []
   },
   "sheets": [
