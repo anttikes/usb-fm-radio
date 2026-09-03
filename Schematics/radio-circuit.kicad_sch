@@ -5402,6 +5402,16 @@
 	)
 	(wire
 		(pts
+			(xy 246.38 81.28) (xy 250.19 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3229e4f4-d151-4072-9ea4-11b69a833db6")
+	)
+	(wire
+		(pts
 			(xy 31.75 171.45) (xy 31.75 168.91)
 		)
 		(stroke
@@ -5559,16 +5569,6 @@
 			(type default)
 		)
 		(uuid "4d36bf6b-54ba-49f5-95c9-3e4a96236959")
-	)
-	(wire
-		(pts
-			(xy 246.38 81.28) (xy 251.46 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4d7fd1eb-3cfc-4624-9e68-89eb1c5dabb6")
 	)
 	(wire
 		(pts
@@ -13660,7 +13660,7 @@
 				)
 			)
 		)
-		(property "JLCPCB Part Number" "C1575"
+		(property "JLCPCB Part Number" "C30274"
 			(at 227.33 64.77 0)
 			(hide yes)
 			(show_name no)
