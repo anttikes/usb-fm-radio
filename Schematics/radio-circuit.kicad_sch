@@ -4685,7 +4685,7 @@
 		)
 		(uuid "8a2006d3-d4ef-4a2b-86ad-a7ea76199ab8")
 	)
-	(text "v0.3"
+	(text "v0.4"
 		(exclude_from_sim no)
 		(at 268.478 193.294 0)
 		(effects
@@ -5352,6 +5352,16 @@
 	)
 	(wire
 		(pts
+			(xy 36.83 168.91) (xy 34.29 168.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2c65a103-8b98-4385-b643-5df7f9e745cd")
+	)
+	(wire
+		(pts
 			(xy 26.67 50.8) (xy 38.1 50.8)
 		)
 		(stroke
@@ -5802,6 +5812,16 @@
 	)
 	(wire
 		(pts
+			(xy 34.29 168.91) (xy 34.29 166.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7e169402-d295-48b8-b8eb-183717a02ffb")
+	)
+	(wire
+		(pts
 			(xy 162.56 71.12) (xy 182.88 71.12)
 		)
 		(stroke
@@ -6152,16 +6172,6 @@
 	)
 	(wire
 		(pts
-			(xy 34.29 166.37) (xy 34.29 168.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a3020267-3a4a-41b1-8a55-fa69cb79e7cb")
-	)
-	(wire
-		(pts
 			(xy 58.42 106.68) (xy 63.5 106.68)
 		)
 		(stroke
@@ -6469,16 +6479,6 @@
 			(type default)
 		)
 		(uuid "c9d648df-a297-4ace-99ac-58c29b898c70")
-	)
-	(wire
-		(pts
-			(xy 34.29 168.91) (xy 36.83 168.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c9ff9593-139a-435d-b845-496f29437b90")
 	)
 	(wire
 		(pts
