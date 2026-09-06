@@ -7286,7 +7286,7 @@
 			)
 		)
 	)
-	(footprint "Oscillator:Oscillator_SMD_SeikoEpson_SG3030CM"
+	(footprint "Local:Oscillator_SMD_SeikoEpson_SG3030CM"
 		(layer "F.Cu")
 		(uuid "a21f9401-65fc-4622-aefd-88a1f8734566")
 		(at 191 119.25 -90)
@@ -7300,6 +7300,7 @@
 				(font
 					(size 1 1)
 					(thickness 0.2)
+					(bold yes)
 				)
 			)
 		)
@@ -7519,7 +7520,7 @@
 			(effects
 				(font
 					(size 0.3 0.3)
-					(thickness 0.2)
+					(thickness 0.06)
 				)
 			)
 		)
@@ -7560,7 +7561,7 @@
 			(uuid "46726d1e-eac4-4fda-bc07-73f7e580a58e")
 		)
 		(embedded_fonts no)
-		(model "${KICAD10_3DMODEL_DIR}/Oscillator.3dshapes/Oscillator_SMD_SeikoEpson_SG3030CM.step"
+		(model "${KIPRJMOD}/Local.pretty/Oscillator_SMD_SeikoEpson_SG3030CM.stp"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -7568,7 +7569,7 @@
 				(xyz 1 1 1)
 			)
 			(rotate
-				(xyz 0 0 0)
+				(xyz -90 -0 -0)
 			)
 		)
 	)

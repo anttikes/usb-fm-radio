@@ -10733,7 +10733,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Oscillator:Oscillator_SMD_SeikoEpson_SG3030CM"
+		(property "Footprint" "Local:Oscillator_SMD_SeikoEpson_SG3030CM"
 			(at 241.3 151.13 0)
 			(hide yes)
 			(show_name no)
