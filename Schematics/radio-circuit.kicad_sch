@@ -9211,7 +9211,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Local:USB_A_Molex_48037-2200_Horizontal"
+		(property "Footprint" "Local:USB_A_AM180-01-T1-W"
 			(at 38.1 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -9244,7 +9244,7 @@
 				)
 			)
 		)
-		(property "JLCPCB Part Number" "C2765195"
+		(property "JLCPCB Part Number" "C19077262"
 			(at 34.29 156.21 0)
 			(hide yes)
 			(show_name no)
