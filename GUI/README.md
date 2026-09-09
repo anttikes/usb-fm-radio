@@ -29,7 +29,3 @@ After installing, you should restart VS Code. The Qt Core extension should detec
 ## Debugging
 
 The `launch.json` file has the necessary wirings for debugging both the C++ and the QML portions. It uses the Qt C++ extension's commands to set the debugger and symbol file paths for Qt.
-
-## Acknowledgements
-
-This repository uses fonts from the DSEG7 series font family. Copyright, license terms and other information related to this font can be found from [keshikan/DSEG](https://github.com/keshikan/DSEG).

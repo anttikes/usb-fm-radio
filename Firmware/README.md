@@ -16,10 +16,6 @@ After the extensions are installed they should prompt you for downloading and in
 
 During the installation of the extensions and the bundles you may need to restart Visual Studio Code. Once everything is installed open the CMake pane in VS Code, select the "Firmware" folder and hit the "Build" button from the VS Code's status bar.
 
-## Deployment and debugging
+## Deployment & debugging
 
-To deploy and debug the project you will need a fabricated board and the ST Microelectronics' ST-Link v3 debug probe. The current schematic has a header for plugging in the probe.
-
-## Acknowledgements
-
-This repository uses a forked version of librdsparser.Copyright, license terms and other information related to the library can be found from [kkonradpl/librdsparser](https://github.com/kkonradpl/librdsparser/).
+To deploy and/or debug the project you will need a fabricated board and the [ST Microelectronics' ST-Link v3 debug probe](https://www.st.com/en/development-tools/stlink-v3minie.html). The schematic has a header for connecting the probe.
