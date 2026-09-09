@@ -33,3 +33,7 @@ Finally, choose "File" > "Fabrication Outputs" > "Component Placement", and clic
 ### Modifying the component placement file
 
 The file generated is not directly compatible with JLCPCB. You will have to edit the according to [these instructions](https://jlcpcb.com/help/article/How-to-generate-the-BOM-and-Centroid-file-from-KiCAD), from the "Generating Pick and Place files" onwards.
+
+## Where to get an antenna?
+
+In order to effectively receive radio broadcasts you will need an antenna. Any 50 Ohm matched antenna will do fine. I personally used [this antenna](https://www.amazon.com/POBADY-Sections-Telescopic-Connector-Replacement/dp/B09BVNK7WV?th=1) from Amazon
