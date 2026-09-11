@@ -516,8 +516,8 @@
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.3,
         "tuning_profile": "",
-        "via_diameter": 0.0,
-        "via_drill": 0.0,
+        "via_diameter": 0.45,
+        "via_drill": 0.3,
         "wire_width": 6
       },
       {
@@ -526,7 +526,9 @@
         "priority": 1,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.5,
-        "tuning_profile": ""
+        "tuning_profile": "",
+        "via_diameter": 0.45,
+        "via_drill": 0.3
       },
       {
         "name": "Radio",
