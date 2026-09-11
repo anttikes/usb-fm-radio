@@ -657,13 +657,13 @@
         "fields_ordered": [
           {
             "group_by": false,
-            "label": "Value",
+            "label": "Comment",
             "name": "Value",
             "show": true
           },
           {
             "group_by": false,
-            "label": "Reference",
+            "label": "Designator",
             "name": "Reference",
             "show": true
           },
@@ -729,7 +729,7 @@
           },
           {
             "group_by": false,
-            "label": "JLCPCB Part Number",
+            "label": "JLCPCB Part #",
             "name": "JLCPCB Part Number",
             "show": true
           },
@@ -777,13 +777,13 @@
       "fields_ordered": [
         {
           "group_by": false,
-          "label": "Value",
+          "label": "Comment",
           "name": "Value",
           "show": true
         },
         {
           "group_by": false,
-          "label": "Reference",
+          "label": "Designator",
           "name": "Reference",
           "show": true
         },
@@ -849,7 +849,7 @@
         },
         {
           "group_by": false,
-          "label": "JLCPCB Part Number",
+          "label": "JLCPCB Part #",
           "name": "JLCPCB Part Number",
           "show": true
         },
