@@ -2,34 +2,34 @@
   "resolved": [
     {
       "name": "cmake",
-      "version": "4.2.3+st.1",
+      "version": "4.3.1+st.1",
       "platform": "darwin",
       "selected_by": [
         {
           "name": "cmake",
-          "version": "4.2.3+st.1"
+          "version": "4.3.1+st.1"
         }
       ]
     },
     {
       "name": "cmake",
-      "version": "4.2.3+st.1",
+      "version": "4.3.1+st.1",
       "platform": "x86_64-linux",
       "selected_by": [
         {
           "name": "cmake",
-          "version": "4.2.3+st.1"
+          "version": "4.3.1+st.1"
         }
       ]
     },
     {
       "name": "cmake",
-      "version": "4.2.3+st.1",
+      "version": "4.3.1+st.1",
       "platform": "x86_64-windows",
       "selected_by": [
         {
           "name": "cmake",
-          "version": "4.2.3+st.1"
+          "version": "4.3.1+st.1"
         }
       ]
     },
@@ -123,45 +123,45 @@
     },
     {
       "name": "programmer",
-      "version": "2.22.0+st.1",
+      "version": "2.23.0",
       "platform": "aarch64-darwin",
       "selected_by": [
         {
           "name": "programmer",
-          "version": "2.22.0+st.1"
+          "version": "2.23.0"
         }
       ]
     },
     {
       "name": "programmer",
-      "version": "2.22.0+st.1",
-      "platform": "darwin",
+      "version": "2.23.0",
+      "platform": "x86_64-darwin",
       "selected_by": [
         {
           "name": "programmer",
-          "version": "2.22.0+st.1"
+          "version": "2.23.0"
         }
       ]
     },
     {
       "name": "programmer",
-      "version": "2.22.0+st.1",
+      "version": "2.23.0",
       "platform": "x86_64-linux",
       "selected_by": [
         {
           "name": "programmer",
-          "version": "2.22.0+st.1"
+          "version": "2.23.0"
         }
       ]
     },
     {
       "name": "programmer",
-      "version": "2.22.0+st.1",
+      "version": "2.23.0",
       "platform": "x86_64-windows",
       "selected_by": [
         {
           "name": "programmer",
-          "version": "2.22.0+st.1"
+          "version": "2.23.0"
         }
       ]
     },
@@ -200,45 +200,45 @@
     },
     {
       "name": "stlink-gdbserver",
-      "version": "7.13.0+st.3",
+      "version": "7.14.0+st.2",
       "platform": "aarch64-darwin",
       "selected_by": [
         {
           "name": "stlink-gdbserver",
-          "version": "7.13.0+st.3"
+          "version": "7.14.0+st.2"
         }
       ]
     },
     {
       "name": "stlink-gdbserver",
-      "version": "7.13.0+st.3",
-      "platform": "darwin",
+      "version": "7.14.0+st.2",
+      "platform": "x86_64-darwin",
       "selected_by": [
         {
           "name": "stlink-gdbserver",
-          "version": "7.13.0+st.3"
+          "version": "7.14.0+st.2"
         }
       ]
     },
     {
       "name": "stlink-gdbserver",
-      "version": "7.13.0+st.3",
+      "version": "7.14.0+st.2",
       "platform": "x86_64-linux",
       "selected_by": [
         {
           "name": "stlink-gdbserver",
-          "version": "7.13.0+st.3"
+          "version": "7.14.0+st.2"
         }
       ]
     },
     {
       "name": "stlink-gdbserver",
-      "version": "7.13.0+st.3",
+      "version": "7.14.0+st.2",
       "platform": "x86_64-windows",
       "selected_by": [
         {
           "name": "stlink-gdbserver",
-          "version": "7.13.0+st.3"
+          "version": "7.14.0+st.2"
         }
       ]
     }
