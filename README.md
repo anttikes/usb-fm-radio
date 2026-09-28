@@ -4,7 +4,7 @@
 
 This repository presents a USB FM Radio hardware device, consisting of the electronic schematic and PCB layout files drawn with KiCad, a C-language firmware implementation for an STM32 microcontroller and a GUI application for operating the radio device.
 
-![Finished](../docs/Finished.png)
+![Finished](docs/Finished.png)
 
 > [!IMPORTANT]
 > This repository is still under heavy development, and quite many of the things are still unfinished.
