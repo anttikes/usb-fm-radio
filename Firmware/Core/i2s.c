@@ -6,7 +6,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -47,7 +47,7 @@ void HAL_I2S_MspInit(I2S_HandleTypeDef *i2sHandle)
         __HAL_RCC_SPI1_CLK_ENABLE();
 
         __HAL_RCC_GPIOA_CLK_ENABLE();
-        /**I2S1 GPIO Configuration
+        /* I2S1 GPIO Configuration
         PA4     ------> I2S1_WS
         PA5     ------> I2S1_CK
         PA7     ------> I2S1_SD
@@ -87,10 +87,10 @@ void HAL_I2S_MspDeInit(I2S_HandleTypeDef *i2sHandle)
         /* Peripheral clock disable */
         __HAL_RCC_SPI1_CLK_DISABLE();
 
-        /**I2S1 GPIO Configuration
-        PA4     ------> I2S1_WS
-        PA5     ------> I2S1_CK
-        PA7     ------> I2S1_SD
+        /* I2S1 GPIO Configuration
+        PA4     <------ I2S1_WS
+        PA5     <------ I2S1_CK
+        PA7     <------ I2S1_SD
         */
         HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_7);
 

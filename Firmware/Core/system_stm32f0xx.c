@@ -22,7 +22,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file

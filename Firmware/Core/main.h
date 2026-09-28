@@ -6,7 +6,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -39,13 +39,13 @@ void Error_Handler(void);
 void SystemClock_Config(void);
 
 /* Private defines -----------------------------------------------------------*/
-#define RADIO_NIRQ_Pin GPIO_PIN_13
-#define RADIO_NIRQ_GPIO_Port GPIOC
-#define RADIO_NIRQ_EXTI_IRQn EXTI4_15_IRQn
-#define RADIO_NRST_Pin GPIO_PIN_14
-#define RADIO_NRST_GPIO_Port GPIOC
-#define RCLK_EN_Pin GPIO_PIN_15
-#define RCLK_EN_GPIO_Port GPIOC
+#define RD_RST_Pin GPIO_PIN_1
+#define RD_RST_GPIO_Port GPIOA
+#define RD_IRQ_Pin GPIO_PIN_2
+#define RD_IRQ_GPIO_Port GPIOA
+#define RD_IRQ_EXTI_IRQn EXTI2_3_IRQn
+#define OSC_EN_Pin GPIO_PIN_6
+#define OSC_EN_GPIO_Port GPIOA
 
 #ifdef __cplusplus
 }
