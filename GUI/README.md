@@ -1,6 +1,6 @@
-# The GUI
+# The graphical user interface
 
-This folder contains the graphical user interface application for controlling the radio device.
+This folder contains the desktop application for controlling the radio device.
 
 ![Main Screen](docs/MainScreen.png)
 
