@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -14,8 +14,8 @@
  ******************************************************************************
  */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32F0xx_IT_H
-#define __STM32F0xx_IT_H
+#ifndef __STM32F0xx_IT_H__
+#define __STM32F0xx_IT_H__
 
 #ifdef __cplusplus
 extern "C"
@@ -37,12 +37,15 @@ void SVC_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
 void RCC_CRS_IRQHandler(void);
-void EXTI4_15_IRQHandler(void);
+void EXTI2_3_IRQHandler(void);
 void DMA1_Channel2_3_IRQHandler(void);
-void TIM14_IRQHandler(void);
+void TIM16_IRQHandler(void);
+void TIM17_IRQHandler(void);
+void I2C1_IRQHandler(void);
 void USB_IRQHandler(void);
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __STM32F0xx_IT_H */
+#endif /* __STM32F0xx_IT_H__ */

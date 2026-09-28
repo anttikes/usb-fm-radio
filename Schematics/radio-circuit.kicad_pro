@@ -39,9 +39,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 3.2,
-          "height": 3.2,
-          "width": 3.2
+          "drill": 0.0,
+          "height": 0.4,
+          "width": 1.475
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -50,7 +50,7 @@
         "silk_text_thickness": 0.15,
         "silk_text_upright": false,
         "zones": {
-          "min_clearance": 0.3
+          "min_clearance": 0.4
         }
       },
       "diff_pair_dimensions": [
@@ -117,12 +117,12 @@
         "too_many_vias": "error",
         "track_angle": "error",
         "track_dangling": "warning",
-        "track_not_centered_on_via": "ignore",
+        "track_not_centered_on_via": "warning",
         "track_on_post_machined_layer": "error",
         "track_segment_length": "error",
         "track_width": "error",
         "tracks_crossing": "error",
-        "tuning_profile_track_geometries": "ignore",
+        "tuning_profile_track_geometries": "warning",
         "unconnected_items": "error",
         "unresolved_variable": "error",
         "via_dangling": "warning",
@@ -194,7 +194,9 @@
         }
       ],
       "track_widths": [
-        0.0
+        0.0,
+        0.28,
+        0.3
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -514,8 +516,8 @@
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.3,
         "tuning_profile": "",
-        "via_diameter": 0.0,
-        "via_drill": 0.0,
+        "via_diameter": 0.45,
+        "via_drill": 0.3,
         "wire_width": 6
       },
       {
@@ -524,7 +526,9 @@
         "priority": 1,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.5,
-        "tuning_profile": ""
+        "tuning_profile": "",
+        "via_diameter": 0.45,
+        "via_drill": 0.3
       },
       {
         "name": "Radio",
@@ -572,7 +576,7 @@
       },
       {
         "netclass": "Power",
-        "pattern": "VBUS"
+        "pattern": "V_{BUS}"
       },
       {
         "netclass": "USB",
@@ -589,6 +593,26 @@
       {
         "netclass": "Power",
         "pattern": "/PWR_LED_K"
+      },
+      {
+        "netclass": "Power",
+        "pattern": "V_{LDO}"
+      },
+      {
+        "netclass": "Power",
+        "pattern": "V_{RADIO}"
+      },
+      {
+        "netclass": "Power",
+        "pattern": "V_{OSC}"
+      },
+      {
+        "netclass": "Radio",
+        "pattern": "/TUNE"
+      },
+      {
+        "netclass": "Power",
+        "pattern": "/SHD"
       },
       {
         "netclass": "Default",
@@ -616,7 +640,7 @@
       "method": 0,
       "sort_order": 0
     },
-    "bom_export_filename": "output\\${PROJECTNAME}.csv",
+    "bom_export_filename": "output\\radio-circuit-bom.csv",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
@@ -633,13 +657,13 @@
         "fields_ordered": [
           {
             "group_by": false,
-            "label": "Value",
+            "label": "Comment",
             "name": "Value",
             "show": true
           },
           {
             "group_by": false,
-            "label": "Reference",
+            "label": "Designator",
             "name": "Reference",
             "show": true
           },
@@ -705,7 +729,7 @@
           },
           {
             "group_by": false,
-            "label": "JLCPCB Part Number",
+            "label": "JLCPCB Part #",
             "name": "JLCPCB Part Number",
             "show": true
           },
@@ -753,13 +777,13 @@
       "fields_ordered": [
         {
           "group_by": false,
-          "label": "Value",
+          "label": "Comment",
           "name": "Value",
           "show": true
         },
         {
           "group_by": false,
-          "label": "Reference",
+          "label": "Designator",
           "name": "Reference",
           "show": true
         },
@@ -825,7 +849,7 @@
         },
         {
           "group_by": false,
-          "label": "JLCPCB Part Number",
+          "label": "JLCPCB Part #",
           "name": "JLCPCB Part Number",
           "show": true
         },
@@ -924,7 +948,7 @@
         "uuid": "6b4c382d-c3a6-4721-98dc-a03527f31640"
       }
     ],
-    "used_designators": "C17,R13-14",
+    "used_designators": "H1-4",
     "variants": []
   },
   "sheets": [

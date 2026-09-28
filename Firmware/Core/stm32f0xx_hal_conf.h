@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -14,8 +14,8 @@
  ******************************************************************************
  */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32F0xx_HAL_CONF_H
-#define __STM32F0xx_HAL_CONF_H
+#ifndef __STM32F0xx_HAL_CONF_H__
+#define __STM32F0xx_HAL_CONF_H__
 
 #ifdef __cplusplus
 extern "C"
@@ -71,8 +71,8 @@ extern "C"
  * PLL).
  */
 #if !defined(HSE_VALUE)
-#define HSE_VALUE ((uint32_t)16000000) /*!< Value of the External oscillator in Hz */
-#endif                                 /* HSE_VALUE */
+#define HSE_VALUE ((uint32_t)8000000) /*!< Value of the External oscillator in Hz */
+#endif                                /* HSE_VALUE */
 
 /**
  * @brief In the following line adjust the External High Speed oscillator (HSE)
@@ -319,4 +319,4 @@ void assert_failed(uint8_t *file, uint32_t line);
 }
 #endif
 
-#endif /* __STM32F0xx_HAL_CONF_H */
+#endif /* __STM32F0xx_HAL_CONF_H__ */

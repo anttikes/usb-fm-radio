@@ -186,7 +186,7 @@ tusb_desc_device_t const desc_device = {
 
 	.idVendor = USB_FM_RADIO_VENDOR_ID,
 	.idProduct = USB_FM_RADIO_PRODUCT_ID,
-	.bcdDevice = 0x0002,
+	.bcdDevice = 0x0004,
 
 	.iManufacturer = STRID_MANUFACTURER,
 	.iProduct = STRID_PRODUCT,

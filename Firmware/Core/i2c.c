@@ -6,7 +6,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -58,9 +58,9 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *i2cHandle)
     {
         __HAL_RCC_GPIOF_CLK_ENABLE();
 
-        /**I2C1 GPIO Configuration
+        /* I2C1 GPIO Configuration
         PF0-OSC_IN     ------> I2C1_SDA
-        PF1-OSC_OUT     ------> I2C1_SCL
+        PF1-OSC_OUT    ------> I2C1_SCL
         */
         GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
@@ -82,17 +82,14 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef *i2cHandle)
 {
     if (i2cHandle->Instance == I2C1)
     {
-
         /* Peripheral clock disable */
         __HAL_RCC_I2C1_CLK_DISABLE();
 
-        /**I2C1 GPIO Configuration
-        PF0-OSC_IN     ------> I2C1_SDA
-        PF1-OSC_OUT     ------> I2C1_SCL
+        /* I2C1 GPIO Configuration
+        PF0-OSC_IN     <------ I2C1_SDA
+        PF1-OSC_OUT    <------ I2C1_SCL
         */
-        HAL_GPIO_DeInit(GPIOF, GPIO_PIN_0);
-
-        HAL_GPIO_DeInit(GPIOF, GPIO_PIN_1);
+        HAL_GPIO_DeInit(GPIOF, GPIO_PIN_0 | GPIO_PIN_1);
 
         /* I2C1 interrupt Deinit */
         HAL_NVIC_DisableIRQ(I2C1_IRQn);

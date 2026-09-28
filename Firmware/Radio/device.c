@@ -385,7 +385,7 @@ bool EnqueueReport(RadioDevice_t *device, Report_t *report)
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    if (GPIO_Pin == RADIO_NIRQ_Pin)
+    if (GPIO_Pin == RD_IRQ_Pin)
     {
         radioDevice.interruptCounter++;
     }

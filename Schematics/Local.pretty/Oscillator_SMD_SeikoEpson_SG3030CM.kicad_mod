@@ -1,0 +1,226 @@
+(footprint "Oscillator_SMD_SeikoEpson_SG3030CM"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "SMD Crystal Oscillator Seiko Epson SG-3030CM package")
+	(tags "SMD SMT crystal oscillator")
+	(property "Reference" "REF**"
+		(at 0 2.17 0)
+		(layer "F.SilkS")
+		(uuid "f1478586-31aa-4d44-9db6-a090f9eff5ae")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "Oscillator_SMD_SeikoEpson_SG3030CM"
+		(at 0 -2.14 0)
+		(layer "F.Fab")
+		(uuid "fac49159-e0dc-4b12-b597-aa31884c7898")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ae515494-c671-4ce8-adad-09fc3725ffbf")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "0f0e5ee3-05c3-4023-99cf-a840e586f6dd")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -0.5 -0.88)
+		(end 0.5 -0.88)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "501a7f95-52bb-460d-8e02-e17002de81fa")
+	)
+	(fp_line
+		(start -0.5 0.88)
+		(end 0.5 0.88)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "13d0bafe-5ce7-4bfa-be7c-e6e27529edca")
+	)
+	(fp_line
+		(start -0.5 1.1)
+		(end -0.5 0.88)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "c270bb59-b8fd-4c70-953a-87c18b60980d")
+	)
+	(fp_line
+		(start -2.35 -1.5)
+		(end 2.35 -1.5)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "5cdd6f7f-c27e-467c-853b-ac787fb044b3")
+	)
+	(fp_line
+		(start -2.35 1.5)
+		(end -2.35 -1.5)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "2981c2e0-5eaf-43ac-bf88-0710c39bdae8")
+	)
+	(fp_line
+		(start 2.35 -1.5)
+		(end 2.35 1.5)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "1c555ca7-1aa8-4da6-bd0f-2d0a9e09e1df")
+	)
+	(fp_line
+		(start 2.35 1.5)
+		(end -2.35 1.5)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "3c9c9cd6-7ccf-4905-bce1-e065d149d266")
+	)
+	(fp_line
+		(start -1.6 -0.75)
+		(end -1.6 0.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "024f5643-1127-4830-aece-f0bffbf30bcc")
+	)
+	(fp_line
+		(start -1.6 -0.75)
+		(end 1.6 -0.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "18b4cbca-5e12-41f8-96b7-fd600355eecb")
+	)
+	(fp_line
+		(start 1.6 -0.75)
+		(end 1.6 0.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "2fc555ac-e64f-46aa-9ca4-31c82cb8f335")
+	)
+	(fp_line
+		(start 1.6 0.75)
+		(end -1.6 0.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "1c7678b8-7d8b-4d00-9aa1-c3fcca5f96ce")
+	)
+	(fp_circle
+		(center -1.08 0.34)
+		(end -0.94 0.29)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "b373bfc2-5524-4fd5-89fc-d767be560bfe")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "10049e0a-02ca-41e9-aefc-47da05a25582")
+		(effects
+			(font
+				(size 0.3 0.3)
+				(thickness 0.06)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -1.325 0.6)
+		(size 1.05 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "9442303a-3ea2-4343-afb3-0b5cc02c3626")
+	)
+	(pad "2" smd rect
+		(at 1.325 0.6)
+		(size 1.05 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "3e60fda2-9138-44b4-8daf-85e613926bc0")
+	)
+	(pad "3" smd rect
+		(at 1.325 -0.6)
+		(size 1.05 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "6b50df09-e716-4d2b-946c-d094229d1d4e")
+	)
+	(pad "4" smd rect
+		(at -1.325 -0.6)
+		(size 1.05 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "3f71d589-9946-4cd3-93b8-d075c69f4159")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/Local.pretty/Oscillator_SMD_SeikoEpson_SG3030CM.stp"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 -0 -0)
+		)
+	)
+)

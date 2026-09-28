@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -73,8 +73,8 @@ int main(void)
     RDSInit();
 
     // Bring Si4705 out of reset, and enable the oscillator
-    HAL_GPIO_WritePin(RADIO_NRST_GPIO_Port, RADIO_NRST_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(RCLK_EN_GPIO_Port, RCLK_EN_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(RD_RST_GPIO_Port, RD_RST_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(OSC_EN_GPIO_Port, OSC_EN_Pin, GPIO_PIN_SET);
 
     // The oscillator has a max startup time of one second
     // The radio chip also has a startup time but it is much faster than the

@@ -1,5 +1,6 @@
-# Ignore backup folder
+# Ignore the KiCad history folders
 radio-circuit-backups
+.history
 
 # Ignore output folder for BOM & placement file
 output

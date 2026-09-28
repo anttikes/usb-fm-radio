@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -96,11 +96,11 @@ void RCC_CRS_IRQHandler(void)
 }
 
 /**
- * @brief This function handles EXTI line 4 to 15 interrupts.
+ * @brief This function handles EXTI line 2 and 3 interrupts.
  */
-void EXTI4_15_IRQHandler(void)
+void EXTI2_3_IRQHandler(void)
 {
-    HAL_GPIO_EXTI_IRQHandler(RADIO_NIRQ_Pin);
+    HAL_GPIO_EXTI_IRQHandler(RD_IRQ_Pin);
 }
 
 /**

@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file      sysmem.c
- * @brief     STM32CubeIDE System Memory calls file
+ * @brief     System Memory calls file
  *
  *            For more information about which C functions
  *            need which of these lowlevel functions
@@ -9,7 +9,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -74,3 +74,10 @@ void *_sbrk(ptrdiff_t incr)
 
     return (void *)prev_heap_end;
 }
+
+#if defined(__PICOLIBC__)
+// Picolibc expects syscalls without the leading underscore.
+// This creates a strong alias so that
+// calls to `sbrk()` are resolved to our `_sbrk()` implementation.
+__strong_reference(_sbrk, sbrk);
+#endif
