@@ -2,34 +2,34 @@
   "resolved": [
     {
       "name": "cmake",
-      "version": "4.3.1+st.1",
+      "version": "4.4.0+st.1",
       "platform": "darwin",
       "selected_by": [
         {
           "name": "cmake",
-          "version": "4.3.1+st.1"
+          "version": "4.4.0+st.1"
         }
       ]
     },
     {
       "name": "cmake",
-      "version": "4.3.1+st.1",
+      "version": "4.4.0+st.1",
       "platform": "x86_64-linux",
       "selected_by": [
         {
           "name": "cmake",
-          "version": "4.3.1+st.1"
+          "version": "4.4.0+st.1"
         }
       ]
     },
     {
       "name": "cmake",
-      "version": "4.3.1+st.1",
+      "version": "4.4.0+st.1",
       "platform": "x86_64-windows",
       "selected_by": [
         {
           "name": "cmake",
-          "version": "4.3.1+st.1"
+          "version": "4.4.0+st.1"
         }
       ]
     },
