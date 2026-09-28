@@ -4,6 +4,8 @@
 
 This repository presents a USB FM Radio hardware device, consisting of the electronic schematic and PCB layout files drawn with KiCad, a C-language firmware implementation for an STM32 microcontroller and a GUI application for operating the radio device.
 
+![Finished](../docs/Finished.png)
+
 > [!IMPORTANT]
 > This repository is still under heavy development, and quite many of the things are still unfinished.
 
@@ -30,6 +32,10 @@ Highlights:
 The repository is structured around a "multi-root workspace" for Visual Studio Code. Thus, you will need VS Code, and you can install it from [here](https://code.visualstudio.com/Download). After installing, open the `usb-fm-radio.code-workspace` file from the root folder.
 
 Both firmware and GUI portions have specific requirements regarding their build environment. Review the README.md files in each subdirectory for more details.
+
+## Where to get an antenna?
+
+In order to effectively receive radio broadcasts you will need an antenna. Any 50 Ohm matched antenna will do fine. I personally used [this antenna](https://www.amazon.com/POBADY-Sections-Telescopic-Connector-Replacement/dp/B09BVNK7WV?th=1) from Amazon
 
 ## Copyright & License
 

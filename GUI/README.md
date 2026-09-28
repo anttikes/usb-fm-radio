@@ -2,7 +2,7 @@
 
 This folder contains the desktop application for controlling the radio device.
 
-![Main Screen](docs/MainScreen.png)
+![Main Screen](../docs/MainScreen.png)
 
 ## Working on the project
 
