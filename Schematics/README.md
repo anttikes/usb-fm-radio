@@ -2,6 +2,8 @@
 
 This folder contains the KiCad schematic and PCB layout file for the board.
 
+![Schematic](docs/Schematic.png)
+
 ![PCB Layout](docs/PCBLayout.png)
 
 ![3D Model](docs/3DModel.png)
