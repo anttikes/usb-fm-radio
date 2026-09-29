@@ -3,6 +3,7 @@
         "dan-c-underwood.arm",
         "zixuanwang.linkerscript",
         "ms-vscode.cpptools",
+        "stmicroelectronics.stm32cube-ide-build-analyzer",
         "stmicroelectronics.stm32cube-ide-bundles-manager",
         "stmicroelectronics.stm32cube-ide-debug-stlink-gdbserver",
         "stmicroelectronics.stm32cube-ide-registers"
