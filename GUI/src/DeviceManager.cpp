@@ -185,9 +185,9 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
             connect(
                 m_reportWorker, &ReportWorker::rsqStatusReportReceived, this, &DeviceManager::rsqStatusReportReceived);
             connect(m_reportWorker,
-                    &ReportWorker::radioStateReportReceived,
+                    &ReportWorker::deviceStateReportReceived,
                     this,
-                    &DeviceManager::radioStateReportReceived);
+                    &DeviceManager::deviceStateReportReceived);
 
             connect(m_reportWorker,
                     &ReportWorker::disconnectCurrentDevice,

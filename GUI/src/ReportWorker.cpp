@@ -48,9 +48,9 @@ void ReportWorker::run()
 
             switch (identifier)
             {
-            case REPORT_IDENTIFIER_RADIO_STATUS: {
-                RadioStatusResponse_t report;
-                std::memcpy(&report, &buf[1], sizeof(RadioStatusResponse_t));
+            case REPORT_IDENTIFIER_DEVICE_STATUS: {
+                DeviceStatusResponse_t report;
+                std::memcpy(&report, &buf[1], sizeof(DeviceStatusResponse_t));
 
                 double newFrequency = (double)(report.currentFrequency / 100.0);
                 if (newFrequency != frequency)
@@ -63,7 +63,7 @@ void ReportWorker::run()
                     frequency = newFrequency;
                 }
 
-                emit radioStateReportReceived(report);
+                emit deviceStateReportReceived(report);
 
                 break;
             }
