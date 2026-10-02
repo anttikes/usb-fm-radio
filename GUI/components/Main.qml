@@ -69,10 +69,12 @@ Window {
 
                 Layout.fillWidth: true
 
+                enabled: DeviceManager.selectedDeviceIndex >= 0
+
                 Connections {
                     target: DeviceManager
 
-                    function onRadioStateReportReceived(report) {
+                    function onDeviceStateReportReceived(report) {
                         tunerDial.currentFrequency = report.currentFrequency / 100;
                     }
                 }
@@ -106,7 +108,7 @@ Window {
                     Connections {
                         target: DeviceManager
 
-                        function onRadioStateReportReceived(report) {
+                        function onDeviceStateReportReceived(report) {
                             digitalDisplay.currentFrequency = report.currentFrequency / 100;
                         }
                     }
@@ -149,7 +151,7 @@ Window {
 
                     function onRdsRadioTextReportReceived(report) {
                         console.log("RT data received: " + report.radioText);
-                        
+
                         rdsPanel.radioText = report.radioText;
                     }
                 }
