@@ -74,10 +74,8 @@ Item {
             GlowingText {
                 id: frequencyText
 
-                anchors.left: parent.left
-                anchors.leftMargin: 30
-
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: root.currentFrequency > 100 ? -26 : -7
 
                 font.family: lcdFont.name
                 font.pointSize: 34
