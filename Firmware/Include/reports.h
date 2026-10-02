@@ -34,7 +34,7 @@
 typedef enum _ReportIdentifier_t : uint8_t
 {
     /* Indentifies a radio status report */
-    REPORT_IDENTIFIER_RADIO_STATUS = 0x01,
+    REPORT_IDENTIFIER_DEVICE_STATUS = 0x01,
 
     /* Identifies an interrupt status report */
     REPORT_IDENTIFIER_INTERRUPT_STATUS = 0x02,
@@ -106,9 +106,12 @@ typedef struct _RadioStatusResponse_t
 
     /* Holds the mute status of the device */
     bool isMuted;
-} RadioStatusResponse_t;
 
-static_assert(sizeof(RadioStatusResponse_t) <= MAX_STRUCT_SIZE);
+    /* Holds the current highest stack usage; only reported by the debug build */
+    uint32_t stackUsage;
+} DeviceStatusResponse_t;
+
+static_assert(sizeof(DeviceStatusResponse_t) <= MAX_STRUCT_SIZE);
 
 typedef struct _GetIntStatusResponse_t
 {
@@ -300,7 +303,7 @@ typedef struct _Report_t
 
     /* Report bytes */
     union ReportBytes {
-        RadioStatusResponse_t radioStatus;
+        DeviceStatusResponse_t deviceStatus;
         GetIntStatusResponse_t interruptStatus;
         GetPropertyResponse_t propertyResponse;
         RSQStatusResponse_t rsqStatus;

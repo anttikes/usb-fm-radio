@@ -5,6 +5,7 @@
   * @brief     STM32F042x4/STM32F042x6 devices vector table for GCC toolchain.
   *            This module performs:
   *                - Set the initial SP
+  *                - Initializes stack with a watermark pattern (in debug mode)
   *                - Set the initial PC == Reset_Handler,
   *                - Set the vector table entries with the exceptions ISR address
   *                - Branches to main in the C library (which eventually
@@ -44,6 +45,21 @@ defined in linker script */
 /* end address for the .bss section. defined in linker script */
 .word _ebss
 
+#ifdef DEBUG
+/* 
+  Define a globally visible watermark pattern, 
+  align it to word boundary and place it to the
+  rodata section.
+*/
+.section .rodata.stack_watermark, "a", %progbits
+.p2align 2
+.global stack_watermark_pattern
+.type stack_watermark_pattern, %object
+stack_watermark_pattern:
+  .word 0xA5A5A5A5
+.size stack_watermark_pattern, .-stack_watermark_pattern
+#endif /* DEBUG */
+
 /**
  * @brief  This is the code that gets called when the processor first
  *          starts execution following a reset event. Only the absolutely
@@ -59,7 +75,24 @@ defined in linker script */
 Reset_Handler:
   ldr   r0, =_estack
   mov   sp, r0          /* set stack pointer */
-  
+
+#ifdef DEBUG
+/* Fill stack with watermark pattern */  
+  ldr   r0, =_sstack
+  ldr   r1, =_estack
+  ldr   r2, =stack_watermark_pattern
+  ldr   r2, [r2]
+  b LoopFillStackWaterMark
+
+FillStackWaterMark:
+  str   r2, [r0]
+  adds  r0, r0, #4
+
+LoopFillStackWaterMark:
+  cmp   r0, r1
+  bcc   FillStackWaterMark
+#endif /* DEBUG */
+
 /* Call the clock system initialization function.*/
   bl  SystemInit
 

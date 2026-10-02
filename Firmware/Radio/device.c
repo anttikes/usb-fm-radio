@@ -431,6 +431,14 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
     UNUSED(hi2c);
 }
 
+#ifdef DEBUG
+
+extern uint32_t _sstack;
+extern uint32_t _estack;
+extern const uint32_t stack_watermark_pattern;
+
+#endif /* DEBUG */
+
 /**
  * @brief  Period elapsed callback in non-blocking mode
  * @param  htim TIM handle
@@ -451,14 +459,32 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         // Timer 17 is used to periodically report device state
         Report_t report = {0};
 
-        report.identifier = REPORT_IDENTIFIER_RADIO_STATUS;
+        report.identifier = REPORT_IDENTIFIER_DEVICE_STATUS;
 
-        report.bytes.radioStatus.currentState = radioDevice.currentState;
-        report.bytes.radioStatus.currentFrequency = radioDevice.currentFrequency;
-        report.bytes.radioStatus.currentVolume = radioDevice.currentVolume;
-        report.bytes.radioStatus.commandQueueCount = radioDevice.commandQueue.count;
-        report.bytes.radioStatus.reportQueueCount = radioDevice.reportQueue.count;
-        report.bytes.radioStatus.isMuted = radioDevice.isMuted;
+        report.bytes.deviceStatus.currentState = radioDevice.currentState;
+        report.bytes.deviceStatus.currentFrequency = radioDevice.currentFrequency;
+        report.bytes.deviceStatus.currentVolume = radioDevice.currentVolume;
+        report.bytes.deviceStatus.commandQueueCount = radioDevice.commandQueue.count;
+        report.bytes.deviceStatus.reportQueueCount = radioDevice.reportQueue.count;
+        report.bytes.deviceStatus.isMuted = radioDevice.isMuted;
+
+#ifdef DEBUG
+        uintptr_t address = (uintptr_t)&_sstack;
+        const uintptr_t end = (uintptr_t)&_estack;
+
+        while (address < end)
+        {
+            const volatile uint32_t *word = (const volatile uint32_t *)address;
+
+            if (*word != stack_watermark_pattern)
+            {
+                report.bytes.deviceStatus.stackUsage = (uint32_t)(end - address);
+                break;
+            }
+
+            address += sizeof(uint32_t);
+        }
+#endif /* DEBUG */
 
         EnqueueReport(&radioDevice, &report);
     }
