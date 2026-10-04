@@ -12,6 +12,9 @@ Item {
 
     property real currentFrequency
 
+    signal frequencySliderValueChanged(real newValue)
+    signal tuneToNewFrequency(real newFrequency)
+
     readonly property real minFreq: 87.5
     readonly property real maxFreq: 108.0
 
@@ -39,6 +42,9 @@ Item {
 
     onCurrentFrequencyChanged: {
         console.info("Current frequency updated from the outside: " + root.currentFrequency);
+
+        frequencySliderValueChanged(root.currentFrequency);
+
         frequencySlider.value = root.currentFrequency;
     }
 
@@ -119,13 +125,13 @@ Item {
 
                 onValueChanged: {
                     if (pressed) {
-                        console.info("Frequency slider was dragged to: " + value);
+                        root.frequencySliderValueChanged(value);
                     }
                 }
 
                 onPressedChanged: {
                     if (!pressed) {
-                        console.info("Slider released, current frequency: " + value);
+                        root.tuneToNewFrequency(value);
                     }
                 }
 

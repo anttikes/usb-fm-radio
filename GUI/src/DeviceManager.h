@@ -41,8 +41,9 @@ class DeviceManager : public QObject
 
   public slots:
     void onDevicesChanged(QList<Device> newDevices);
-    void onDisconnectCurrentDevice();
+    void onErrorThresholdExceeded();
     void beginSeek(bool seekUp);
+    void tuneToFrequency(uint16_t frequency);
 
   private slots:
     void onSelectedDeviceIndexChanged(int newIndex);

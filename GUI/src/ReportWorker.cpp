@@ -118,9 +118,9 @@ void ReportWorker::run()
 
         if (errorCount >= 5)
         {
-            qDebug() << "[ReportWorker]: Too many errors during HID read; signalling DeviceManager to reset.";
+            qDebug() << "[ReportWorker]: Too many errors during HID read; signaling DeviceManager.";
 
-            emit disconnectCurrentDevice();
+            emit errorThresholdExceeded();
         }
     }
 

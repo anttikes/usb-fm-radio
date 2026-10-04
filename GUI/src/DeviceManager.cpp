@@ -16,8 +16,6 @@ DeviceManager::DeviceManager(QObject *parent)
 
     connect(m_deviceWorker, &DeviceWorker::devicesChanged, this, &DeviceManager::onDevicesChanged);
 
-    qDebug() << "[DeviceManager] Starting the device worker";
-
     QThreadPool::globalInstance()->start(m_deviceWorker);
 
     connect(this,
@@ -142,11 +140,13 @@ void DeviceManager::onDevicesChanged(QList<Device> newDevices)
     }
 }
 
-void DeviceManager::onDisconnectCurrentDevice()
+void DeviceManager::onErrorThresholdExceeded()
 {
-    qDebug() << "[DeviceManager] Received signal to disconnect the current device due to errors in the report worker.";
+    qDebug() << "[DeviceManager] Report worker error threshold exceeded. Unselecting current device.";
 
-    emit selectedDeviceIndexChanged(-1);
+    m_selectedDeviceIndex = -1;
+
+    emit selectedDeviceIndexChanged(m_selectedDeviceIndex);
 }
 
 void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
@@ -190,10 +190,8 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
                     this,
                     &DeviceManager::deviceStateReportReceived);
 
-            connect(m_reportWorker,
-                    &ReportWorker::disconnectCurrentDevice,
-                    this,
-                    &DeviceManager::onDisconnectCurrentDevice);
+            connect(
+                m_reportWorker, &ReportWorker::errorThresholdExceeded, this, &DeviceManager::onErrorThresholdExceeded);
 
             connect(m_reportWorker,
                     &ReportWorker::rdsProgrammeServiceReportReceived,
@@ -204,8 +202,6 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
                     &ReportWorker::rdsRadioTextReportReceived,
                     this,
                     &DeviceManager::rdsRadioTextReportReceived);
-
-            qDebug() << "[DeviceManager] Starting the report worker";
 
             QThreadPool::globalInstance()->start(m_reportWorker);
         }
@@ -225,6 +221,8 @@ void DeviceManager::beginSeek(bool seekUp)
 {
     if (m_currentDevice)
     {
+        qDebug() << "[DeviceManager]: Requesting seek up/down";
+
         uint8_t buf[MAX_REPORT_SIZE] = {0};
 
         buf[0] = 0x00; // Report ID; not used currently
@@ -243,5 +241,32 @@ void DeviceManager::beginSeek(bool seekUp)
     else
     {
         qDebug() << "[DeviceManager]: No device is currently selected; cannot send seek command.";
+    }
+}
+
+void DeviceManager::tuneToFrequency(uint16_t frequency)
+{
+    if (m_currentDevice)
+    {
+        qDebug() << "[DeviceManager]: Requesting tune to frequency" << frequency;
+
+        uint8_t buf[MAX_REPORT_SIZE] = {0};
+
+        buf[0] = 0x00; // Report ID; not used currently
+        buf[1] = REPORT_IDENTIFIER_TUNE_FREQ;
+        buf[2] = frequency & 0xFF;        // Low byte of frequency
+        buf[3] = (frequency >> 8) & 0xFF; // High byte of frequency
+
+        int res = hid_write(m_currentDevice, buf, sizeof(buf));
+        if (res < 0)
+        {
+            QString error = QString::fromWCharArray(hid_error(m_currentDevice));
+
+            qDebug() << "[DeviceManager]: Error during HID write" << error;
+        }
+    }
+    else
+    {
+        qDebug() << "[DeviceManager]: No device is currently selected; cannot send tune command.";
     }
 }

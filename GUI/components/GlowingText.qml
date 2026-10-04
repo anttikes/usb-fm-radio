@@ -3,19 +3,19 @@ import QtQuick
 import QtQuick.Effects
 
 Item {
-    property alias text: text.text
-    property alias font: text.font
-    property alias color: text.color
+    property alias text: textContent.text
+    property alias font: textContent.font
+    property alias color: textContent.color
 
     property alias brightness: effect.brightness
     property alias contrast: effect.contrast
     property alias blur: effect.blur
 
-    width: text.width
-    height: text.height
+    width: textContent.width
+    height: textContent.height
 
     Text {
-        id: text
+        id: textContent
 
         visible: false // Not shown; used as a template for the glow effect
 
@@ -27,11 +27,11 @@ Item {
 
         anchors.fill: parent
 
-        source: text
+        source: textContent
 
         // Bloom effect
         shadowEnabled: true
-        shadowColor: text.color
+        shadowColor: textContent.color
         shadowBlur: 0.8
         shadowHorizontalOffset: 0
         shadowVerticalOffset: 0

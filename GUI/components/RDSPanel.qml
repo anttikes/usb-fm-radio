@@ -4,14 +4,41 @@ import QtQuick.Layouts
 Item {
     id: root
 
-    property alias stationName: stationNameControl.text
-    property alias radioText: radioTextControl.text
+    property string stationName: ""
+    property string radioText: ""
 
     function resetDisplay() {
-        console.log("RDS panel content was reset")
-        
-        stationNameControl.text = ""
-        radioTextControl.text = ""
+        stationName = "";
+        radioText = "";
+
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        if (DeviceManager.selectedDeviceIndex >= 0) {
+            if (stationName.length > 0 && radioText.length > 0) {
+                topRow.text = stationName;
+                secondRow.text = radioText;
+            } else {
+                topRow.text = qsTr("Waiting for RDS data...");
+                secondRow.text = "";
+            }
+        } else {
+            topRow.text = qsTr("No radios detected; please connect a radio device to your computer");
+            secondRow.text = "";
+        }
+    }
+
+    Component.onCompleted: {
+        updateDisplay();
+    }
+
+    onStationNameChanged: {
+        updateDisplay();
+    }
+
+    onRadioTextChanged: {
+        updateDisplay();
     }
 
     Text {
@@ -87,7 +114,7 @@ Item {
                 spacing: 2
 
                 GlowingText {
-                    id: stationNameControl
+                    id: topRow
 
                     brightness: 0.4
                     blur: 0.1
@@ -97,7 +124,7 @@ Item {
                 }
 
                 GlowingText {
-                    id: radioTextControl
+                    id: secondRow
 
                     brightness: 0.4
                     blur: 0.1

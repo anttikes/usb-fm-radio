@@ -71,6 +71,16 @@ Window {
 
                 enabled: DeviceManager.selectedDeviceIndex >= 0
 
+                onFrequencySliderValueChanged: newFrequency => {
+                    digitalDisplay.currentFrequency = newFrequency;
+                }
+
+                onTuneToNewFrequency: newFrequency => {
+                    rdsPanel.resetDisplay();
+
+                    DeviceManager.tuneToFrequency(newFrequency * 100);
+                }
+
                 Connections {
                     target: DeviceManager
 
@@ -94,8 +104,6 @@ Window {
                     icon.color: hovered ? '#afd8f5' : '#ACD6EE'
 
                     onClicked: {
-                        console.log("Seek down issued");
-
                         rdsPanel.resetDisplay();
 
                         DeviceManager.beginSeek(false);
@@ -108,8 +116,14 @@ Window {
                     Connections {
                         target: DeviceManager
 
+                        function onSelectedDeviceIndexChanged(newIndex) {
+                            if (newIndex < 0) {
+                                digitalDisplay.currentFrequency = 0;
+                            }
+                        }
+
                         function onDeviceStateReportReceived(report) {
-                            digitalDisplay.currentFrequency = report.currentFrequency / 100;
+                            //digitalDisplay.currentFrequency = report.currentFrequency / 100;
                         }
                     }
                 }
@@ -125,8 +139,6 @@ Window {
                     icon.color: hovered ? '#afd8f5' : '#ACD6EE'
 
                     onClicked: {
-                        console.log("Seek up issued");
-
                         rdsPanel.resetDisplay();
 
                         DeviceManager.beginSeek(true);
@@ -143,6 +155,10 @@ Window {
                 Connections {
                     target: DeviceManager
 
+                    function onSelectedDeviceIndexChanged(newIndex) {
+                        rdsPanel.resetDisplay();
+                    }
+
                     function onRdsProgrammeServiceReportReceived(report) {
                         console.log("PS data received: " + report.programmeService);
 
@@ -155,9 +171,6 @@ Window {
                         rdsPanel.radioText = report.radioText;
                     }
                 }
-
-                stationName: qsTr("No radios detected; please connect a radio device to your computer")
-                radioText: ""
             }
 
             RowLayout {
@@ -172,6 +185,13 @@ Window {
                     Connections {
                         target: DeviceManager
 
+                        function onSelectedDeviceIndexChanged(newIndex) {
+                            if (newIndex < 0) {
+                                signalIndicators.receivedSignalStrength = 0;
+                                signalIndicators.signalToNoiseRatio = 0;
+                            }
+                        }
+
                         function onRsqStatusReportReceived(report) {
                             signalIndicators.receivedSignalStrength = report.rssi;
                             signalIndicators.signalToNoiseRatio = report.snr;
@@ -185,10 +205,15 @@ Window {
                     Layout.leftMargin: 120
                     Layout.alignment: Qt.AlignHCenter
 
-                    enabled: DeviceManager.selectedDeviceIndex >= 0
-
                     Connections {
                         target: DeviceManager
+
+                        function onSelectedDeviceIndexChanged(newIndex) {
+                            if (newIndex < 0) {
+                                stereoIndicator.pilot = false;
+                                stereoIndicator.stereoBlend = 0;
+                            }
+                        }
 
                         function onRsqStatusReportReceived(report) {
                             stereoIndicator.pilot = report.pilot;

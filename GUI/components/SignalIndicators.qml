@@ -31,8 +31,6 @@ ColumnLayout {
     GradientBar {
         id: signalStrength
 
-        //Layout.topMargin: 5
-
         from: 0.0
         to: 127.0
 
@@ -41,7 +39,6 @@ ColumnLayout {
 
     Text {
         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-        //Layout.topMargin: 5
         Layout.leftMargin: 8
 
         text: qsTr("Noise ratio")
@@ -51,8 +48,6 @@ ColumnLayout {
 
     GradientBar {
         id: signalToNoiseRatio
-
-        //Layout.topMargin: 5
 
         from: 0.0
         to: 127.0
