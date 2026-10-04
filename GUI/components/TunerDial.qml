@@ -18,7 +18,7 @@ Item {
     property ListModel tickModel: ListModel {}
 
     Component.onCompleted: {
-        for (var freq = root.minFreq; freq <= root.maxFreq; freq += 0.25) {
+        for (let freq = root.minFreq; freq <= root.maxFreq; freq += 0.25) {
             if ((freq % 2) === 0) {
                 // At every even 2 MHz there's a large tick with a frequency value
                 tickModel.append({
@@ -116,10 +116,17 @@ Item {
                 to: root.maxFreq
 
                 stepSize: 0.1
-                live: false
 
                 onValueChanged: {
-                    console.info("Frequency slider was dragged to: " + frequencySlider.value);
+                    if (pressed) {
+                        console.info("Frequency slider was dragged to: " + value);
+                    }
+                }
+
+                onPressedChanged: {
+                    if (!pressed) {
+                        console.info("Slider released, current frequency: " + value);
+                    }
                 }
 
                 background: Rectangle {
@@ -218,6 +225,8 @@ Item {
 
                     width: 13
                     height: frequencySlider.availableHeight
+
+                    visible: root.enabled
 
                     color: 'transparent'
 
