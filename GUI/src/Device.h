@@ -1,5 +1,5 @@
-#ifndef DEVICE_H
-#define DEVICE_H
+#ifndef __DEVICE_H__
+#define __DEVICE_H__
 
 #include <QMetaObject>
 #include <QString>
@@ -36,4 +36,4 @@ class Device
     QString m_path;
 };
 
-#endif // DEVICE_H
+#endif // __DEVICE_H__

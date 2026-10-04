@@ -1,5 +1,5 @@
-#ifndef DEVICEMANAGER_H
-#define DEVICEMANAGER_H
+#ifndef __DEVICEMANAGER_H__
+#define __DEVICEMANAGER_H__
 
 #include "Device.h"
 #include "DeviceWorker.h"
@@ -56,4 +56,4 @@ class DeviceManager : public QObject
     static DeviceManager *s_instance;
 };
 
-#endif // DEVICEMANAGER_H
+#endif // __DEVICEMANAGER_H__
