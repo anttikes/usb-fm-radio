@@ -91,7 +91,8 @@ target_sources(firmware PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/USB/usb_descriptors.c    
     
     # Use the FSDEV driver for STM32 from TinyUSB
-    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c    
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c
 )
 
 # Add linked libraries
