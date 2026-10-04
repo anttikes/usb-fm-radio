@@ -1,12 +1,18 @@
 [submodule "Firmware/ThirdParty/tinyusb"]
 	path = Firmware/ThirdParty/tinyusb
 	url = https://github.com/hathach/tinyusb.git
-[submodule "Firmware/ThirdParty/STM32CubeF0"]
-	path = Firmware/ThirdParty/STM32CubeF0
-	url = https://github.com/STMicroelectronics/STM32CubeF0
 [submodule "GUI/ThirdParty/hidapi"]
 	path = GUI/ThirdParty/hidapi
 	url = https://github.com/libusb/hidapi.git
 [submodule "Firmware/ThirdParty/librdsparser"]
 	path = Firmware/ThirdParty/librdsparser
 	url = https://github.com/anttikes/librdsparser
+[submodule "Firmware/ThirdParty/stm32f0xx-hal-driver"]
+	path = Firmware/ThirdParty/stm32f0xx-hal-driver
+	url = https://github.com/STMicroelectronics/stm32f0xx-hal-driver
+[submodule "Firmware/ThirdParty/cmsis-device-f0"]
+	path = Firmware/ThirdParty/cmsis-device-f0
+	url = https://github.com/STMicroelectronics/cmsis-device-f0/
+[submodule "Firmware/ThirdParty/cmsis-core"]
+	path = Firmware/ThirdParty/cmsis-core
+	url = https://github.com/STMicroelectronics/cmsis-core/

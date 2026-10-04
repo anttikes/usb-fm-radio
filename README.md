@@ -18,15 +18,12 @@ Highlights:
 ## Prerequirements & Getting started
 
 > [!IMPORTANT]
-> This repository uses Git submodules. You can either use `git clone --recursive-submodules <url>` to clone everything but that takes quite a lot of disk space.
+> This repository uses Git submodules. Use `git clone --recursive-submodules <url>` to clone everything in one go.
 > 
->An alternative is to first clone this repository with `git clone <url>`, then initialize the necessary submodules like this:
+>If you forgot to clone the submodule you can recover with the following commands:
 > ```
-> cd usb-fm-radio
+> cd <local clone directory>
 > git submodule update --init
->
-> cd Firmware/ThirdParty/STM32CubeF0
-> git submodule update --init -- "Drivers/STM32F0xx_HAL_Driver" "Drivers/CMSIS/Device/ST/STM32F0xx"
 > ```
 
 The repository is structured around a "multi-root workspace" for Visual Studio Code. Thus, you will need VS Code, and you can install it from [here](https://code.visualstudio.com/Download). After installing, open the `usb-fm-radio.code-workspace` file from the root folder.
