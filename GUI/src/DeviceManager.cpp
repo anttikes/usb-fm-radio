@@ -229,7 +229,7 @@ void DeviceManager::beginSeek(bool seekUp)
 
         buf[0] = 0x00; // Report ID; not used currently
         buf[1] = REPORT_IDENTIFIER_SEEK_START;
-        buf[2] = 0x00; // Wrap; not supported yet
+        buf[2] = 0x01; // Always wrap
         buf[3] = seekUp ? 0x01 : 0x00;
 
         int res = hid_write(m_currentDevice, buf, sizeof(buf));
