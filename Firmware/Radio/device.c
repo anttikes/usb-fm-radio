@@ -206,16 +206,8 @@ bool ProcessCommand(RadioDevice_t *device)
         }
         else if (currentCommand->args.opCode == CMD_ID_FM_TUNE_STATUS)
         {
-            // If the channel is valid, update the frequency reading; otherwise reset it to zero
-            if (currentCommand->response[1] & 0x01)
-            {
-                device->currentFrequency =
-                    (uint16_t)((currentCommand->response[2] << 8) | (currentCommand->response[3] << 0));
-            }
-            else
-            {
-                device->currentFrequency = 0;
-            }
+            device->currentFrequency =
+                (uint16_t)((currentCommand->response[2] << 8) | (currentCommand->response[3] << 0));
         }
         else if (currentCommand->args.opCode == CMD_ID_GET_INT_STATUS)
         {
