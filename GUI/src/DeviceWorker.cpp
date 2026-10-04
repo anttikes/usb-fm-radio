@@ -1,7 +1,8 @@
 #include "DeviceWorker.h"
 #include <QDebug>
 
-DeviceWorker::DeviceWorker() : QRunnable(), m_eventLoop(nullptr), m_timer(nullptr)
+DeviceWorker::DeviceWorker(unsigned short vendorId, unsigned short productId)
+    : QRunnable(), m_eventLoop(nullptr), m_timer(nullptr), m_vendorId(vendorId), m_productId(productId)
 {
 }
 
@@ -55,7 +56,7 @@ void DeviceWorker::onTimerTimeout()
 
 void DeviceWorker::enumerateDevices()
 {
-    hid_device_info *devs = hid_enumerate(0x0483, 0x5740);
+    hid_device_info *devs = hid_enumerate(m_vendorId, m_productId);
 
     QList<Device> newDevices;
 

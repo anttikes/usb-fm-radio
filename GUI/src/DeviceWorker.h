@@ -12,7 +12,7 @@ class DeviceWorker : public QObject, public QRunnable
     Q_OBJECT
 
   public:
-    explicit DeviceWorker();
+    explicit DeviceWorker(unsigned short vendorId, unsigned short productId);
     ~DeviceWorker();
 
     void run() override;
@@ -30,6 +30,9 @@ class DeviceWorker : public QObject, public QRunnable
   private:
     QEventLoop *m_eventLoop;
     QTimer *m_timer;
+
+    unsigned short m_vendorId;
+    unsigned short m_productId;
 };
 
 #endif // __DEVICEWORKER_H__

@@ -11,7 +11,8 @@ DeviceManager::DeviceManager(QObject *parent)
 {
     s_instance = this;
 
-    m_deviceWorker = new DeviceWorker();
+    // This worker looks for radio devices that have already been programmed
+    m_deviceWorker = new DeviceWorker(0x0483, 0x5740);
 
     connect(m_deviceWorker, &DeviceWorker::devicesChanged, this, &DeviceManager::onDevicesChanged);
 
@@ -145,7 +146,7 @@ void DeviceManager::onDisconnectCurrentDevice()
 {
     qDebug() << "[DeviceManager] Received signal to disconnect the current device due to errors in the report worker.";
 
-    onSelectedDeviceIndexChanged(-1);
+    emit selectedDeviceIndexChanged(-1);
 }
 
 void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
