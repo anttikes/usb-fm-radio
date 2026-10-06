@@ -6,7 +6,6 @@ ReportWorker::ReportWorker(hid_device *selectedDevice)
     : QRunnable(), m_signalQualityLog("signal_quality_log.csv"), m_selectedDevice(selectedDevice), m_shouldStop(false),
       m_stopped(false)
 {
-    m_signalQualityLog.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
 }
 
 ReportWorker::~ReportWorker()
@@ -16,7 +15,6 @@ ReportWorker::~ReportWorker()
 
 void ReportWorker::stop()
 {
-    m_signalQualityLog.close();
     m_shouldStop = true;
 }
 
@@ -26,6 +24,11 @@ void ReportWorker::run()
 
     uint8_t errorCount = 0;
     double frequency = 0.0;
+
+    if (!m_signalQualityLog.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+    {
+        qDebug() << "[ReportWorker] Failed to open signal quality log file; readings will not be reported";
+    }
 
     while (!m_shouldStop)
     {
@@ -122,6 +125,11 @@ void ReportWorker::run()
 
             emit errorThresholdExceeded();
         }
+    }
+
+    if (m_signalQualityLog.isOpen())
+    {
+        m_signalQualityLog.close();
     }
 
     qDebug() << "[ReportWorker] Report worker is shutting down...";
