@@ -105,6 +105,7 @@ Window {
 
                     onClicked: {
                         rdsPanel.resetDisplay();
+                        digitalDisplay.currentFrequency = 0;
 
                         DeviceManager.beginSeek(false);
                     }
@@ -123,7 +124,9 @@ Window {
                         }
 
                         function onDeviceStateReportReceived(report) {
-                            //digitalDisplay.currentFrequency = report.currentFrequency / 100;
+                            if (!tunerDial.dragInProgress) {
+                                digitalDisplay.currentFrequency = report.currentFrequency / 100;
+                            }
                         }
                     }
                 }
@@ -140,6 +143,7 @@ Window {
 
                     onClicked: {
                         rdsPanel.resetDisplay();
+                        digitalDisplay.currentFrequency = 0;
 
                         DeviceManager.beginSeek(true);
                     }

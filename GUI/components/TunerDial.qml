@@ -18,6 +18,8 @@ Item {
     readonly property real minFreq: 87.5
     readonly property real maxFreq: 108.0
 
+    readonly property alias dragInProgress: frequencySlider.dragInProgress
+
     property ListModel tickModel: ListModel {}
 
     Component.onCompleted: {
@@ -42,8 +44,6 @@ Item {
 
     onCurrentFrequencyChanged: {
         console.info("Current frequency updated from the outside: " + root.currentFrequency);
-
-        frequencySliderValueChanged(root.currentFrequency);
 
         frequencySlider.value = root.currentFrequency;
     }
@@ -114,6 +114,8 @@ Item {
             Slider {
                 id: frequencySlider
 
+                property bool dragInProgress: false
+
                 anchors.fill: parent
                 anchors.leftMargin: 10
                 anchors.rightMargin: 10
@@ -125,12 +127,14 @@ Item {
 
                 onValueChanged: {
                     if (pressed) {
+                        frequencySlider.dragInProgress = true;
                         root.frequencySliderValueChanged(value);
                     }
                 }
 
                 onPressedChanged: {
                     if (!pressed) {
+                        frequencySlider.dragInProgress = false;
                         root.tuneToNewFrequency(value);
                     }
                 }
