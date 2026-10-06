@@ -76,7 +76,7 @@ typedef enum _RadioState_t : uint8_t
     RADIOSTATE_DIGITAL_OUTPUT_ENABLED = 0x04,
 } RadioState_t;
 
-typedef struct _RadioStatusResponse_t
+typedef struct _DeviceStatusResponse_t
 {
 #if defined __cplusplus
     Q_GADGET
@@ -87,6 +87,11 @@ typedef struct _RadioStatusResponse_t
     Q_PROPERTY(bool isMuted MEMBER isMuted)
 
   public:
+    _DeviceStatusResponse_t()
+        : currentState(RADIOSTATE_POWERDOWN), currentFrequency(0), currentVolume(0), commandQueueCount(0),
+          reportQueueCount(0), isMuted(false), stackUsage(0)
+    {
+    }
 #endif /* __cplusplus */
 
     /* Holds the current state of the device */
@@ -125,6 +130,10 @@ typedef struct _GetIntStatusResponse_t
     Q_PROPERTY(bool seekTuneCompletedInterrupt MEMBER seekTuneCompletedInterrupt)
 
   public:
+    _GetIntStatusResponse_t()
+        : clearToSend(false), error(false), rsqInterrupt(false), rdsInterrupt(false), seekTuneCompletedInterrupt(false)
+    {
+    }
 #endif /* __cplusplus */
 
     /* When set, the device is ready to receive the next command */
@@ -153,6 +162,9 @@ typedef struct _GetPropertyResponse_t
     Q_PROPERTY(uint16_t propertyValue MEMBER propertyValue)
 
   public:
+    _GetPropertyResponse_t() : propertyValue(0)
+    {
+    }
 #endif /* __cplusplus */
 
     /* Holds the current value of the property*/
@@ -184,6 +196,12 @@ typedef struct _RSQStatusResponse_t
     Q_PROPERTY(int8_t frequencyOffset MEMBER frequencyOffset)
 
   public:
+    _RSQStatusResponse_t()
+        : blendInt(false), multHInt(false), multLInt(false), snrHInt(false), snrLInt(false), rssiHInt(false),
+          rssiLInt(false), softMute(false), AFCRail(false), validChannel(false), pilot(false), stereoBlend(0), rssi(0),
+          snr(0), multipath(0), frequencyOffset(0)
+    {
+    }
 #endif /* __cplusplus */
 
     /* When set, the blend goes above or below the blend threshold settings */
@@ -245,9 +263,14 @@ typedef struct _RDSProgrammeServiceReport_t
     Q_PROPERTY(QString programmeService READ GetProgrammeService)
 
   public:
+    _RDSProgrammeServiceReport_t() : programmeService{0}
+    {
+    }
+
     QString GetProgrammeService() const
     {
-        return QString::fromLatin1(programmeService, 8).trimmed();
+        QByteArray byteArray(programmeService, 8);
+        return QString::fromUtf8(byteArray.constData(), -1).trimmed();
     }
 #endif /* __cplusplus */
 
@@ -265,9 +288,14 @@ typedef struct _RDSRadioTextReport_t
     Q_PROPERTY(QString radioText READ GetRadioText)
 
   public:
+    _RDSRadioTextReport_t() : radioText{0}
+    {
+    }
+
     QString GetRadioText() const
     {
-        return QString::fromLatin1(radioText, 64).trimmed();
+        QByteArray byteArray(radioText, 64);
+        return QString::fromUtf8(byteArray.constData(), -1).trimmed();
     }
 #endif /* __cplusplus */
 
