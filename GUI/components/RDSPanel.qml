@@ -16,12 +16,19 @@ Item {
 
     function updateDisplay() {
         if (DeviceManager.selectedDeviceIndex >= 0) {
-            if (stationName.length > 0 && radioText.length > 0) {
-                topRow.text = stationName;
-                secondRow.text = radioText;
-            } else {
+            if (stationName.length == 0 && radioText.length == 0) {
                 topRow.text = qsTr("Waiting for RDS data...");
                 secondRow.text = "";
+
+                return;
+            }
+
+            if (stationName.length > 0) {
+                topRow.text = stationName;
+            }
+
+            if (stationName.length > 0 && radioText.length > 0) {
+                secondRow.text = radioText;
             }
         } else {
             topRow.text = qsTr("No radios detected; please connect a radio device to your computer");

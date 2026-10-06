@@ -160,14 +160,10 @@ Window {
                     }
 
                     function onRdsProgrammeServiceReportReceived(report) {
-                        console.log("PS data received: " + report.programmeService);
-
                         rdsPanel.stationName = report.programmeService;
                     }
 
                     function onRdsRadioTextReportReceived(report) {
-                        console.log("RT data received: " + report.radioText);
-
                         rdsPanel.radioText = report.radioText;
                     }
                 }

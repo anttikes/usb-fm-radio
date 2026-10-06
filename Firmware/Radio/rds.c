@@ -47,17 +47,13 @@ bool RDSInit()
 {
     rdsparser_init(&rdsParser);
 
-    rdsparser_set_text_correction(&rdsParser, RDSPARSER_TEXT_PS, RDSPARSER_BLOCK_TYPE_INFO,
-                                  RDSPARSER_BLOCK_ERROR_LARGE);
-    rdsparser_set_text_correction(&rdsParser, RDSPARSER_TEXT_PS, RDSPARSER_BLOCK_TYPE_DATA,
-                                  RDSPARSER_BLOCK_ERROR_LARGE);
-    rdsparser_set_text_correction(&rdsParser, RDSPARSER_TEXT_RT, RDSPARSER_BLOCK_TYPE_INFO,
-                                  RDSPARSER_BLOCK_ERROR_LARGE);
-    rdsparser_set_text_correction(&rdsParser, RDSPARSER_TEXT_RT, RDSPARSER_BLOCK_TYPE_DATA,
-                                  RDSPARSER_BLOCK_ERROR_LARGE);
+    rdsparser_set_text_correction(&rdsParser, RDSPARSER_TEXT_PS, RDSPARSER_BLOCK_TYPE_INFO, RDSPARSER_BLOCK_ERROR_NONE);
+    rdsparser_set_text_correction(&rdsParser, RDSPARSER_TEXT_PS, RDSPARSER_BLOCK_TYPE_DATA, RDSPARSER_BLOCK_ERROR_NONE);
+    rdsparser_set_text_correction(&rdsParser, RDSPARSER_TEXT_RT, RDSPARSER_BLOCK_TYPE_INFO, RDSPARSER_BLOCK_ERROR_NONE);
+    rdsparser_set_text_correction(&rdsParser, RDSPARSER_TEXT_RT, RDSPARSER_BLOCK_TYPE_DATA, RDSPARSER_BLOCK_ERROR_NONE);
 
-    rdsparser_set_text_progressive(&rdsParser, RDSPARSER_TEXT_PS, RDSPARSER_PROGRESSIVE_AUTO);
-    rdsparser_set_text_progressive(&rdsParser, RDSPARSER_TEXT_RT, RDSPARSER_PROGRESSIVE_AUTO);
+    rdsparser_set_text_progressive(&rdsParser, RDSPARSER_TEXT_PS, RDSPARSER_PROGRESSIVE_ENABLED);
+    rdsparser_set_text_progressive(&rdsParser, RDSPARSER_TEXT_RT, RDSPARSER_PROGRESSIVE_ENABLED);
 
     rdsparser_register_ps(&rdsParser, callback_ps);
     rdsparser_register_rt(&rdsParser, callback_rt);

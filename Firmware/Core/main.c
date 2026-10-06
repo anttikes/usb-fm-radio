@@ -129,14 +129,11 @@ int main(void)
         Error_Handler();
     }
 
-    // Configure the number of FIFO buffers in the RDS
-    if (!SetRDSFIFOCount(&radioDevice, 10))
-    {
-        Error_Handler();
-    }
-
-    // Enable RDS processing
-    if (!SetRDSConfig(&radioDevice, FM_RDS_CONFIG_ARGS_RDS_ENABLE))
+    // Enable RDS processing, and allow max number of errors
+    if (!SetRDSConfig(&radioDevice, FM_RDS_CONFIG_ARGS_BLETHA_ERROR_MAX_5_BITS |
+                                        FM_RDS_CONFIG_ARGS_BLETHB_ERROR_MAX_5_BITS |
+                                        FM_RDS_CONFIG_ARGS_BLETHC_ERROR_MAX_5_BITS |
+                                        FM_RDS_CONFIG_ARGS_BLETHD_ERROR_MAX_5_BITS | FM_RDS_CONFIG_ARGS_RDS_ENABLE))
     {
         Error_Handler();
     }
