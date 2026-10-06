@@ -7,12 +7,7 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/",
             "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
-            "environment": {
-                "INSTALL_DIRECTORY": "${sourceDir}/../install/"
-            },
-            "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "$env{INSTALL_DIRECTORY}"
-            }
+            "installDir": "${sourceDir}/../install/"
         },
         {
             "name": "firmware-debug",
