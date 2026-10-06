@@ -23,7 +23,7 @@
                 "port=SWD",
                 "mode=UR",
                 "-d",
-                "${command:cmake.launchTargetPath}",
+                "${workspaceFolder:Firmware}/build/firmware.elf",
                 "-v",
                 "fast",
                 "-hardRst"
