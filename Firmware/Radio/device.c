@@ -158,10 +158,6 @@ bool ProcessCommand(RadioDevice_t *device)
     {
         switch (currentCommand->args.opCode)
         {
-        case CMD_ID_GET_INT_STATUS:
-            ProcessIntStatus(device, (Command_t *)currentCommand);
-            break;
-
         case CMD_ID_GET_PROPERTY:
             ProcessGetProperty(device, (Command_t *)currentCommand);
             break;
@@ -461,8 +457,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         report.bytes.deviceStatus.isMuted = radioDevice.isMuted;
 
 #ifdef DEBUG
-        uintptr_t address = (uintptr_t)&_sstack;
-        const uintptr_t end = (uintptr_t)&_estack;
+        volatile uintptr_t address = (uintptr_t)&_sstack;
+        volatile const uintptr_t end = (uintptr_t)&_estack;
 
         while (address < end)
         {

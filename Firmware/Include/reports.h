@@ -36,20 +36,17 @@ typedef enum _ReportIdentifier_t : uint8_t
     /* Indentifies a radio status report */
     REPORT_IDENTIFIER_DEVICE_STATUS = 0x01,
 
-    /* Identifies an interrupt status report */
-    REPORT_IDENTIFIER_INTERRUPT_STATUS = 0x02,
-
     /* Identifies an RSQ status report */
-    REPORT_IDENTIFIER_RSQ_STATUS = 0x03,
+    REPORT_IDENTIFIER_RSQ_STATUS = 0x02,
 
     /* Identifies a Get Property report */
-    REPORT_IDENTIFIER_GET_PROPERTY = 0x04,
+    REPORT_IDENTIFIER_GET_PROPERTY = 0x03,
 
     /* Identifies a report that provides stable Programme Service information */
-    REPORT_IDENTIFIER_RDS_PROGRAMME_SERVICE = 0x05,
+    REPORT_IDENTIFIER_RDS_PROGRAMME_SERVICE = 0x04,
 
     /* Identifies a report that provides stable Radio Text information */
-    REPORT_IDENTIFIER_RDS_RADIO_TEXT = 0x06,
+    REPORT_IDENTIFIER_RDS_RADIO_TEXT = 0x05,
 
     /* Indicates a request to tune to a new frequency */
     REPORT_IDENTIFIER_TUNE_FREQ = 0x20,

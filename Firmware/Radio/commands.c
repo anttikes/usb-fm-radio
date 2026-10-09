@@ -204,30 +204,6 @@ bool GetIntStatus(RadioDevice_t *device)
 }
 
 /**
- * @brief  Processes the result of "Get Int Status" command and generates a report
- * @param  device Pointer to the radio device structure
- * @param  command Pointer to the command
- *
- * @retval The corresponding report structure
- */
-bool ProcessIntStatus(RadioDevice_t *device, Command_t *command)
-{
-    Report_t report = {0};
-
-    report.identifier = REPORT_IDENTIFIER_INTERRUPT_STATUS;
-
-    report.bytes.interruptStatus.clearToSend = command->response[0] & 0x80;
-    report.bytes.interruptStatus.error = command->response[0] & 0x40;
-
-    report.bytes.interruptStatus.rsqInterrupt = command->response[0] & 0x08;
-    report.bytes.interruptStatus.rdsInterrupt = command->response[0] & 0x04;
-
-    report.bytes.interruptStatus.seekTuneCompletedInterrupt = command->response[0] & 0x01;
-
-    return EnqueueReport(device, &report);
-}
-
-/**
  * @brief  Enqueues the "FM Tune" command
  * @param  device Pointer to the radio device structure
  * @param  args Arguments for the command
