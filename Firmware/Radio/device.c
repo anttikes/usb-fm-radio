@@ -41,7 +41,13 @@ RadioDevice_t radioDevice = {
         .count = 0,
         .front = 0,
         .back = 0
-    }    
+    },
+    .reportQueue = {
+        .reports = {{0}},
+        .count = 0,
+        .front = 0,
+        .back = 0
+    }
 };
 // clang-format on
 
