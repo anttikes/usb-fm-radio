@@ -47,7 +47,7 @@
 
 // FIFO buffer size for TinyUSB; the multiplier indicates the number of milliseconds
 // worth of audio data that fits into the buffer
-#define CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ 6U * CFG_TUD_AUDIO_FUNC_1_EP_IN_SZ_MAX
+#define CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ 2U * CFG_TUD_AUDIO_FUNC_1_EP_IN_SZ_MAX
 
 // Interface numbers
 #define ITF_NUM_AUDIO_CONTROL 0x00

@@ -31,18 +31,18 @@
 
 /* Private define ------------------------------------------------------------*/
 
-// Using a smaller buffer is possible, but causes more load for the CPU
-// due to more frequent DMA interrupts. This may cause problems in detecting
-// GPIO-based interrupts from the radio device, which in turn manifests as
-// the command queue filling up
-#define DMA_BUFFER_LENGTH CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 4
+// Size of the staging buffer has an effect on the CPU usage; smaller buffer means
+// more interrupts and thus more transfers into the TinyUSB FIFO
+// With 2 ms FIFO length, a ratio of 1:4 or smaller causes the
+// DMA transfer to occasionally overflow the FIFO buffer
+#define DMA_BUFFER_LENGTH CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 8
 #define DMA_BUFFER_START 0
 #define DMA_BUFFER_MIDPOINT DMA_BUFFER_LENGTH / 2
 
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
-uint16_t i2sBuffer[DMA_BUFFER_LENGTH];
+uint8_t i2sBuffer[DMA_BUFFER_LENGTH];
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -146,8 +146,8 @@ int main(void)
 
     // Start receiving I2S data through DMA; this provides DCLK and DFS
     // for the radio chip. When using circular mode, the size parameter
-    // must equal the number of elements in the receiving array
-    if (HAL_I2S_Receive_DMA(&hi2s1, &i2sBuffer[0], DMA_BUFFER_LENGTH) != HAL_OK)
+    // must equal the number of audio samples we want to read during one cycle
+    if (HAL_I2S_Receive_DMA(&hi2s1, (uint16_t *)&i2sBuffer[0], DMA_BUFFER_LENGTH / 2) != HAL_OK)
     {
         Error_Handler();
     }
@@ -253,7 +253,7 @@ void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s)
 {
     if (hi2s->Instance == SPI1)
     {
-        tud_audio_write(&i2sBuffer[DMA_BUFFER_START], DMA_BUFFER_LENGTH);
+        tud_audio_write(&i2sBuffer[DMA_BUFFER_START], DMA_BUFFER_LENGTH / 2);
     }
 }
 
@@ -267,7 +267,7 @@ void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
 {
     if (hi2s->Instance == SPI1)
     {
-        tud_audio_write(&i2sBuffer[DMA_BUFFER_MIDPOINT], DMA_BUFFER_LENGTH);
+        tud_audio_write(&i2sBuffer[DMA_BUFFER_MIDPOINT], DMA_BUFFER_LENGTH / 2);
     }
 }
 
