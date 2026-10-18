@@ -443,7 +443,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if (htim->Instance == TIM16)
     {
         // Timer 16 is used to periodically query RSQ status when tuned to a station
-        if (radioDevice.currentState != RADIOSTATE_POWERDOWN)
+        if (radioDevice.currentState >= RADIOSTATE_TUNED_TO_STATION)
         {
             RSQStatus(&radioDevice, FM_RSQ_STATUS_ARGS_NONE);
         }
@@ -463,20 +463,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         report.bytes.deviceStatus.isMuted = radioDevice.isMuted;
 
 #ifdef DEBUG
-        volatile uintptr_t address = (uintptr_t)&_sstack;
-        volatile const uintptr_t end = (uintptr_t)&_estack;
+        const uint32_t *ptr = &_sstack;
+        const uint32_t *const end = &_estack;
 
-        while (address < end)
+        while (ptr < end)
         {
-            const volatile uint32_t *word = (const volatile uint32_t *)address;
-
-            if (*word != stack_watermark_pattern)
+            if (*ptr != stack_watermark_pattern)
             {
-                report.bytes.deviceStatus.stackUsage = (uint32_t)(end - address);
+                size_t unusedWords = (size_t)(end - ptr);
+                report.bytes.deviceStatus.stackUsage = (uint32_t)(unusedWords * sizeof(uint32_t));
                 break;
             }
 
-            address += sizeof(uint32_t);
+            ptr++;
         }
 #endif /* DEBUG */
 
