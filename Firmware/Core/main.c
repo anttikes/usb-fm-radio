@@ -55,7 +55,7 @@ uint8_t i2sBuffer[DMA_BUFFER_LENGTH];
  * @brief  The application entry point.
  * @retval None
  */
-void main(void)
+int main(void)
 {
     // Initialize HAL
     HAL_Init();
