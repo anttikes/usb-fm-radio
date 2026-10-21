@@ -25,11 +25,24 @@
 /* Static Member Definitions ------------------------------------------------*/
 
 /* Constructors & Destructor ------------------------------------------------*/
+
+/**
+ * @brief  Constructs the device enumeration worker
+ * @param  vendorId Vendor identifier to enumerate
+ * @param  productId Product identifier to enumerate
+ *
+ * @retval None
+ */
 DeviceWorker::DeviceWorker(unsigned short vendorId, unsigned short productId)
     : QRunnable(), m_eventLoop(nullptr), m_timer(nullptr), m_vendorId(vendorId), m_productId(productId)
 {
 }
 
+/**
+ * @brief  Stops the worker and releases its event loop and timer
+ *
+ * @retval None
+ */
 DeviceWorker::~DeviceWorker()
 {
     stop();
@@ -48,6 +61,12 @@ DeviceWorker::~DeviceWorker()
 }
 
 /* Public Methods -----------------------------------------------------------*/
+
+/**
+ * @brief  Stops the worker event loop
+ *
+ * @retval None
+ */
 void DeviceWorker::stop()
 {
     if (m_eventLoop)
@@ -56,6 +75,11 @@ void DeviceWorker::stop()
     }
 }
 
+/**
+ * @brief  Runs periodic device enumeration in the worker thread
+ *
+ * @retval None
+ */
 void DeviceWorker::run()
 {
     qDebug() << "[DeviceWorker] Device worker is starting up...";
@@ -77,11 +101,22 @@ void DeviceWorker::run()
 /* Protected Methods --------------------------------------------------------*/
 
 /* Private Methods ----------------------------------------------------------*/
+
+/**
+ * @brief  Enumerates devices when the polling timer expires
+ *
+ * @retval None
+ */
 void DeviceWorker::onTimerTimeout()
 {
     enumerateDevices();
 }
 
+/**
+ * @brief  Enumerates matching HID devices and emits the updated device list
+ *
+ * @retval None
+ */
 void DeviceWorker::enumerateDevices()
 {
     hid_device_info *devs = hid_enumerate(m_vendorId, m_productId);

@@ -28,7 +28,13 @@
 bool hidapi_initialize();
 void hidapi_deinitialize();
 
-/* Main Entry Point ----------------------------------------------------------*/
+/**
+ * @brief  Initializes the GUI application and runs its event loop
+ * @param  argc Argument count
+ * @param  argv Argument vector
+ *
+ * @retval Application exit code
+ */
 int main(int argc, char *argv[])
 {
     /* Not sure where an embedded resource (QML or otherwise) went? This will help you find it. */
@@ -65,6 +71,12 @@ int main(int argc, char *argv[])
 }
 
 /* HIDAPI Lifecycle Functions ------------------------------------------------*/
+
+/**
+ * @brief  Initializes HIDAPI
+ *
+ * @retval True if initialization succeeds, false otherwise
+ */
 bool hidapi_initialize()
 {
     int res = hid_init();
@@ -81,6 +93,11 @@ bool hidapi_initialize()
     return true;
 }
 
+/**
+ * @brief  Deinitializes HIDAPI and reports any shutdown error
+ *
+ * @retval None
+ */
 void hidapi_deinitialize()
 {
     int res = hid_exit();

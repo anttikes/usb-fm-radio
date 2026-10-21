@@ -28,6 +28,12 @@
 DeviceManager *DeviceManager::s_instance = nullptr;
 
 /* Constructors & Destructor ------------------------------------------------*/
+/**
+ * @brief  Constructs the device manager and starts device enumeration
+ * @param  parent Parent QObject
+ *
+ * @retval None
+ */
 DeviceManager::DeviceManager(QObject *parent)
     : QObject(parent), m_deviceWorker(nullptr), m_reportWorker(nullptr), m_currentDevice(nullptr),
       m_selectedDeviceIndex(-1)
@@ -48,6 +54,11 @@ DeviceManager::DeviceManager(QObject *parent)
             Qt::QueuedConnection);
 }
 
+/**
+ * @brief  Stops workers and closes the selected HID device
+ *
+ * @retval None
+ */
 DeviceManager::~DeviceManager()
 {
     m_devices.clear();
@@ -78,21 +89,43 @@ DeviceManager::~DeviceManager()
 }
 
 /* Public Methods -----------------------------------------------------------*/
+
+/**
+ * @brief  Returns the device manager singleton
+ *
+ * @retval The device manager instance
+ */
 DeviceManager *DeviceManager::instance()
 {
     return s_instance;
 }
 
+/**
+ * @brief  Returns the currently enumerated devices
+ *
+ * @retval The device list
+ */
 QList<Device> DeviceManager::devices() const
 {
     return m_devices;
 }
 
+/**
+ * @brief  Returns the index of the selected device
+ *
+ * @retval The selected device index, or -1 if none is selected
+ */
 int DeviceManager::selectedDeviceIndex() const
 {
     return m_selectedDeviceIndex;
 }
 
+/**
+ * @brief  Updates the selected device index
+ * @param  newIndex Index of the device to select
+ *
+ * @retval None
+ */
 void DeviceManager::setSelectedDeviceIndex(int newIndex)
 {
     if (newIndex > m_devices.size())
@@ -109,6 +142,13 @@ void DeviceManager::setSelectedDeviceIndex(int newIndex)
 }
 
 /* Public Slots -------------------------------------------------------------*/
+
+/**
+ * @brief  Updates the device list and preserves or chooses a selection
+ * @param  newDevices Newly enumerated devices
+ *
+ * @retval None
+ */
 void DeviceManager::onDevicesChanged(QList<Device> newDevices)
 {
     QString currentPath;
@@ -165,6 +205,11 @@ void DeviceManager::onDevicesChanged(QList<Device> newDevices)
     }
 }
 
+/**
+ * @brief  Clears the device selection after repeated report read errors
+ *
+ * @retval None
+ */
 void DeviceManager::onErrorThresholdExceeded()
 {
     qDebug() << "[DeviceManager] Report worker error threshold exceeded. Unselecting current device.";
@@ -175,6 +220,13 @@ void DeviceManager::onErrorThresholdExceeded()
 }
 
 /* Private Slots ------------------------------------------------------------*/
+
+/**
+ * @brief  Opens or closes the device associated with the selected index
+ * @param  newIndex Index of the selected device, or -1 to clear selection
+ *
+ * @retval None
+ */
 void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
 {
     if (newIndex == -1)
@@ -244,6 +296,13 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
 }
 
 /* Public Slots -------------------------------------------------------------*/
+
+/**
+ * @brief  Sends a seek command to the currently selected device
+ * @param  seekUp True to seek upward, false to seek downward
+ *
+ * @retval None
+ */
 void DeviceManager::beginSeek(bool seekUp)
 {
     if (m_currentDevice)
@@ -271,6 +330,12 @@ void DeviceManager::beginSeek(bool seekUp)
     }
 }
 
+/**
+ * @brief  Sends a tune-to-frequency command to the selected device
+ * @param  frequency Target frequency value sent to the device
+ *
+ * @retval None
+ */
 void DeviceManager::tuneToFrequency(uint16_t frequency)
 {
     if (m_currentDevice)

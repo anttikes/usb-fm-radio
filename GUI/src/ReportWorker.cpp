@@ -26,23 +26,46 @@
 /* Static Member Definitions ------------------------------------------------*/
 
 /* Constructors & Destructor ------------------------------------------------*/
+
+/**
+ * @brief  Constructs the report worker for a selected HID device
+ * @param  selectedDevice HID device to read reports from
+ *
+ * @retval None
+ */
 ReportWorker::ReportWorker(hid_device *selectedDevice)
     : QRunnable(), m_signalQualityLog("signal_quality_log.csv"), m_selectedDevice(selectedDevice), m_shouldStop(false),
       m_stopped(false)
 {
 }
 
+/**
+ * @brief  Requests that the report worker stop during destruction
+ *
+ * @retval None
+ */
 ReportWorker::~ReportWorker()
 {
     stop();
 }
 
 /* Public Methods -----------------------------------------------------------*/
+
+/**
+ * @brief  Requests that the report polling loop stop
+ *
+ * @retval None
+ */
 void ReportWorker::stop()
 {
     m_shouldStop = true;
 }
 
+/**
+ * @brief  Polls HID reports, emits parsed reports, and logs signal quality
+ *
+ * @retval None
+ */
 void ReportWorker::run()
 {
     qDebug() << "[ReportWorker] Report worker is starting up...";
