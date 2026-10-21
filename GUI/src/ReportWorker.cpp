@@ -1,7 +1,31 @@
+/**
+ ******************************************************************************
+ * @file    ReportWorker.cpp
+ * @brief   Implements the ReportWorker class
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) Antti Keskinen
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ *
+ ******************************************************************************
+ */
+
+/* Includes ------------------------------------------------------------------*/
 #include "ReportWorker.h"
 #include <QDebug>
 #include <QThread>
 
+/* File-scope Constants & Macros --------------------------------------------*/
+
+/* Anonymous Namespace (File-local helpers and variables) -------------------*/
+
+/* Static Member Definitions ------------------------------------------------*/
+
+/* Constructors & Destructor ------------------------------------------------*/
 ReportWorker::ReportWorker(hid_device *selectedDevice)
     : QRunnable(), m_signalQualityLog("signal_quality_log.csv"), m_selectedDevice(selectedDevice), m_shouldStop(false),
       m_stopped(false)
@@ -13,6 +37,7 @@ ReportWorker::~ReportWorker()
     stop();
 }
 
+/* Public Methods -----------------------------------------------------------*/
 void ReportWorker::stop()
 {
     m_shouldStop = true;
@@ -136,3 +161,9 @@ void ReportWorker::run()
 
     m_stopped = true;
 }
+
+/* Protected Methods --------------------------------------------------------*/
+
+/* Private Methods ----------------------------------------------------------*/
+
+/* External Callbacks / Event Handlers --------------------------------------*/

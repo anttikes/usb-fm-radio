@@ -1,6 +1,30 @@
+/**
+ ******************************************************************************
+ * @file    DeviceWorker.cpp
+ * @brief   Implements the DeviceWorker class
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) Antti Keskinen
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ *
+ ******************************************************************************
+ */
+
+/* Includes ------------------------------------------------------------------*/
 #include "DeviceWorker.h"
 #include <QDebug>
 
+/* File-scope Constants & Macros --------------------------------------------*/
+
+/* Anonymous Namespace (File-local helpers and variables) -------------------*/
+
+/* Static Member Definitions ------------------------------------------------*/
+
+/* Constructors & Destructor ------------------------------------------------*/
 DeviceWorker::DeviceWorker(unsigned short vendorId, unsigned short productId)
     : QRunnable(), m_eventLoop(nullptr), m_timer(nullptr), m_vendorId(vendorId), m_productId(productId)
 {
@@ -23,6 +47,7 @@ DeviceWorker::~DeviceWorker()
     }
 }
 
+/* Public Methods -----------------------------------------------------------*/
 void DeviceWorker::stop()
 {
     if (m_eventLoop)
@@ -49,6 +74,9 @@ void DeviceWorker::run()
     qDebug() << "[DeviceWorker] Device worker is shutting down...";
 }
 
+/* Protected Methods --------------------------------------------------------*/
+
+/* Private Methods ----------------------------------------------------------*/
 void DeviceWorker::onTimerTimeout()
 {
     enumerateDevices();
@@ -69,3 +97,5 @@ void DeviceWorker::enumerateDevices()
 
     emit devicesChanged(newDevices);
 }
+
+/* External Callbacks / Event Handlers --------------------------------------*/

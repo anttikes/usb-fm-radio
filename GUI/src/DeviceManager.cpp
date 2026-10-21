@@ -1,10 +1,33 @@
+/**
+ ******************************************************************************
+ * @file    DeviceManager.cpp
+ * @brief   Implements the DeviceManager class
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) Antti Keskinen
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ *
+ ******************************************************************************
+ */
+
+/* Includes ------------------------------------------------------------------*/
 #include "DeviceManager.h"
 #include <QDebug>
 #include <QThreadPool>
 #include <hidapi.h>
 
+/* File-scope Constants & Macros --------------------------------------------*/
+
+/* Anonymous Namespace (File-local helpers and variables) -------------------*/
+
+/* Static Member Definitions ------------------------------------------------*/
 DeviceManager *DeviceManager::s_instance = nullptr;
 
+/* Constructors & Destructor ------------------------------------------------*/
 DeviceManager::DeviceManager(QObject *parent)
     : QObject(parent), m_deviceWorker(nullptr), m_reportWorker(nullptr), m_currentDevice(nullptr),
       m_selectedDeviceIndex(-1)
@@ -54,6 +77,7 @@ DeviceManager::~DeviceManager()
     }
 }
 
+/* Public Methods -----------------------------------------------------------*/
 DeviceManager *DeviceManager::instance()
 {
     return s_instance;
@@ -84,6 +108,7 @@ void DeviceManager::setSelectedDeviceIndex(int newIndex)
     }
 }
 
+/* Public Slots -------------------------------------------------------------*/
 void DeviceManager::onDevicesChanged(QList<Device> newDevices)
 {
     QString currentPath;
@@ -149,6 +174,7 @@ void DeviceManager::onErrorThresholdExceeded()
     emit selectedDeviceIndexChanged(m_selectedDeviceIndex);
 }
 
+/* Private Slots ------------------------------------------------------------*/
 void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
 {
     if (newIndex == -1)
@@ -217,6 +243,7 @@ void DeviceManager::onSelectedDeviceIndexChanged(int newIndex)
     }
 }
 
+/* Public Slots -------------------------------------------------------------*/
 void DeviceManager::beginSeek(bool seekUp)
 {
     if (m_currentDevice)
@@ -270,3 +297,5 @@ void DeviceManager::tuneToFrequency(uint16_t frequency)
         qDebug() << "[DeviceManager]: No device is currently selected; cannot send tune command.";
     }
 }
+
+/* External Callbacks / Event Handlers --------------------------------------*/

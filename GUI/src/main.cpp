@@ -1,3 +1,20 @@
+/**
+ ******************************************************************************
+ * @file    main.cpp
+ * @brief   Application entry point and HIDAPI lifecycle functions
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) Antti Keskinen
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ *
+ ******************************************************************************
+ */
+
+/* Includes ------------------------------------------------------------------*/
 #include "DeviceManager.h"
 #include <QDebug>
 #include <QDirIterator>
@@ -7,9 +24,11 @@
 #include <QQmlContext>
 #include <QQuickStyle>
 
+/* Forward Declarations ------------------------------------------------------*/
 bool hidapi_initialize();
 void hidapi_deinitialize();
 
+/* Main Entry Point ----------------------------------------------------------*/
 int main(int argc, char *argv[])
 {
     /* Not sure where an embedded resource (QML or otherwise) went? This will help you find it. */
@@ -45,6 +64,7 @@ int main(int argc, char *argv[])
     return retVal;
 }
 
+/* HIDAPI Lifecycle Functions ------------------------------------------------*/
 bool hidapi_initialize()
 {
     int res = hid_init();
