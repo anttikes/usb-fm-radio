@@ -33,7 +33,7 @@
 /* Class Definition ----------------------------------------------------------*/
 class DeviceManager : public QObject
 {
-    /* Meta-Object Macro -----------------------------------------------------*/
+    /* Meta-Object Macros -----------------------------------------------------*/
     Q_OBJECT
     QML_SINGLETON
     QML_ELEMENT

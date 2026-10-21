@@ -30,8 +30,10 @@
 /* Class Definition ----------------------------------------------------------*/
 class DeviceWorker : public QObject, public QRunnable
 {
-    /* Meta-Object Macro -----------------------------------------------------*/
+    /* Meta-Object Macros -----------------------------------------------------*/
     Q_OBJECT
+
+    /* Properties ------------------------------------------------------------*/
 
   public:
     /* Enums & Type Aliases --------------------------------------------------*/
@@ -48,6 +50,7 @@ class DeviceWorker : public QObject, public QRunnable
     void run() override;
     void stop();
 
+  protected slots:
     /* Protected Methods -----------------------------------------------------*/
 
     /* Protected Slots -------------------------------------------------------*/

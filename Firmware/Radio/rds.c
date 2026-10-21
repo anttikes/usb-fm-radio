@@ -33,8 +33,8 @@ rdsparser_t rdsParser;
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
-void callback_ps(rdsparser_t *rds, bool, void *user_data);
-void callback_rt(rdsparser_t *rds, rdsparser_rt_flag_t flag, bool, void *user_data);
+static void callback_ps(rdsparser_t *rds, bool, void *user_data);
+static void callback_rt(rdsparser_t *rds, rdsparser_rt_flag_t flag, bool, void *user_data);
 
 /* Exported functions --------------------------------------------------------*/
 
@@ -97,7 +97,7 @@ void RDSReset()
  * @param  changed True if the PS has changed; false otherwise
  * @param  user_data Pointer to user data; NULL if no data was provided
  */
-void callback_ps(rdsparser_t *rds, bool changed, void *user_data)
+static void callback_ps(rdsparser_t *rds, bool changed, void *user_data)
 {
     if (changed)
     {
@@ -124,7 +124,7 @@ void callback_ps(rdsparser_t *rds, bool changed, void *user_data)
  * @param  changed True if the RT has changed; false otherwise
  * @param  user_data Pointer to user data; NULL if no data was provided
  */
-void callback_rt(rdsparser_t *rds, rdsparser_rt_flag_t flag, bool changed, void *user_data)
+static void callback_rt(rdsparser_t *rds, rdsparser_rt_flag_t flag, bool changed, void *user_data)
 {
     if (changed)
     {
