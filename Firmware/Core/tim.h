@@ -14,7 +14,8 @@
  *
  ******************************************************************************
  */
-/* Define to prevent recursive inclusion -------------------------------------*/
+
+/* Header guard --------------------------------------------------------------*/
 #ifndef __TIM_H__
 #define __TIM_H__
 
@@ -26,11 +27,19 @@ extern "C"
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+/* Exported types ------------------------------------------------------------*/
+
+/* Exported constants --------------------------------------------------------*/
+
+/* Exported macros -----------------------------------------------------------*/
+
+/* Exported variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim16;
 extern TIM_HandleTypeDef htim17;
 
-void MX_TIM16_Init(void);
-void MX_TIM17_Init(void);
+/* Exported functions --------------------------------------------------------*/
+extern void MX_TIM16_Init(void);
+extern void MX_TIM17_Init(void);
 
 #ifdef __cplusplus
 }

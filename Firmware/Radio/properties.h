@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -14,7 +14,7 @@
  ******************************************************************************
  */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
+/* Header guard --------------------------------------------------------------*/
 #ifndef __PROPERTIES_H__
 #define __PROPERTIES_H__
 
@@ -26,7 +26,7 @@ extern "C"
 /* Includes ------------------------------------------------------------------*/
 #include "device.h"
 
-/* Exported types */
+/* Exported types ------------------------------------------------------------*/
 typedef enum _PROP_GPO_IEN_ARGS : uint16_t
 {
     /* Do not generate interrupts when status bits become set */

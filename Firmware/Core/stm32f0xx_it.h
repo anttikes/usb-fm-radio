@@ -13,7 +13,8 @@
  *
  ******************************************************************************
  */
-/* Define to prevent recursive inclusion -------------------------------------*/
+
+/* Header guard --------------------------------------------------------------*/
 #ifndef __STM32F0xx_IT_H__
 #define __STM32F0xx_IT_H__
 
@@ -22,27 +23,27 @@ extern "C"
 {
 #endif
 
-/* Private includes ----------------------------------------------------------*/
-
 /* Exported types ------------------------------------------------------------*/
 
 /* Exported constants --------------------------------------------------------*/
 
-/* Exported macro ------------------------------------------------------------*/
+/* Exported macros -----------------------------------------------------------*/
 
-/* Exported functions prototypes ---------------------------------------------*/
-void NMI_Handler(void);
-void HardFault_Handler(void);
-void SVC_Handler(void);
-void PendSV_Handler(void);
-void SysTick_Handler(void);
-void RCC_CRS_IRQHandler(void);
-void EXTI2_3_IRQHandler(void);
-void DMA1_Channel2_3_IRQHandler(void);
-void TIM16_IRQHandler(void);
-void TIM17_IRQHandler(void);
-void I2C1_IRQHandler(void);
-void USB_IRQHandler(void);
+/* Exported variables --------------------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
+extern void NMI_Handler(void);
+extern void HardFault_Handler(void);
+extern void SVC_Handler(void);
+extern void PendSV_Handler(void);
+extern void SysTick_Handler(void);
+extern void RCC_CRS_IRQHandler(void);
+extern void EXTI2_3_IRQHandler(void);
+extern void DMA1_Channel2_3_IRQHandler(void);
+extern void TIM16_IRQHandler(void);
+extern void TIM17_IRQHandler(void);
+extern void I2C1_IRQHandler(void);
+extern void USB_IRQHandler(void);
 
 #ifdef __cplusplus
 }

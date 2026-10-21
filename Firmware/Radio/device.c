@@ -6,7 +6,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -62,10 +62,9 @@ volatile bool i2cTransferInterruptRaised = false;
 volatile bool i2cReceiveInterruptRaised = false;
 
 /* Private function prototypes -----------------------------------------------*/
-bool IsCommandQueueEmpty(CommandQueue_t *queue);
-Command_t *PeekCommand(CommandQueue_t *queue);
-Command_t *PopCommand(CommandQueue_t *queue);
-Report_t *PopReport(ReportQueue_t *queue);
+static Command_t *PeekCommand(CommandQueue_t *queue);
+static Command_t *PopCommand(CommandQueue_t *queue);
+static Report_t *PopReport(ReportQueue_t *queue);
 
 /* Exported functions --------------------------------------------------------*/
 
@@ -388,7 +387,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 /**
  * @brief  Invoked by HAL when I2C Master transmit has completed.
  * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
- *                the configuration information for the specified I2C.
+ *              the configuration information for the specified I2C.
  * @retval None
  */
 void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
@@ -402,7 +401,7 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 /**
  * @brief  Invoked by HAL when I2C Master receive has completed.
  * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
- *                the configuration information for the specified I2C.
+ *              the configuration information for the specified I2C.
  * @retval None
  */
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
@@ -416,7 +415,7 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 /**
  * @brief  Invoked by HAL when an I2C transaction encounters an error.
  * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
- *                the configuration information for the specified I2C.
+ *              the configuration information for the specified I2C.
  * @retval None
  */
 void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
@@ -486,44 +485,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 /* Private functions ---------------------------------------------------------*/
 
 /**
- * @brief  Determines if the queue is empty
- * @param  queue Pointer to the queue
- *
- * @retval True if the queue is empty; false otherwise
- */
-bool IsCommandQueueEmpty(CommandQueue_t *queue)
-{
-    if (queue == NULL)
-    {
-        return true;
-    }
-
-    return (queue->count == 0);
-}
-
-/**
- * @brief  Determines if the queue is empty
- * @param  queue Pointer to the queue
- *
- * @retval True if the queue is empty; false otherwise
- */
-bool IsReportQueueEmpty(ReportQueue_t *queue)
-{
-    if (queue == NULL)
-    {
-        return true;
-    }
-
-    return (queue->count == 0);
-}
-
-/**
  * @brief  Peeks the first command from the queue without removing it
  * @param  queue Pointer to the queue
  *
  * @retval Pointer to the first command in the queue or NULL if the queue is empty
  */
-Command_t *PeekCommand(CommandQueue_t *queue)
+static Command_t *PeekCommand(CommandQueue_t *queue)
 {
     if (queue == NULL || queue->count == 0)
     {
@@ -539,7 +506,7 @@ Command_t *PeekCommand(CommandQueue_t *queue)
  *
  * @retval Pointer to the first command in the queue or NULL if the queue is empty
  */
-Command_t *PopCommand(CommandQueue_t *queue)
+static Command_t *PopCommand(CommandQueue_t *queue)
 {
     if (queue == NULL || queue->count == 0)
     {
@@ -560,7 +527,7 @@ Command_t *PopCommand(CommandQueue_t *queue)
  *
  * @retval Pointer to the first report in the queue or NULL if the queue is empty
  */
-Report_t *PopReport(ReportQueue_t *queue)
+static Report_t *PopReport(ReportQueue_t *queue)
 {
     if (queue == NULL || queue->count == 0)
     {

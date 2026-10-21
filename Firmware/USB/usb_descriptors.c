@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) 2019 Ha Thach, Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -13,168 +13,45 @@
  *
  ******************************************************************************
  */
+
+/* Includes ------------------------------------------------------------------*/
+#include "usb_descriptors.h"
 #include "audio_config.h"
 #include "constants.h"
 #include "hid_config.h"
 #include "stm32f042x6.h"
 #include "tusb.h"
 
-//--------------------------------------------------------------------+
-// Board support
-//--------------------------------------------------------------------+
+/* Global variables ----------------------------------------------------------*/
+uint8_t const desc_hid_report[] = {TUD_HID_REPORT_DESC_GENERIC_INOUT(CFG_TUD_HID_EP_BUFSIZE)};
 
-/**
- * @brief  Extracts the unique identifier of the STM32 chip from the registers
- * @param  id Pointer to the buffer which should be filled with the identifier
- * @param  maxChars Maximum number of ASCII characters that can fit into the
- * buffer
- *
- * @retval Length of the unique identifier, in ASCII characters
- */
-size_t board_get_unique_id(uint8_t id[], size_t maxChars)
-{
-    (void)maxChars;
-
-    volatile uint32_t *stm32_uuid = (volatile uint32_t *)UID_BASE;
-    uint32_t *id32 = (uint32_t *)(uintptr_t)id;
-    uint8_t const len = 12;
-
-    id32[0] = stm32_uuid[0];
-    id32[1] = stm32_uuid[1];
-    id32[2] = stm32_uuid[2];
-
-    return len;
-}
-
-/**
- * @brief  Helper method to get the unique identifier of the STM32 chip as a
- * Unicode string
- * @param  desc_str1 Pointer to the second position in the buffer which should
- * be filled with the identifier
- * @param  maxChars Maximum amount of ASCII characters that can fit into the
- * buffer
- *
- * @retval Length of the unique identifier, in Unicode characters
- */
-static inline size_t board_usb_get_serial(uint16_t desc_str1[], size_t maxChars)
-{
-    uint8_t uid[16] TU_ATTR_ALIGNED(4);
-    size_t uid_len;
-
-    uid_len = board_get_unique_id(uid, sizeof(uid));
-
-    if (uid_len > maxChars / 2)
-        uid_len = maxChars / 2;
-
-    for (size_t i = 0; i < uid_len; i++)
-    {
-        for (size_t j = 0; j < 2; j++)
-        {
-            const char nibble_to_hex[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
-                                            '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-
-            uint8_t const nibble = (uid[i] >> (j * 4)) & 0xf;
-            desc_str1[i * 2 + (1 - j)] = nibble_to_hex[nibble]; // UTF-16-LE
-        }
-    }
-
-    return 2 * uid_len;
-}
-
-//--------------------------------------------------------------------+
-// HID Report Descriptor
-//--------------------------------------------------------------------+
-
-// clang-format off
-uint8_t const desc_hid_report[] = 
-{
-	TUD_HID_REPORT_DESC_GENERIC_INOUT(CFG_TUD_HID_EP_BUFSIZE)
-};
-// clang-format on
-
-//--------------------------------------------------------------------+
-// String Descriptors
-//--------------------------------------------------------------------+
-
-// String Descriptor indices
-enum
+/* Private types -------------------------------------------------------------*/
+typedef enum _StringDescriptors_t : uint8_t
 {
     STRID_LANGID = 0,
     STRID_MANUFACTURER,
     STRID_PRODUCT,
     STRID_SERIAL,
-};
+} StringDescriptors_t;
 
-// The strings that identify the device
-char const *string_desc_arr[] = {
-    (const char[]){0x09, 0x04}, // 0: is supported language is English (0x0409)
-    "AK Design",                // 1: Manufacturer
-    "AK Design FM Radio",       // 2: Product
-    NULL,                       // 3: Serial will use unique ID if possible
-};
+/* Private constants ---------------------------------------------------------*/
+#define ITF_NUM_TOTAL ITF_NUM_AUDIO_TOTAL + ITF_NUM_HID_TOTAL
 
-// Buffer to hold the Unicode representation of a string
-// Serial number is the longest
-static uint16_t _desc_str[32 + 1];
-
-/**
- * @brief  Invoked when GET STRING DESCRIPTOR request is received
- * @param  index Index of the string descriptor to return
- * @param  langid Language identifier in which to return it
- *
- * @retval Pointer to the Unicode string descriptor buffer
- */
-uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid)
-{
-    (void)langid;
-    size_t chr_count;
-
-    switch (index)
-    {
-    case STRID_LANGID:
-        memcpy(&_desc_str[1], string_desc_arr[0], 2);
-        chr_count = 1;
-        break;
-
-    case STRID_SERIAL:
-        chr_count = board_usb_get_serial(_desc_str + 1, 32);
-        break;
-
-    default:
-        // Note: the 0xEE index string is a Microsoft OS 1.0 Descriptors.
-        // https://docs.microsoft.com/en-us/windows-hardware/drivers/usbcon/microsoft-defined-usb-descriptors
-
-        if (!(index < sizeof(string_desc_arr) / sizeof(string_desc_arr[0])))
-            return NULL;
-
-        const char *str = string_desc_arr[index];
-
-        // Cap at max char
-        chr_count = strlen(str);
-        size_t const max_count = sizeof(_desc_str) / sizeof(_desc_str[0]) - 1; // -1 for string type
-        if (chr_count > max_count)
-            chr_count = max_count;
-
-        // Convert ASCII string into UTF-16
-        for (size_t i = 0; i < chr_count; i++)
-        {
-            _desc_str[1 + i] = str[i];
-        }
-        break;
-    }
-
-    // First byte is length of the entire descriptor, second byte identifies it as
-    // string type
-    _desc_str[0] = (uint16_t)((TUSB_DESC_STRING << 8) | (2 * chr_count + 2));
-
-    return _desc_str;
-}
-
-//--------------------------------------------------------------------+
-// Device Descriptors
-//--------------------------------------------------------------------+
 // clang-format off
-tusb_desc_device_t const desc_device = {
+#define CONFIG_TOTAL_LEN (0\
+    + TUD_CONFIG_DESC_LEN\
+	+ CFG_TUD_AUDIO * TUD_AUDIO10_RADIO_RECEIVER_TWO_CH_1_FORMAT_DESC_LEN\
+	+ CFG_TUD_HID * TUD_HID_INOUT_DESC_LEN\
+)
+// clang-format on
+
+/* Private macros ------------------------------------------------------------*/
+
+/* Private variables ---------------------------------------------------------*/
+// clang-format off
+tusb_desc_device_t const desc_device = 
+{
+	/* Standard Device Descriptor */
 	.bLength = sizeof(tusb_desc_device_t),
 	.bDescriptorType = TUSB_DESC_DEVICE,
 	.bcdUSB = 0x0200,
@@ -194,30 +71,6 @@ tusb_desc_device_t const desc_device = {
 
 	.bNumConfigurations = 0x01
 };
-// clang-format on
-
-/**
- * @brief  Invoked when GET DEVICE DESCRIPTOR is received
- *
- * @retval Pointer to the device descriptor structure
- */
-uint8_t const *tud_descriptor_device_cb(void)
-{
-    return (uint8_t const *)&desc_device;
-}
-
-//--------------------------------------------------------------------+
-// Configuration Descriptor
-//--------------------------------------------------------------------+
-
-#define ITF_NUM_TOTAL ITF_NUM_AUDIO_TOTAL + ITF_NUM_HID_TOTAL
-
-// clang-format off
-#define CONFIG_TOTAL_LEN (0\
-    + TUD_CONFIG_DESC_LEN\
-	+ CFG_TUD_AUDIO * TUD_AUDIO10_RADIO_RECEIVER_TWO_CH_1_FORMAT_DESC_LEN\
-	+ CFG_TUD_HID * TUD_HID_INOUT_DESC_LEN\
-)
 // clang-format on
 
 // clang-format off
@@ -350,8 +203,37 @@ uint8_t const desc_configuration[] =
 TU_VERIFY_STATIC(sizeof(desc_configuration) == CONFIG_TOTAL_LEN,
                  "Configuration descriptor actual size differs from CONFIG_TOTAL_LEN");
 
+// The strings that identify the device
+char const *string_desc_arr[] = {
+    (const char[]){0x09, 0x04}, // 0: is supported language is English (0x0409)
+    "AK Design",                // 1: Manufacturer
+    "AK Design FM Radio",       // 2: Product
+    NULL,                       // 3: Serial will use unique ID if possible
+};
+
+// Buffer to hold the Unicode representation of a string
+static uint16_t _desc_str[32 + 1];
+
+/* Private function prototypes -----------------------------------------------*/
+static size_t board_get_unique_id(uint8_t id[], size_t maxChars);
+static inline size_t board_usb_get_serial(uint16_t desc_str1[], size_t maxChars);
+
+/* Exported functions --------------------------------------------------------*/
+
+/* External callbacks --------------------------------------------------------*/
+
 /**
- * @brief  Invoked when GET CONFIGURATION DESCRIPTOR is received
+ * @brief  Invoked when GET DEVICE DESCRIPTOR request is received
+ *
+ * @retval Pointer to the device descriptor structure
+ */
+uint8_t const *tud_descriptor_device_cb(void)
+{
+    return (uint8_t const *)&desc_device;
+}
+
+/**
+ * @brief  Invoked when GET CONFIGURATION DESCRIPTOR request is received
  *
  * @retval Pointer to the configuration descriptor structure
  */
@@ -360,4 +242,113 @@ uint8_t const *tud_descriptor_configuration_cb(uint8_t index)
     (void)index; // for multiple configurations
 
     return desc_configuration;
+}
+
+/**
+ * @brief  Invoked when GET STRING DESCRIPTOR request is received
+ * @param  index Index of the string descriptor to return
+ * @param  langid Language identifier in which to return it
+ *
+ * @retval Pointer to the Unicode string descriptor buffer
+ */
+uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid)
+{
+    (void)langid;
+    size_t chr_count;
+
+    switch (index)
+    {
+    case STRID_LANGID:
+        memcpy(&_desc_str[1], string_desc_arr[0], 2);
+        chr_count = 1;
+        break;
+
+    case STRID_SERIAL:
+        chr_count = board_usb_get_serial(_desc_str + 1, 32);
+        break;
+
+    default:
+        // Note: the 0xEE index string is a Microsoft OS 1.0 Descriptors.
+        // https://docs.microsoft.com/en-us/windows-hardware/drivers/usbcon/microsoft-defined-usb-descriptors
+
+        if (!(index < sizeof(string_desc_arr) / sizeof(string_desc_arr[0])))
+            return NULL;
+
+        const char *str = string_desc_arr[index];
+
+        // Cap at max char
+        chr_count = strlen(str);
+        size_t const max_count = sizeof(_desc_str) / sizeof(_desc_str[0]) - 1; // -1 for string type
+        if (chr_count > max_count)
+            chr_count = max_count;
+
+        // Convert ASCII string into UTF-16
+        for (size_t i = 0; i < chr_count; i++)
+        {
+            _desc_str[1 + i] = str[i];
+        }
+        break;
+    }
+
+    // First byte is length of the entire descriptor, second byte identifies it as
+    // string type
+    _desc_str[0] = (uint16_t)((TUSB_DESC_STRING << 8) | (2 * chr_count + 2));
+
+    return _desc_str;
+}
+
+/* Private functions ---------------------------------------------------------*/
+
+/**
+ * @brief  Extracts the unique identifier of the STM32 chip from the registers
+ * @param  id Pointer to the buffer which should be filled with the identifier
+ * @param  maxChars Maximum number of ASCII characters that can fit into the buffer
+ *
+ * @retval Length of the unique identifier, in ASCII characters
+ */
+static size_t board_get_unique_id(uint8_t id[], size_t maxChars)
+{
+    (void)maxChars;
+
+    volatile uint32_t *stm32_uuid = (volatile uint32_t *)UID_BASE;
+    uint32_t *id32 = (uint32_t *)(uintptr_t)id;
+    uint8_t const len = 12;
+
+    id32[0] = stm32_uuid[0];
+    id32[1] = stm32_uuid[1];
+    id32[2] = stm32_uuid[2];
+
+    return len;
+}
+
+/**
+ * @brief  Helper method to get the unique identifier of the STM32 chip as a Unicode string
+ * @param  desc_str1 Pointer to the second position in the buffer which should be filled with the identifier
+ * @param  maxChars Maximum amount of ASCII characters that can fit into the buffer
+ *
+ * @retval Length of the unique identifier, in Unicode characters
+ */
+static inline size_t board_usb_get_serial(uint16_t desc_str1[], size_t maxChars)
+{
+    uint8_t uid[16] TU_ATTR_ALIGNED(4);
+    size_t uid_len;
+
+    uid_len = board_get_unique_id(uid, sizeof(uid));
+
+    if (uid_len > maxChars / 2)
+        uid_len = maxChars / 2;
+
+    for (size_t i = 0; i < uid_len; i++)
+    {
+        for (size_t j = 0; j < 2; j++)
+        {
+            const char nibble_to_hex[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
+                                            '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+            uint8_t const nibble = (uid[i] >> (j * 4)) & 0xf;
+            desc_str1[i * 2 + (1 - j)] = nibble_to_hex[nibble]; // UTF-16-LE
+        }
+    }
+
+    return 2 * uid_len;
 }

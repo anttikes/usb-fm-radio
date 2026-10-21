@@ -14,7 +14,8 @@
  *
  ******************************************************************************
  */
-/* Define to prevent recursive inclusion -------------------------------------*/
+
+/* Header guard --------------------------------------------------------------*/
 #ifndef __I2S_H__
 #define __I2S_H__
 
@@ -26,9 +27,18 @@ extern "C"
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-extern I2S_HandleTypeDef hi2s1;
+/* Exported types */
 
-void MX_I2S1_Init(void);
+/* Exported constants --------------------------------------------------------*/
+
+/* Exported macros -----------------------------------------------------------*/
+
+/* Exported variables --------------------------------------------------------*/
+extern I2S_HandleTypeDef hi2s1;
+extern DMA_HandleTypeDef hdma_spi1_rx;
+
+/* Exported functions --------------------------------------------------------*/
+extern void MX_I2S1_Init(void);
 
 #ifdef __cplusplus
 }

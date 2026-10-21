@@ -14,13 +14,30 @@
  *
  ******************************************************************************
  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "i2s.h"
 
+/* Global variables ----------------------------------------------------------*/
 I2S_HandleTypeDef hi2s1;
 DMA_HandleTypeDef hdma_spi1_rx;
 
-/* I2S1 init function */
+/* Private types -------------------------------------------------------------*/
+
+/* Private constants ---------------------------------------------------------*/
+
+/* Private macros ------------------------------------------------------------*/
+
+/* Private variables ---------------------------------------------------------*/
+
+/* Private function prototypes -----------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
+
+/**
+ * @brief  Initialize I2S1
+ * @retval None
+ */
 void MX_I2S1_Init(void)
 {
     hi2s1.Instance = SPI1;
@@ -37,11 +54,19 @@ void MX_I2S1_Init(void)
     }
 }
 
-void HAL_I2S_MspInit(I2S_HandleTypeDef *i2sHandle)
+/* External callbacks --------------------------------------------------------*/
+
+/**
+ * @brief  Invoked by HAL to perform lower level initialization
+ * @param  hi2s Pointer to a I2S_HandleTypeDef structure that contains
+ *         the configuration information for I2S module
+ * @retval None
+ */
+void HAL_I2S_MspInit(I2S_HandleTypeDef *hi2s)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-    if (i2sHandle->Instance == SPI1)
+    if (hi2s->Instance == SPI1)
     {
         /* I2S1 clock enable */
         __HAL_RCC_SPI1_CLK_ENABLE();
@@ -76,13 +101,19 @@ void HAL_I2S_MspInit(I2S_HandleTypeDef *i2sHandle)
             Error_Handler();
         }
 
-        __HAL_LINKDMA(i2sHandle, hdmarx, hdma_spi1_rx);
+        __HAL_LINKDMA(hi2s, hdmarx, hdma_spi1_rx);
     }
 }
 
-void HAL_I2S_MspDeInit(I2S_HandleTypeDef *i2sHandle)
+/**
+ * @brief  Invoked by HAL to perform lower level de-initialization
+ * @param  hi2s Pointer to a I2S_HandleTypeDef structure that contains
+ *              the configuration information for I2S module
+ * @retval None
+ */
+void HAL_I2S_MspDeInit(I2S_HandleTypeDef *hi2s)
 {
-    if (i2sHandle->Instance == SPI1)
+    if (hi2s->Instance == SPI1)
     {
         /* Peripheral clock disable */
         __HAL_RCC_SPI1_CLK_DISABLE();
@@ -95,6 +126,8 @@ void HAL_I2S_MspDeInit(I2S_HandleTypeDef *i2sHandle)
         HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_7);
 
         /* I2S1 DMA DeInit */
-        HAL_DMA_DeInit(i2sHandle->hdmarx);
+        HAL_DMA_DeInit(hi2s->hdmarx);
     }
 }
+
+/* Private functions ---------------------------------------------------------*/

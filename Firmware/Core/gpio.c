@@ -14,21 +14,27 @@
  *
  ******************************************************************************
  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "gpio.h"
 
-/*----------------------------------------------------------------------------*/
-/* Configure GPIO                                                             */
-/*----------------------------------------------------------------------------*/
+/* Global variables ----------------------------------------------------------*/
 
-/** Configure pins as
- * Analog
- * Input
- * Output
- * EVENT_OUT
- * EXTI
- * Free pins are configured automatically as Analog (this feature is enabled
- * through the Code Generation settings)
+/* Private types -------------------------------------------------------------*/
+
+/* Private constants ---------------------------------------------------------*/
+
+/* Private macros ------------------------------------------------------------*/
+
+/* Private variables ---------------------------------------------------------*/
+
+/* Private function prototypes -----------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
+
+/**
+ * @brief  Initialize GPIO
+ * @retval None
  */
 void MX_GPIO_Init(void)
 {
@@ -39,7 +45,7 @@ void MX_GPIO_Init(void)
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOF_CLK_ENABLE();
 
-    /*Configure GPIO pin Output Level */
+    /* Configure GPIO pin Output Level */
     HAL_GPIO_WritePin(GPIOA, RD_RST_Pin | OSC_EN_Pin, GPIO_PIN_RESET);
 
     /* Configure GPIO pin : RD_IRQ_Pin */
@@ -71,3 +77,7 @@ void MX_GPIO_Init(void)
     HAL_NVIC_SetPriority(EXTI2_3_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(EXTI2_3_IRQn);
 }
+
+/* External callbacks --------------------------------------------------------*/
+
+/* Private functions ---------------------------------------------------------*/

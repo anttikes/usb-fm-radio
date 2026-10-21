@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -13,6 +13,8 @@
  *
  ******************************************************************************
  */
+
+/* Header guard --------------------------------------------------------------*/
 #ifndef __TUSB_CONFIG_H__
 #define __TUSB_CONFIG_H__
 
@@ -21,9 +23,11 @@ extern "C"
 {
 #endif
 
-//--------------------------------------------------------------------
-// COMMON CONFIGURATION
-//--------------------------------------------------------------------
+/* Includes ------------------------------------------------------------------*/
+
+/* Exported types ------------------------------------------------------------*/
+
+/* Exported constants --------------------------------------------------------*/
 
 // Define MCU and OS
 #define CFG_TUSB_MCU OPT_MCU_STM32F0
@@ -58,26 +62,22 @@ extern "C"
 #define CFG_TUSB_MEM_ALIGN __attribute__((aligned(4)))
 #endif
 
-//--------------------------------------------------------------------
-// DEVICE CONFIGURATION
-//--------------------------------------------------------------------
-
 // Specify control endpoint data packet size
 #define CFG_TUD_ENDPOINT0_SIZE 64
 
-//------------- CLASS -------------//
+// Specify which USB Class Drivers are being used
 #define CFG_TUD_AUDIO 1
 #define CFG_TUD_HID 1
 
-//--------------------------------------------------------------------
-// AUDIO CLASS DRIVER CONFIGURATION
-//--------------------------------------------------------------------
+// Include enabled class drivers
 #include "audio_config.h"
-
-//--------------------------------------------------------------------
-// HID CLASS DRIVER CONFIGURATION
-//--------------------------------------------------------------------
 #include "hid_config.h"
+
+/* Exported macros -----------------------------------------------------------*/
+
+/* Exported variables --------------------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
 
 #ifdef __cplusplus
 }

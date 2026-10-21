@@ -15,30 +15,26 @@
  */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
+#include "i2c.h"
+#include "i2s.h"
 #include "main.h"
+#include "tim.h"
 #include "tusb.h"
 
-/* Private typedef -----------------------------------------------------------*/
+/* Global variables ----------------------------------------------------------*/
 
-/* Private define ------------------------------------------------------------*/
+/* Private types -------------------------------------------------------------*/
 
-/* Private macro -------------------------------------------------------------*/
+/* Private constants ---------------------------------------------------------*/
+
+/* Private macros ------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
 
-/* Private user code ---------------------------------------------------------*/
+/* Exported functions --------------------------------------------------------*/
 
-/* External variables --------------------------------------------------------*/
-extern I2C_HandleTypeDef hi2c1;
-extern DMA_HandleTypeDef hdma_spi1_rx;
-extern TIM_HandleTypeDef htim16;
-extern TIM_HandleTypeDef htim17;
-
-/******************************************************************************/
-/*           Cortex-M0 Processor Interruption and Exception Handlers          */
-/******************************************************************************/
 /**
  * @brief This function handles Non maskable interrupt.
  */
@@ -80,13 +76,6 @@ void SysTick_Handler(void)
 {
     HAL_IncTick();
 }
-
-/******************************************************************************/
-/* STM32F0xx Peripheral Interrupt Handlers                                    */
-/* Add here the Interrupt Handlers for the used peripherals.                  */
-/* For the available peripheral interrupt handler names,                      */
-/* please refer to the startup file (startup_stm32f0xx.s).                    */
-/******************************************************************************/
 
 /**
  * @brief This function handles EXTI line 2 and 3 interrupts.
@@ -142,3 +131,7 @@ void USB_IRQHandler(void)
 {
     tusb_int_handler(BOARD_DEVICE_RHPORT_NUM, true);
 }
+
+/* External callbacks --------------------------------------------------------*/
+
+/* Private functions ---------------------------------------------------------*/

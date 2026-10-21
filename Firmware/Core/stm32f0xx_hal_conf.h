@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) Antti Keskinen
+ * Copyright (c) 2016 STMicroelectronics, Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -13,7 +13,8 @@
  *
  ******************************************************************************
  */
-/* Define to prevent recursive inclusion -------------------------------------*/
+
+/* Header guard --------------------------------------------------------------*/
 #ifndef __STM32F0xx_HAL_CONF_H__
 #define __STM32F0xx_HAL_CONF_H__
 
@@ -23,9 +24,9 @@ extern "C"
 #endif
 
 /* Exported types ------------------------------------------------------------*/
+
 /* Exported constants --------------------------------------------------------*/
 
-/* ########################## Module Selection ############################## */
 /**
  * @brief This is the list of modules to be used in the HAL driver
  */
@@ -63,7 +64,6 @@ extern "C"
 #define HAL_RCC_MODULE_ENABLED
 #define HAL_I2C_MODULE_ENABLED
 
-/* ########################## HSE/HSI Values adaptation ##################### */
 /**
  * @brief Adjust the value of External High Speed oscillator (HSE) used in your
  * application. This value is used by the RCC HAL module to compute the system
@@ -145,7 +145,6 @@ extern "C"
 /* Tip: To avoid modifying this file each time you need to use different HSE,
    ===  you can define the HSE value in your toolchain compiler preprocessor. */
 
-/* ########################### System Configuration ######################### */
 /**
  * @brief This is the HAL system configuration section
  */
@@ -185,11 +184,9 @@ extern "C"
  */
 /* #define USE_FULL_ASSERT   1U */
 
-/* Includes ------------------------------------------------------------------*/
 /**
  * @brief Include module's header file
  */
-
 #ifdef HAL_RCC_MODULE_ENABLED
 #include "stm32f0xx_hal_rcc.h"
 #endif /* HAL_RCC_MODULE_ENABLED */
@@ -298,7 +295,8 @@ extern "C"
 #include "stm32f0xx_hal_wwdg.h"
 #endif /* HAL_WWDG_MODULE_ENABLED */
 
-/* Exported macro ------------------------------------------------------------*/
+/* Exported macros -----------------------------------------------------------*/
+
 #ifdef USE_FULL_ASSERT
 /**
  * @brief  The assert_param macro is used for function's parameters check.
@@ -314,6 +312,10 @@ void assert_failed(uint8_t *file, uint32_t line);
 #else
 #define assert_param(expr) ((void)0U)
 #endif /* USE_FULL_ASSERT */
+
+/* Exported variables --------------------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
 
 #ifdef __cplusplus
 }

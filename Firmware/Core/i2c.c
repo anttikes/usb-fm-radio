@@ -14,12 +14,29 @@
  *
  ******************************************************************************
  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "i2c.h"
 
+/* Global variables ----------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 
-/* I2C1 init function */
+/* Private types -------------------------------------------------------------*/
+
+/* Private constants ---------------------------------------------------------*/
+
+/* Private macros ------------------------------------------------------------*/
+
+/* Private variables ---------------------------------------------------------*/
+
+/* Private function prototypes -----------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
+
+/**
+ * @brief  Initialize I2C1
+ * @retval None
+ */
 void MX_I2C1_Init(void)
 {
     hi2c1.Instance = I2C1;
@@ -50,11 +67,19 @@ void MX_I2C1_Init(void)
     }
 }
 
-void HAL_I2C_MspInit(I2C_HandleTypeDef *i2cHandle)
+/* External callbacks --------------------------------------------------------*/
+
+/**
+ * @brief  Invoked by HAL to perform lower level initialization
+ * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
+ *              the configuration information for the specified I2C.
+ * @retval None
+ */
+void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-    if (i2cHandle->Instance == I2C1)
+    if (hi2c->Instance == I2C1)
     {
         __HAL_RCC_GPIOF_CLK_ENABLE();
 
@@ -78,9 +103,15 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *i2cHandle)
     }
 }
 
-void HAL_I2C_MspDeInit(I2C_HandleTypeDef *i2cHandle)
+/**
+ * @brief  Invoked by HAL to perform lower level de-initialization
+ * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
+ *              the configuration information for the specified I2C.
+ * @retval None
+ */
+void HAL_I2C_MspDeInit(I2C_HandleTypeDef *hi2c)
 {
-    if (i2cHandle->Instance == I2C1)
+    if (hi2c->Instance == I2C1)
     {
         /* Peripheral clock disable */
         __HAL_RCC_I2C1_CLK_DISABLE();
@@ -95,3 +126,5 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef *i2cHandle)
         HAL_NVIC_DisableIRQ(I2C1_IRQn);
     }
 }
+
+/* Private functions ---------------------------------------------------------*/

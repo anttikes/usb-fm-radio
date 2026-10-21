@@ -4,7 +4,7 @@
 
 **  File        : LinkerScript.ld
 **
-**  Author		: STM32CubeMX
+**  Author		  : STM32CubeMX
 **
 **  Abstract    : Linker script for STM32F042F6Px series
 **                32Kbytes FLASH and 6Kbytes RAM

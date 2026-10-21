@@ -14,7 +14,8 @@
  *
  ******************************************************************************
  */
-/* Define to prevent recursive inclusion -------------------------------------*/
+
+/* Header guard --------------------------------------------------------------*/
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
@@ -26,19 +27,9 @@ extern "C"
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_hal.h"
 
-/* Private includes ----------------------------------------------------------*/
-
 /* Exported types ------------------------------------------------------------*/
 
 /* Exported constants --------------------------------------------------------*/
-
-/* Exported macro ------------------------------------------------------------*/
-
-/* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
-void SystemClock_Config(void);
-
-/* Private defines -----------------------------------------------------------*/
 #define RD_RST_Pin GPIO_PIN_1
 #define RD_RST_GPIO_Port GPIOA
 #define RD_IRQ_Pin GPIO_PIN_2
@@ -46,6 +37,14 @@ void SystemClock_Config(void);
 #define RD_IRQ_EXTI_IRQn EXTI2_3_IRQn
 #define OSC_EN_Pin GPIO_PIN_6
 #define OSC_EN_GPIO_Port GPIOA
+
+/* Exported macros -----------------------------------------------------------*/
+
+/* Exported variables --------------------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
+extern void Error_Handler(void);
+extern void SystemClock_Config(void);
 
 #ifdef __cplusplus
 }

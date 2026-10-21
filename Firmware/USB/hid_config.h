@@ -1,11 +1,11 @@
 /**
  ******************************************************************************
  * @file    hid_config.h
- * @brief   Header file for settings related to USB HID
+ * @brief   Header file for settings related to USB HID Class Driver
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -13,14 +13,17 @@
  *
  ******************************************************************************
  */
+
+/* Header guard --------------------------------------------------------------*/
 #ifndef __HID_CONFIG_H__
 #define __HID_CONFIG_H__
 
+/* Includes ------------------------------------------------------------------*/
 #include "reports.h"
 
-//--------------------------------------------------------------------
-// HID CLASS DRIVER CONFIGURATION
-//--------------------------------------------------------------------
+/* Exported types ------------------------------------------------------------*/
+
+/* Exported constants --------------------------------------------------------*/
 
 // HID buffer size; link to the report size defined in the shared header
 #define CFG_TUD_HID_EP_BUFSIZE MAX_REPORT_SIZE
@@ -31,5 +34,11 @@
 
 // Endpoint numbers
 #define EPNUM_HID 0x02
+
+/* Exported macros -----------------------------------------------------------*/
+
+/* Exported variables --------------------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
 
 #endif /* __HID_CONFIG_H__ */

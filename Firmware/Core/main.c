@@ -13,6 +13,7 @@
  *
  ******************************************************************************
  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "commands.h"
@@ -27,9 +28,11 @@
 #include "tim.h"
 #include "tusb.h"
 
-/* Private typedef -----------------------------------------------------------*/
+/* Global variables ----------------------------------------------------------*/
 
-/* Private define ------------------------------------------------------------*/
+/* Private types -------------------------------------------------------------*/
+
+/* Private constants ---------------------------------------------------------*/
 
 // Size of the staging buffer has an effect on the CPU usage; smaller buffer means
 // more interrupts and thus more transfers into the TinyUSB FIFO
@@ -39,21 +42,20 @@
 #define DMA_BUFFER_START 0
 #define DMA_BUFFER_MIDPOINT DMA_BUFFER_LENGTH / 2
 
-/* Private macro -------------------------------------------------------------*/
+/* Private macros ------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
 uint8_t i2sBuffer[DMA_BUFFER_LENGTH];
 
 /* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
 
-/* Private user code ---------------------------------------------------------*/
+/* Exported functions --------------------------------------------------------*/
 
 /**
  * @brief  The application entry point.
- * @retval int
+ * @retval None
  */
-int main(void)
+void main(void)
 {
     // Initialize HAL
     HAL_Init();
@@ -241,6 +243,19 @@ void SystemClock_Config(void)
     HAL_RCCEx_CRSConfig(&RCC_CRSInitStruct);
 }
 
+/**
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
+void Error_Handler(void)
+{
+    /* User can add his own implementation to report the HAL error return state */
+    __disable_irq();
+    while (1)
+    {
+    }
+}
+
 /* External callbacks --------------------------------------------------------*/
 
 /**
@@ -271,18 +286,7 @@ void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
     }
 }
 
-/**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
-void Error_Handler(void)
-{
-    /* User can add his own implementation to report the HAL error return state */
-    __disable_irq();
-    while (1)
-    {
-    }
-}
+/* Private functions ---------------------------------------------------------*/
 
 #ifdef USE_FULL_ASSERT
 /**

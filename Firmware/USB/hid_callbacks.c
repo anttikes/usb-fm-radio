@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -13,12 +13,29 @@
  *
  ******************************************************************************
  */
+
+/* Includes ------------------------------------------------------------------*/
 #include "commands.h"
 #include "device.h"
 #include "hid_config.h"
 #include "tusb.h"
+#include "usb_descriptors.h"
 
-extern uint8_t desc_hid_report[];
+/* Global variables ----------------------------------------------------------*/
+
+/* Private types -------------------------------------------------------------*/
+
+/* Private constants ---------------------------------------------------------*/
+
+/* Private macros ------------------------------------------------------------*/
+
+/* Private variables ---------------------------------------------------------*/
+
+/* Private function prototypes -----------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
+
+/* External callbacks --------------------------------------------------------*/
 
 /**
  * @brief  Invoked when the GET HID REPORT DESCRIPTOR request is received
@@ -134,3 +151,5 @@ void tud_hid_report_failed_cb(uint8_t instance, hid_report_type_t report_type, u
 
     return;
 }
+
+/* Private functions ---------------------------------------------------------*/

@@ -1,11 +1,11 @@
 /**
  ******************************************************************************
  * @file    audio_config.h
- * @brief   Header file for settings related to USB Audio
+ * @brief   Header file for settings related to USB Audio Class Driver
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -13,12 +13,16 @@
  *
  ******************************************************************************
  */
+
+/* Header guard --------------------------------------------------------------*/
 #ifndef __AUDIO_CONFIG_H__
 #define __AUDIO_CONFIG_H__
 
-//--------------------------------------------------------------------
-// AUDIO CLASS DRIVER CONFIGURATION
-//--------------------------------------------------------------------
+/* Includes ------------------------------------------------------------------*/
+
+/* Exported types ------------------------------------------------------------*/
+
+/* Exported constants --------------------------------------------------------*/
 
 // Sample rate and sample bit depth (not really part of the driver but listed here for clarity)
 #define CFG_TUD_AUDIO_FUNC_1_SAMPLE_RATE 48000
@@ -85,5 +89,11 @@
     + TUD_AUDIO10_DESC_CS_AS_ISO_EP_LEN\
 )
 // clang-format on
+
+/* Exported macros -----------------------------------------------------------*/
+
+/* Exported variables --------------------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
 
 #endif /* __AUDIO_CONFIG_H__ */

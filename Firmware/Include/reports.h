@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -26,11 +26,15 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-/* The HID report size includes the identifier and the struct bytes */
+/* Exported types ------------------------------------------------------------*/
+
+/*
+    The HID report size includes the identifier and the struct bytes
+    The definitions are listed here as they're used by the static assert calls
+*/
 #define MAX_REPORT_SIZE 128
 #define MAX_STRUCT_SIZE MAX_REPORT_SIZE - 1
 
-/* Exported types */
 typedef enum _ReportIdentifier_t : uint8_t
 {
     /* Indentifies a radio status report */

@@ -14,13 +14,30 @@
  *
  ******************************************************************************
  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "tim.h"
 
+/* Global variables ----------------------------------------------------------*/
 TIM_HandleTypeDef htim16;
 TIM_HandleTypeDef htim17;
 
-/* TIM16 init function */
+/* Private types -------------------------------------------------------------*/
+
+/* Private constants ---------------------------------------------------------*/
+
+/* Private macros ------------------------------------------------------------*/
+
+/* Private variables ---------------------------------------------------------*/
+
+/* Private function prototypes -----------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
+
+/**
+ * @brief  Initialize TIM16 timer
+ * @retval None
+ */
 void MX_TIM16_Init(void)
 {
     htim16.Instance = TIM16;
@@ -37,7 +54,10 @@ void MX_TIM16_Init(void)
     }
 }
 
-/* TIM17 init function */
+/**
+ * @brief  Initialize TIM17 timer
+ * @retval None
+ */
 void MX_TIM17_Init(void)
 {
     htim17.Instance = TIM17;
@@ -54,6 +74,14 @@ void MX_TIM17_Init(void)
     }
 }
 
+/* External callbacks --------------------------------------------------------*/
+
+/**
+ * @brief  Invoked by HAL to perform lower level initialization
+ * @param  htim Pointer to a TIM_HandleTypeDef structure that contains
+ *         the configuration information for timer module
+ * @retval None
+ */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM16)
@@ -76,6 +104,12 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
     }
 }
 
+/**
+ * @brief  Invoked by HAL to perform lower level de-initialization
+ * @param  htim Pointer to a TIM_HandleTypeDef structure that contains
+ *         the configuration information for timer module
+ * @retval None
+ */
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM16)
@@ -95,3 +129,5 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *htim)
         HAL_NVIC_DisableIRQ(TIM17_IRQn);
     }
 }
+
+/* Private functions ---------------------------------------------------------*/

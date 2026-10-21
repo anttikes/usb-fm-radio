@@ -5,7 +5,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 Antti Keskinen
+ * Copyright (c) Antti Keskinen
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -13,6 +13,8 @@
  *
  ******************************************************************************
  */
+
+/* Includes ------------------------------------------------------------------*/
 #include "audio_config.h"
 #include "commands.h"
 #include "device.h"
@@ -20,6 +22,22 @@
 #include "properties.h"
 #include "tusb.h"
 #include <stdbool.h>
+
+/* Global variables ----------------------------------------------------------*/
+
+/* Private types -------------------------------------------------------------*/
+
+/* Private constants ---------------------------------------------------------*/
+
+/* Private macros ------------------------------------------------------------*/
+
+/* Private variables ---------------------------------------------------------*/
+
+/* Private function prototypes -----------------------------------------------*/
+
+/* Exported functions --------------------------------------------------------*/
+
+/* External callbacks --------------------------------------------------------*/
 
 /**
  * @brief  Invoked to handle the SET INTERFACE request
@@ -38,11 +56,9 @@ bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const *p_reques
     // Clear buffer when streaming format is changed
     if (alt == 1)
     {
-        TU_BREAKPOINT();
     }
     else
     {
-        TU_BREAKPOINT();
     }
 
     return true;
@@ -122,7 +138,6 @@ bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
         case AUDIO10_FU_CTRL_VOLUME:
             if (p_request->bRequest != AUDIO10_CS_REQ_SET_CUR)
             {
-                TU_BREAKPOINT();
                 return false;
             }
 
@@ -136,7 +151,6 @@ bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
         case AUDIO10_FU_CTRL_MUTE:
             if (p_request->bRequest != AUDIO10_CS_REQ_SET_CUR)
             {
-                TU_BREAKPOINT();
                 return false;
             }
 
@@ -156,7 +170,6 @@ bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
             }
 
         default:
-            TU_BREAKPOINT();
             return false;
         }
     }
@@ -238,7 +251,6 @@ bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
             }
 
             default:
-                TU_BREAKPOINT();
                 return false;
             }
 
@@ -247,10 +259,11 @@ bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
                                                               sizeof(radioDevice.isMuted));
 
         default:
-            TU_BREAKPOINT();
             return false;
         }
     }
 
     return false;
 }
+
+/* Private functions ---------------------------------------------------------*/
