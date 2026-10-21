@@ -27,8 +27,6 @@ set(MX_Application_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/tim.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/stm32f0xx_it.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/stm32f0xx_hal_msp.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/sysmem.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/syscalls.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../startup_stm32f042x6.s
 )
 
